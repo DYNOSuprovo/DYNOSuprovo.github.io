@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suprovo Mallick - AI/ML Developer</title>
+    <!-- Favicon link added here -->
+    <link rel="icon" type="image/png" href="https://placehold.co/32x32/0FF0FC/1A1A1D?text=Logo">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -33,6 +35,8 @@
             color: var(--foreground); /* Default text color */
             overflow-x: hidden; /* Prevent horizontal scrolling */
             line-height: 1.6; /* Improve readability */
+            /* Add padding to the top to prevent content from being hidden by the fixed navbar */
+            padding-top: 100px; /* Adjust based on navbar height + desired spacing */
         }
 
         /* Animated Background Container */
@@ -129,7 +133,7 @@
 
         /* Hero Section Styling */
         .hero {
-            min-height: 100vh; /* Full viewport height */
+            min-height: calc(100vh - 100px); /* Adjust min-height to account for padding-top on body */
             display: flex; /* Flexbox for centering content */
             align-items: center; /* Center vertically */
             justify-content: center; /* Center horizontally */
@@ -141,6 +145,10 @@
         .hero-content {
             text-align: center; /* Center text */
             max-width: 800px; /* Max width for content */
+            /* Ensure alignment for the subtitle and terminal container */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center children horizontally when using flex column */
         }
 
         /* Hero Heading (Name) */
@@ -171,11 +179,12 @@
             border: 1px solid var(--border); /* Border */
             border-radius: 12px; /* Rounded corners */
             padding: 20px; /* Padding inside terminal */
-            margin: 30px auto; /* Margin top/bottom, auto for horizontal centering */
+            margin: 30px auto; /* Center horizontally with auto margins */
             font-family: 'Courier New', monospace; /* Monospace font for terminal feel */
-            text-align: left; /* Align text left */
+            text-align: left; /* Align text left - keeping for terminal realism */
             backdrop-filter: blur(10px); /* Blur effect */
             max-width: 600px; /* Max width for terminal */
+            width: 90%; /* Ensure it's responsive */
         }
 
         /* Terminal Header Dots */
@@ -205,6 +214,7 @@
             white-space: nowrap; /* Prevent text wrapping */
             overflow: hidden; /* Hide overflowing text before it's typed */
             display: inline-block; /* Make it an inline block for width calculation */
+            vertical-align: middle; /* Align with the non-typewriter part */
         }
 
         /* Keyframes for blinking cursor */
@@ -276,6 +286,8 @@
             padding: 100px 5%; /* Vertical and horizontal padding */
             max-width: 1200px; /* Max width for content within sections */
             margin: 0 auto; /* Center sections horizontally */
+            /* Establish 3D context for children - reduced for subtlety */
+            perspective: 1000px; 
         }
 
         /* Section Title Styling */
@@ -309,6 +321,9 @@
             grid-template-columns: repeat(2, 1fr); /* Two equal columns */
             gap: 20px; /* Gap between stats cards */
             margin-top: 30px; /* Spacing above grid */
+            place-items: center; /* Center grid items horizontally and vertically within their cells */
+            /* Ensure the grid itself is centered within its parent column */
+            justify-content: center; /* This centers the grid columns if space allows */
         }
 
         /* Individual Stat Card */
@@ -319,6 +334,21 @@
             padding: 20px; /* Padding inside card */
             text-align: center; /* Center align text */
             backdrop-filter: blur(10px); /* Blur effect */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition for hover */
+            width: 100%; /* Ensure cards take full width of their grid cell */
+            max-width: 250px; /* Optional: limit individual card width for uniformity */
+            /* 3D Properties */
+            transform-style: preserve-3d;
+            transform: translateZ(0); /* Ensure GPU acceleration for initial state */
+            will-change: transform, box-shadow; /* Hint to browser for performance */
+        }
+
+        /* Stat Card Hover Effect - Subtle 3D and Neon */
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02) rotateX(3deg) rotateY(3deg) translateZ(10px); /* Reduced 3D effect */
+            box-shadow: 0 0 15px var(--primary), /* Subtle inner glow */
+                        0 0 30px var(--accent), /* Subtle outer glow */
+                        0 5px 20px rgba(0, 0, 0, 0.4); /* Lighter main shadow */
         }
 
         /* Stat Number Styling */
@@ -343,11 +373,16 @@
             border-radius: 12px; /* Rounded corners */
             padding: 30px; /* Padding inside card */
             backdrop-filter: blur(10px); /* Blur effect */
+            /* 3D Properties */
+            transform-style: preserve-3d;
+            transform: translateZ(0); /* Ensure GPU acceleration for initial state */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            will-change: transform, box-shadow; /* Hint to browser for performance */
         }
 
         /* Skill Category Heading */
         .skill-category h3 {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            font-family: 'Space Grootesk', sans-serif; /* Heading font */
             color: var(--primary); /* Primary color */
             margin-bottom: 20px; /* Spacing below heading */
         }
@@ -370,6 +405,15 @@
             display: inline-flex; /* Use flexbox for icon and text alignment */
             align-items: center; /* Vertically align items */
             white-space: nowrap; /* Prevent text wrapping */
+            transition: all 0.3s ease; /* Smooth transition for hover */
+        }
+
+        /* Skill Tag Hover Effect */
+        .skill-tag:hover {
+            transform: translateY(-2px); /* Lift tag slightly */
+            box-shadow: 0 5px 15px rgba(15, 240, 252, 0.2); /* Add subtle shadow on hover */
+            border-color: var(--accent); /* Change border color on hover */
+            border-width: 2px; /* Make border thicker on hover for prominence */
         }
 
         /* Style for icons within skill tags */
@@ -377,6 +421,13 @@
             margin-right: 6px; /* Spacing between icon and text */
             font-size: 0.8em; /* Slightly smaller icon relative to text */
             color: var(--accent); /* Accent color for icons */
+        }
+        /* Skill Category Card Hover Effect - Subtle 3D and Neon */
+        .skill-category:hover {
+            transform: translateY(-5px) scale(1.01) rotateX(2deg) rotateY(2deg) translateZ(5px); /* Reduced 3D effect */
+            box-shadow: 0 0 10px var(--primary), /* Subtle inner glow */
+                        0 0 20px var(--alt-accent), /* Subtle outer glow */
+                        0 5px 20px rgba(0, 0, 0, 0.4); /* Lighter main shadow */
         }
 
         /* Projects Section Grid Layout */
@@ -396,6 +447,10 @@
             transition: all 0.3s ease; /* Smooth transitions */
             position: relative;
             overflow: hidden; /* Hide overflow for pseudo-element */
+            /* 3D Properties */
+            transform-style: preserve-3d;
+            transform: translateZ(0); /* Ensure GPU acceleration for initial state */
+            will-change: transform, box-shadow; /* Hint to browser for performance */
         }
 
         /* Project Card Top Border Effect (Pseudo-element) */
@@ -410,11 +465,12 @@
             transition: left 0.5s ease; /* Animate left property */
         }
 
-        /* Project Card Hover Effect */
+        /* Project Card Hover Effect - Subtle 3D and Neon */
         .project-card:hover {
-            transform: translateY(-5px) scale(1.01); /* Lift and slightly scale */
-            box-shadow: 0 20px 40px rgba(15, 240, 252, 0.1); /* Add shadow */
-            border-color: var(--primary); /* Change border color on hover */
+            transform: translateY(-5px) scale(1.01) rotateX(3deg) rotateY(-3deg) translateZ(10px); /* Reduced 3D effect */
+            box-shadow: 0 0 15px var(--accent), /* Subtle inner glow */
+                        0 0 30px var(--primary), /* Subtle outer glow */
+                        0 5px 20px rgba(0, 0, 0, 0.4); /* Lighter main shadow */
         }
 
         /* Show top border sweeping on hover */
@@ -632,6 +688,11 @@
             max-width: 800px; /* Limit width for better readability */
             backdrop-filter: blur(10px); /* Blur effect */
             overflow: hidden; /* Ensure content stays within */
+            
+            /* Enhanced centering for child elements */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center all flex items horizontally */
         }
         /* Styling for the embedded PDF iframe */
         .resume-preview iframe {
@@ -768,7 +829,7 @@
             <!-- Key Stats -->
             <div class="stats-grid fade-in">
                 <div class="stat-card">
-                    <div class="stat-number">15+</div>
+                    <div class="stat-number">5+</div>
                     <div>AI Projects</div>
                 </div>
                 <div class="stat-card">
@@ -847,7 +908,7 @@
                     <span class="skill-tag"><i class="fas fa-paper-plane"></i>Postman</span>
                     <span class="skill-tag"><i class="fas fa-database"></i>MySQL</span>
                     <span class="skill-tag"><i class="fas fa-drafting-compass"></i>Fusion 360</span>
-                    <span class="fas fa-ruler-combined"></i>SolidWorks</span>
+                    <span class="skill-tag"><i class="fas fa-ruler-combined"></i>SolidWorks</span>
                 </div>
             </div>
         </div>
