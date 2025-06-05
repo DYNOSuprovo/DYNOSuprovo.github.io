@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suprovo Mallick - AI/ML Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Define CSS Variables for colors */
+        :root {
+            --primary: #0FF0FC; /* Electric Cyan */
+            --background: #1A1A1D; /* Deep Charcoal */
+            --accent: #00FFAB; /* Mint Neon */
+            --alt-accent: #A020F0; /* Cyber Violet */
+            --foreground: #F2F2F2; /* Soft White */
+            --border: #2A2A2D; /* Clean Separation/Contrast */
+            --card-bg: rgba(42, 42, 45, 0.3); /* Card background with transparency */
+            --glass-bg: rgba(255, 255, 255, 0.05); /* Glassmorphism background with transparency */
+        }
+
+        /* Universal Box-sizing and Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Inter', sans-serif; /* Body text font */
+            background: var(--background); /* Main background color */
+            color: var(--foreground); /* Default text color */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            line-height: 1.6; /* Improve readability */
+        }
+
+        /* Animated Background Container */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send to back */
+            /* Radial gradients for subtle color glow */
+            background: radial-gradient(circle at 20% 80%, rgba(15, 240, 252, 0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 20%, rgba(160, 32, 240, 0.1) 0%, transparent 50%);
+        }
+
+        /* Container for floating particles */
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Keep particles within bounds */
+        }
+
+        /* Individual particle styling and animation */
+        .particle {
+            position: absolute;
+            background: var(--primary); /* Primary color for particles */
+            border-radius: 50%; /* Make them circular */
+            animation: float 15s infinite linear; /* Apply float animation */
+            opacity: 0.3; /* Slightly transparent */
+            /* Added for more visual variety */
+            box-shadow: 0 0 8px var(--primary); /* Subtle glow */
+        }
+
+        /* Keyframes for floating particle animation */
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; } /* Start from bottom, smaller, hidden */
+            10% { opacity: 0.4; transform: translateY(90vh) rotate(36deg) scale(0.7); } /* Fade in and grow */
+            50% { opacity: 0.5; transform: translateY(50vh) rotate(180deg) scale(1); } /* Fully visible, normal size */
+            90% { opacity: 0.4; transform: translateY(10vh) rotate(324deg) scale(0.7); } /* Shrink and fade out */
+            100% { transform: translateY(-10vh) rotate(360deg) scale(0.5); opacity: 0; } /* Move to top, hidden */
+        }
+
+        /* Navigation Bar Styling */
+        .navbar {
+            position: fixed; /* Fixed position */
+            top: 20px; /* Distance from top */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for perfect centering */
+            background: var(--glass-bg); /* Glassmorphism background */
+            backdrop-filter: blur(20px); /* Blur effect for glassmorphism */
+            border: 1px solid var(--border); /* Border color */
+            border-radius: 50px; /* Rounded corners */
+            padding: 12px 24px; /* Padding inside navbar */
+            z-index: 1000; /* Ensure it's on top */
+            transition: all 0.3s ease; /* Smooth transitions for hover/scroll effects */
+        }
+
+        /* Navbar style when scrolled */
+        .navbar.scrolled {
+            background: rgba(26, 26, 29, 0.9); /* Darker background on scroll */
+            box-shadow: 0 8px 32px rgba(15, 240, 252, 0.1); /* Subtle shadow */
+        }
+
+        /* Navigation Links List */
+        .nav-links {
+            display: flex; /* Flexbox for horizontal layout */
+            list-style: none; /* Remove bullet points */
+            gap: 30px; /* Space between links */
+        }
+
+        /* Individual Navigation Link Styling */
+        .nav-links a {
+            color: var(--foreground); /* Default link color */
+            text-decoration: none; /* Remove underline */
+            font-weight: 500; /* Medium font weight */
+            padding: 8px 16px; /* Padding for click area */
+            border-radius: 25px; /* Rounded buttons */
+            transition: all 0.3s ease; /* Smooth transitions */
+            position: relative;
+        }
+
+        /* Navigation Link Hover Effect */
+        .nav-links a:hover {
+            color: var(--primary); /* Primary color on hover */
+            background: rgba(15, 240, 252, 0.1); /* Light background on hover */
+        }
+
+        /* Active Navigation Link Styling */
+        .nav-links a.active {
+            color: var(--primary); /* Primary color for active link */
+            background: rgba(15, 240, 252, 0.2); /* More prominent background for active link */
+        }
+
+        /* Hero Section Styling */
+        .hero {
+            min-height: 100vh; /* Full viewport height */
+            display: flex; /* Flexbox for centering content */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            padding: 0 5%; /* Horizontal padding */
+            position: relative;
+        }
+
+        /* Hero Content Container */
+        .hero-content {
+            text-align: center; /* Center text */
+            max-width: 800px; /* Max width for content */
+        }
+
+        /* Hero Heading (Name) */
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            font-size: clamp(2.5rem, 6vw, 4rem); /* Responsive font size */
+            font-weight: 700; /* Bold font weight */
+            margin-bottom: 20px; /* Spacing below heading */
+            /* Gradient text effect */
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            /* Added text shadow for glow */
+            text-shadow: 0 0 10px rgba(15, 240, 252, 0.5);
+        }
+
+        /* Hero Subtitle */
+        .hero .subtitle {
+            font-size: 1.2rem; /* Font size for subtitle */
+            margin-bottom: 30px; /* Spacing below subtitle */
+            opacity: 0.8; /* Slightly transparent */
+        }
+
+        /* Terminal Container Styling */
+        .terminal-container {
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 12px; /* Rounded corners */
+            padding: 20px; /* Padding inside terminal */
+            margin: 30px auto; /* Margin top/bottom, auto for horizontal centering */
+            font-family: 'Courier New', monospace; /* Monospace font for terminal feel */
+            text-align: left; /* Align text left */
+            backdrop-filter: blur(10px); /* Blur effect */
+            max-width: 600px; /* Max width for terminal */
+        }
+
+        /* Terminal Header Dots */
+        .terminal-header {
+            display: flex; /* Flexbox for dots */
+            gap: 8px; /* Space between dots */
+            margin-bottom: 15px; /* Spacing below header */
+        }
+
+        /* Individual Terminal Dot */
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%; /* Circular dots */
+        }
+
+        /* Color for terminal dots */
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #28ca42; }
+
+        /* Typewriter text styling */
+        .typewriter {
+            color: var(--accent); /* Accent color for typed text */
+            border-right: 2px solid var(--primary); /* Blinking cursor */
+            animation: blink 1s infinite; /* Apply blinking animation */
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflowing text before it's typed */
+            display: inline-block; /* Make it an inline block for width calculation */
+        }
+
+        /* Keyframes for blinking cursor */
+        @keyframes blink {
+            0%, 50% { border-color: transparent; } /* Cursor off */
+            51%, 100% { border-color: var(--primary); } /* Cursor on */
+        }
+
+        /* Call to Action Buttons Container */
+        .cta-buttons {
+            display: flex; /* Flexbox for buttons */
+            gap: 20px; /* Space between buttons */
+            justify-content: center; /* Center buttons horizontally */
+            margin-top: 40px; /* Spacing above buttons */
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        }
+
+        /* Base Button Styling */
+        .btn {
+            padding: 12px 30px; /* Padding inside buttons */
+            border: none; /* No default border */
+            border-radius: 50px; /* Highly rounded corners */
+            font-weight: 600; /* Semi-bold font weight */
+            text-decoration: none; /* Remove underline */
+            transition: all 0.3s ease; /* Smooth transitions */
+            cursor: pointer; /* Pointer cursor on hover */
+            position: relative;
+            overflow: hidden; /* Hide overflow for ripple effect */
+        }
+
+        /* Primary Button Style */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent)); /* Gradient background */
+            color: var(--background); /* Text color on primary button */
+        }
+
+        /* Secondary Button Style */
+        .btn-secondary {
+            background: transparent; /* Transparent background */
+            color: var(--primary); /* Primary color for text */
+            border: 2px solid var(--primary); /* Primary color border */
+        }
+
+        /* Button Hover Effect */
+        .btn:hover {
+            transform: translateY(-2px); /* Lift button slightly */
+            box-shadow: 0 10px 30px rgba(15, 240, 252, 0.3); /* Add a shadow */
+        }
+
+        /* Ripple effect for buttons */
+        .btn .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(255, 255, 255, 0.7); /* White ripple */
+            opacity: 0; /* Hidden by default */
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* General Section Styling */
+        .section {
+            padding: 100px 5%; /* Vertical and horizontal padding */
+            max-width: 1200px; /* Max width for content within sections */
+            margin: 0 auto; /* Center sections horizontally */
+        }
+
+        /* Section Title Styling */
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            font-size: 2.5rem; /* Font size */
+            font-weight: 700; /* Bold font weight */
+            text-align: center; /* Center align title */
+            margin-bottom: 60px; /* Spacing below title */
+            color: var(--primary); /* Primary color for title */
+            text-shadow: 0 0 10px rgba(15, 240, 252, 0.5); /* Added text shadow for glow */
+        }
+
+        /* About Section Grid Layout */
+        .about-grid {
+            display: grid; /* Grid layout */
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            gap: 60px; /* Gap between columns */
+            align-items: center; /* Vertically align items in center */
+        }
+
+        /* About Section Text */
+        .about-text {
+            font-size: 1.1rem; /* Font size */
+            line-height: 1.8; /* Improve line spacing */
+        }
+
+        /* Stats Grid for About Section */
+        .stats-grid {
+            display: grid; /* Grid layout */
+            grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+            gap: 20px; /* Gap between stats cards */
+            margin-top: 30px; /* Spacing above grid */
+        }
+
+        /* Individual Stat Card */
+        .stat-card {
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 12px; /* Rounded corners */
+            padding: 20px; /* Padding inside card */
+            text-align: center; /* Center align text */
+            backdrop-filter: blur(10px); /* Blur effect */
+        }
+
+        /* Stat Number Styling */
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            font-size: 2rem; /* Font size */
+            font-weight: 700; /* Bold font weight */
+            color: var(--accent); /* Accent color */
+        }
+
+        /* Skills Section Grid Layout */
+        .skills-grid {
+            display: grid; /* Grid layout */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+            gap: 30px; /* Gap between skill categories */
+        }
+
+        /* Individual Skill Category Card */
+        .skill-category {
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 12px; /* Rounded corners */
+            padding: 30px; /* Padding inside card */
+            backdrop-filter: blur(10px); /* Blur effect */
+        }
+
+        /* Skill Category Heading */
+        .skill-category h3 {
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            color: var(--primary); /* Primary color */
+            margin-bottom: 20px; /* Spacing below heading */
+        }
+
+        /* Container for Skill Tags */
+        .skill-items {
+            display: flex; /* Flexbox for tags */
+            flex-wrap: wrap; /* Allow tags to wrap */
+            gap: 10px; /* Space between tags */
+        }
+
+        /* Individual Skill Tag Styling */
+        .skill-tag {
+            background: rgba(15, 240, 252, 0.1); /* Light background */
+            color: var(--primary); /* Primary color */
+            padding: 5px 12px; /* Padding inside tag */
+            border-radius: 20px; /* Rounded corners */
+            font-size: 0.9rem; /* Smaller font size */
+            border: 1px solid var(--primary); /* Primary color border */
+            display: inline-flex; /* Use flexbox for icon and text alignment */
+            align-items: center; /* Vertically align items */
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        /* Style for icons within skill tags */
+        .skill-tag i {
+            margin-right: 6px; /* Spacing between icon and text */
+            font-size: 0.8em; /* Slightly smaller icon relative to text */
+            color: var(--accent); /* Accent color for icons */
+        }
+
+        /* Projects Section Grid Layout */
+        .projects-grid {
+            display: grid; /* Grid layout */
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive columns */
+            gap: 30px; /* Gap between project cards */
+        }
+
+        /* Individual Project Card */
+        .project-card {
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 16px; /* Rounded corners */
+            padding: 30px; /* Padding inside card */
+            backdrop-filter: blur(10px); /* Blur effect */
+            transition: all 0.3s ease; /* Smooth transitions */
+            position: relative;
+            overflow: hidden; /* Hide overflow for pseudo-element */
+        }
+
+        /* Project Card Top Border Effect (Pseudo-element) */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%; /* Start off-screen to the left */
+            width: 100%; /* Cover the full width */
+            height: 3px; /* Height of the border */
+            background: linear-gradient(90deg, var(--primary), var(--accent)); /* Gradient for border */
+            transition: left 0.5s ease; /* Animate left property */
+        }
+
+        /* Project Card Hover Effect */
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.01); /* Lift and slightly scale */
+            box-shadow: 0 20px 40px rgba(15, 240, 252, 0.1); /* Add shadow */
+            border-color: var(--primary); /* Change border color on hover */
+        }
+
+        /* Show top border sweeping on hover */
+        .project-card:hover::before {
+            left: 0; /* Sweep into view */
+        }
+
+        /* Project Title Styling */
+        .project-title {
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            font-size: 1.3rem; /* Font size */
+            font-weight: 600; /* Semi-bold */
+            color: var(--primary); /* Primary color */
+            margin-bottom: 15px; /* Spacing below title */
+        }
+
+        /* Project Description Styling */
+        .project-description {
+            margin-bottom: 20px; /* Spacing below description */
+            opacity: 0.9; /* Slightly transparent */
+        }
+
+        /* Container for Project Tech Tags */
+        .project-tech {
+            display: flex; /* Flexbox for tags */
+            flex-wrap: wrap; /* Allow tags to wrap */
+            gap: 8px; /* Space between tags */
+            margin-bottom: 20px; /* Spacing below tech tags */
+        }
+
+        /* Individual Project Tech Tag */
+        .tech-tag {
+            background: rgba(160, 32, 240, 0.2); /* Alternate accent background */
+            color: var(--alt-accent); /* Alternate accent color */
+            padding: 4px 10px; /* Padding inside tag */
+            border-radius: 12px; /* Rounded corners */
+            font-size: 0.8rem; /* Smaller font size */
+            border: 1px solid var(--alt-accent); /* Alternate accent border */
+        }
+
+        /* Project Links Container */
+        .project-links {
+            display: flex; /* Flexbox for links */
+            gap: 15px; /* Space between links */
+        }
+
+        /* Individual Project Link Styling */
+        .project-link {
+            color: var(--accent); /* Accent color for links */
+            text-decoration: none; /* Remove underline */
+            font-weight: 500; /* Medium font weight */
+            transition: all 0.3s ease; /* Smooth transitions */
+        }
+
+        /* Project Link Hover Effect */
+        .project-link:hover {
+            color: var(--primary); /* Primary color on hover */
+        }
+
+        /* Contact Section Grid Layout */
+        .contact-grid {
+            display: grid; /* Grid layout */
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            gap: 60px; /* Gap between columns */
+        }
+
+        /* Contact Info Heading */
+        .contact-info h3 {
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
+            color: var(--primary); /* Primary color */
+            margin-bottom: 20px; /* Spacing below heading */
+        }
+
+        /* Social Links Container */
+        .social-links {
+            display: flex; /* Flexbox for links */
+            gap: 20px; /* Space between links */
+            margin-top: 30px; /* Spacing above links */
+        }
+
+        /* Individual Social Link Styling */
+        .social-link {
+            display: flex; /* Flexbox for icon centering */
+            align-items: center; /* Center icon vertically */
+            justify-content: center; /* Center icon horizontally */
+            width: 50px;
+            height: 50px;
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 50%; /* Circular shape */
+            color: var(--primary); /* Primary color for icon */
+            text-decoration: none; /* Remove underline */
+            transition: all 0.3s ease; /* Smooth transitions */
+            backdrop-filter: blur(10px); /* Blur effect */
+            font-size: 1.2rem; /* Icon size */
+            box-shadow: 0 0 5px rgba(15, 240, 252, 0.3); /* Initial subtle glow */
+        }
+
+        /* Social Link Hover Effect */
+        .social-link:hover {
+            background: var(--primary); /* Primary color background on hover */
+            color: var(--background); /* Dark text color on hover */
+            transform: translateY(-5px) scale(1.1); /* Lift and slightly scale */
+            box-shadow: 0 0 20px var(--primary); /* More pronounced glow */
+        }
+
+        /* Contact Form Styling */
+        .contact-form {
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 16px; /* Rounded corners */
+            padding: 30px; /* Padding inside form */
+            backdrop-filter: blur(10px); /* Blur effect */
+        }
+
+        /* Form Group (label + input/textarea) */
+        .form-group {
+            margin-bottom: 20px; /* Spacing below each form group */
+        }
+
+        /* Form Label Styling */
+        .form-group label {
+            display: block; /* Block level for label */
+            margin-bottom: 8px; /* Spacing below label */
+            color: var(--primary); /* Primary color for label */
+            font-weight: 500; /* Medium font weight */
+        }
+
+        /* Form Input and Textarea Styling */
+        .form-group input,
+        .form-group textarea {
+            width: 100%; /* Full width */
+            padding: 12px; /* Padding inside fields */
+            background: rgba(255, 255, 255, 0.05); /* Light transparent background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 8px; /* Rounded corners */
+            color: var(--foreground); /* Text color inside fields */
+            font-family: inherit; /* Inherit font from body */
+        }
+
+        /* Form Input/Textarea Focus Effect */
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none; /* Remove default outline */
+            border-color: var(--primary); /* Primary color border on focus */
+            box-shadow: 0 0 0 2px rgba(15, 240, 252, 0.2), 0 0 10px rgba(15, 240, 252, 0.3); /* Glow effect on focus */
+        }
+        /* Ensure textarea can be vertically resized */
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px; /* Minimum height for textarea */
+        }
+
+        /* Responsive Design Adjustments */
+        @media (max-width: 768px) {
+            /* Adjust navbar link spacing and font size */
+            .nav-links {
+                gap: 15px;
+            }
+
+            .nav-links a {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            /* Stack grid columns for about and contact sections */
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr; /* Single column */
+                gap: 30px; /* Reduced gap */
+            }
+
+            /* Stack stats grid columns */
+            .stats-grid {
+                grid-template-columns: 1fr; /* Single column */
+            }
+
+            /* Stack CTA buttons vertically */
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            /* Adjust section padding */
+            .section {
+                padding: 60px 5%;
+            }
+        }
+
+        /* Scroll Animation Styles */
+        .fade-in {
+            opacity: 0; /* Hidden by default */
+            transform: translateY(30px); /* Slightly moved down */
+            transition: all 0.6s ease; /* Smooth transition */
+        }
+
+        /* Visible state for scroll animation */
+        .fade-in.visible {
+            opacity: 1; /* Fully visible */
+            transform: translateY(0); /* Reset position */
+        }
+
+        /* Resume Section Specific Styles */
+        .resume-section {
+            text-align: center; /* Center content */
+        }
+
+        /* Resume Preview Container */
+        .resume-preview {
+            background: var(--card-bg); /* Card background */
+            border: 1px solid var(--border); /* Border */
+            border-radius: 16px; /* Rounded corners */
+            padding: 40px; /* Padding inside */
+            margin: 30px auto; /* Center the preview horizontally */
+            max-width: 800px; /* Limit width for better readability */
+            backdrop-filter: blur(10px); /* Blur effect */
+            overflow: hidden; /* Ensure content stays within */
+        }
+        /* Styling for the embedded PDF iframe */
+        .resume-preview iframe {
+            width: 100%; /* Full width of its container */
+            height: 600px; /* Fixed height, adjust as needed */
+            border: none; /* No border */
+            border-radius: 8px; /* Rounded corners */
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation Layer -->
+    <div class="bg-animation">
+        <div class="floating-particles" id="particles"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#skills" class="nav-link">Skills</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#resume" class="nav-link">Resume</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section: Introduction and Call to Action -->
+    <section id="home" class="hero">
+        <div class="hero-content fade-in">
+            <h1>Suprovo Mallick</h1>
+            <p class="subtitle">AI/ML Developer • GenAI Enthusiast • Problem Solver</p>
+            
+            <!-- Terminal-style Introduction -->
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot yellow"></div>
+                    <div class="terminal-dot green"></div>
+                </div>
+                <div class="terminal-content">
+                    <span style="color: var(--accent);">suprovo@ai-developer:~$</span> 
+                    <span class="typewriter" id="typewriter"></span>
+                </div>
+            </div>
+
+            <!-- Call to Action Buttons -->
+            <div class="cta-buttons">
+                <a href="#projects" class="btn btn-primary">View My Work</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section: Personal Introduction and Stats -->
+    <section id="about" class="section">
+        <h2 class="section-title fade-in">About Me</h2>
+        <div class="about-grid">
+            <div class="about-text fade-in">
+                <p>I'm a passionate AI/ML developer from India, currently pursuing Computer Science at KIIT. I specialize in building intelligent applications using cutting-edge technologies like LangChain, Gemini API, and RAG architectures.</p>
+                
+                <p>My journey in AI began with curiosity about how machines can understand and generate human language. Today, I create practical solutions that bridge the gap between complex AI models and real-world applications.</p>
+
+                <p>When I'm not coding, you'll find me exploring the latest research papers, contributing to open-source projects, or sharing knowledge with the developer community.</p>
+            </div>
+            
+            <!-- Key Stats -->
+            <div class="stats-grid fade-in">
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div>AI Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">150+</div>
+                    <div>LeetCode Problems</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5⭐</div>
+                    <div>HackerRank</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5+</div>
+                    <div>Certifications</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section: My Expertise -->
+    <section id="skills" class="section">
+        <h2 class="section-title fade-in">My Expertise</h2>
+        <div class="skills-grid">
+            <!-- Languages Category -->
+            <div class="skill-category fade-in">
+                <h3>Languages</h3>
+                <div class="skill-items">
+                    <span class="skill-tag"><i class="fab fa-python"></i>Python</span>
+                    <span class="skill-tag"><i class="fab fa-java"></i>Java</span>
+                    <span class="skill-tag"><i class="fas fa-cogs"></i>C</span>
+                    <span class="skill-tag"><i class="fas fa-cogs"></i>C++</span>
+                </div>
+            </div>
+            <!-- AI/ML Libraries Category -->
+            <div class="skill-category fade-in">
+                <h3>AI/ML Libraries</h3>
+                <div class="skill-items">
+                    <span class="skill-tag"><i class="fas fa-brain"></i>TensorFlow</span>
+                    <span class="skill-tag"><i class="fas fa-robot"></i>PyTorch</span>
+                    <span class="skill-tag"><i class="fas fa-project-diagram"></i>scikit-learn</span>
+                    <span class="skill-tag"><i class="fas fa-calculator"></i>NumPy</span>
+                    <span class="skill-tag"><i class="fas fa-table"></i>Pandas</span>
+                    <span class="skill-tag"><i class="fas fa-chart-line"></i>Matplotlib</span>
+                    <span class="skill-tag"><i class="fas fa-chart-bar"></i>Seaborn</span>
+                </div>
+            </div>
+            <!-- GenAI & LLM Ops Category -->
+            <div class="skill-category fade-in">
+                <h3>GenAI & LLM Ops</h3>
+                <div class="skill-items">
+                    <span class="skill-tag"><i class="fas fa-link"></i>LangChain</span>
+                    <span class="skill-tag"><i class="fas fa-star-of-life"></i>Gemini API</span>
+                    <span class="skill-tag"><i class="fas fa-bolt"></i>Groq</span>
+                    <span class="skill-tag"><i class="fas fa-box-open"></i>Hugging Face Transformers</span>
+                    <span class="skill-tag"><i class="fas fa-sitemap"></i>RAG Architecture</span>
+                    <span class="skill-tag"><i class="fas fa-database"></i>ChromaDB</span>
+                    <span class="skill-tag"><i class="fas fa-cube"></i>FAISS</span>
+                    <span class="skill-tag"><i class="fas fa-download"></i>Ollama</span>
+                    <span class="skill-tag"><i class="fas fa-language"></i>Sentence Transformers</span>
+                    <span class="skill-tag"><i class="fas fa-cloud"></i>Vertex AI</span>
+                </div>
+            </div>
+            <!-- Tools & Platforms Category -->
+            <div class="skill-category fade-in">
+                <h3>Tools & Platforms</h3>
+                <div class="skill-items">
+                    <span class="skill-tag"><i class="fab fa-git-alt"></i>Git</span>
+                    <span class="skill-tag"><i class="fab fa-github"></i>GitHub</span>
+                    <span class="skill-tag"><i class="fab fa-docker"></i>Docker</span>
+                    <span class="skill-tag"><i class="fas fa-stream"></i>Streamlit</span>
+                    <span class="skill-tag"><i class="fas fa-rocket"></i>FastAPI</span>
+                    <span class="skill-tag"><i class="fab fa-dev"></i>Flutter</span>
+                    <span class="skill-tag"><i class="fab fa-google"></i>Google Cloud</span>
+                    <span class="skill-tag"><i class="fas fa-code"></i>VS Code</span>
+                    <span class="skill-tag"><i class="fas fa-flask"></i>Jupyter Lab</span>
+                    <span class="skill-tag"><i class="fas fa-book"></i>Google Colab</span>
+                    <span class="skill-tag"><i class="fas fa-paper-plane"></i>Postman</span>
+                    <span class="skill-tag"><i class="fas fa-database"></i>MySQL</span>
+                    <span class="skill-tag"><i class="fas fa-drafting-compass"></i>Fusion 360</span>
+                    <span class="skill-tag"><i class="fas fa-ruler-combined"></i>SolidWorks</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section: Showcase of Work -->
+    <section id="projects" class="section">
+        <h2 class="section-title fade-in">My Projects</h2>
+        <div class="projects-grid">
+            <!-- Project Card 1: Hindu Scripture Q&A App -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">Hindu Scripture Q&A App</h3>
+                <p class="project-description">A cross-platform RAG-based assistant providing answers from Hindu scriptures, built with Flutter and FastAPI.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">Flutter</span>
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">LangChain</span>
+                    <span class="tech-tag">ChromaDB</span>
+                    <span class="tech-tag">Hugging Face</span>
+                    <span class="tech-tag">RAG</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+
+            <!-- Project Card 2: AI Expense Advisor (India Edition) -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">AI Expense Advisor (India Edition)</h3>
+                <p class="project-description">A budgeting app powered by Gemini API, offering sarcastic GenAI advice for managing expenses, integrated with LangChain and RAG.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">Streamlit</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">LangChain</span>
+                    <span class="tech-tag">Hugging Face Embeddings</span>
+                    <span class="tech-tag">RAG</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+
+            <!-- Project Card 3: RAG-based Diet Advisor -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">RAG-based Diet Advisor</h3>
+                <p class="project-description">A GenAI assistant that provides context-aware diet suggestions by parsing PDFs, creating embeddings, and using RetrievalQA.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">LangChain</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">ChromaDB</span>
+                    <span class="tech-tag">Hugging Face</span>
+                    <span class="tech-tag">RetrievalQA</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/DYNOSuprovo/Diet-Suggest" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+
+            <!-- Project Card 4: ProblemSolverQP -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">ProblemSolverQP</h3>
+                <p class="project-description">A Python automation tool designed to parse academic question papers and generate solutions.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Automation</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+
+            <!-- Project Card 5: Churn Prediction App -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">Churn Prediction App</h3>
+                <p class="project-description">A real-time churn predictor using TensorFlow and scikit-learn, deployed with a user-friendly Streamlit interface.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">TensorFlow</span>
+                    <span class="tech-tag">scikit-learn</span>
+                    <span class="tech-tag">Streamlit</span>
+                    <span class="tech-tag">Deep Learning</span>
+                </div>
+                <div class="project-links">
+                    <!-- Placeholder for demo/GitHub link -->
+                </div>
+            </div>
+
+            <!-- Project Card 6: Car Price Prediction -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">Car Price Prediction</h3>
+                <p class="project-description">A full ML pipeline for car price prediction, involving EDA, regression modeling, and hyperparameter tuning.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">NumPy</span>
+                    <span class="tech-tag">Pandas</span>
+                    <span class="tech-tag">Matplotlib</span>
+                    <span class="tech-tag">scikit-learn</span>
+                    <span class="tech-tag">Regression</span>
+                </div>
+                <div class="project-links">
+                    <!-- Placeholder for demo/GitHub link -->
+                </div>
+            </div>
+            
+            <!-- Project Card 7: Diabetes Prediction Model -->
+            <div class="project-card fade-in">
+                <h3 class="project-title">Diabetes Prediction Model</h3>
+                <p class="project-description">A classification model developed to predict diabetes using StandardScaler and medical datasets.</p>
+                <div class="project-tech">
+                    <span class="tech-tag">scikit-learn</span>
+                    <span class="tech-tag">Classification</span>
+                    <span class="tech-tag">StandardScaler</span>
+                </div>
+                <div class="project-links">
+                    <!-- Placeholder for demo/GitHub link -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Section: Download and Preview -->
+    <section id="resume" class="section resume-section">
+        <h2 class="section-title fade-in">My Resume</h2>
+        <div class="resume-preview fade-in">
+            <p>Download my full resume:</p>
+            <a href="Suprovo_Mallick_Resume.pdf" target="_blank" class="btn btn-primary" download>Download Resume (PDF)</a>
+            <p style="margin-top: 30px;">Or view it below:</p>
+            <!-- Ensure 'Suprovo_Mallick_Resume.pdf' is in the same directory for this to work -->
+            <iframe src="Suprovo_Mallick_Resume.pdf" title="Suprovo Mallick Resume"></iframe>
+        </div>
+    </section>
+
+    <!-- Contact Section: Get in Touch and Socials -->
+    <section id="contact" class="section">
+        <h2 class="section-title fade-in">Get In Touch</h2>
+        <div class="contact-grid">
+            <div class="contact-info fade-in">
+                <h3>Let's Connect!</h3>
+                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel free to reach out!</p>
+                <p style="margin-top: 20px;"><strong>Email:</strong> <a href="mailto:supromallick3@gmail.com" style="color: var(--primary); text-decoration: none;">supromallick3@gmail.com</a></p>
+                <!-- Mobile number removed as requested -->
+                <!-- <p><strong>Phone:</strong> +91 8276028272</p> -->
+
+                <!-- Social Media Links -->
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/suprovo-mallick-abb582287/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/DYNOSuprovo" target="_blank" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://twitter.com/suprovo1307" target="_blank" class="social-link" title="Twitter/X"><i class="fab fa-twitter"></i></a>
+                    <a href="https://leetcode.com/supromallick3/" target="_blank" class="social-link" title="LeetCode"><i class="fas fa-code"></i></a>
+                    <a href="https://www.hackerrank.com/profile/supromallick3" target="_blank" class="social-link" title="HackerRank"><i class="fab fa-hackerrank"></i></a>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form fade-in">
+                <h3>Send Me a Message</h3>
+                <!-- Replace 'YOUR_FORM_SUBMISSION_ENDPOINT' with your actual form submission URL -->
+                <form action="YOUR_FORM_SUBMISSION_ENDPOINT" method="POST">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript for Interactivity and Animations -->
+    <script>
+        // Particle animation: Dynamically create and animate background particles
+        const particlesContainer = document.getElementById('particles');
+        const numParticles = 70; // Increased number of particles for denser effect
+
+        for (let i = 0; i < numParticles; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            // Randomize width and height for visual variety
+            const size = Math.random() * 3 + 1; // Size between 1px and 4px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            // Randomly position particles across the viewport
+            particle.style.left = `${Math.random() * 100}vw`;
+            // Randomize animation duration and delay for varied movement
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`; // Duration between 10s and 20s
+            particle.style.animationDelay = `${Math.random() * -15}s`; // Negative delay to start particles at different stages
+            particlesContainer.appendChild(particle);
+        }
+
+        // Navbar scroll effect: Change navbar style on scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // If scrolled down more than 50px
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default anchor click behavior
+                // Scroll to the target section smoothly
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Typewriter effect for the hero subtitle
+        const typewriterText = "I build intelligent applications.";
+        const typewriterElement = document.getElementById('typewriter');
+        let i = 0; // Current character index
+        let isDeleting = false; // Flag to indicate if text is being deleted
+        let speed = 80; // Typing speed in milliseconds
+
+        function typeWriter() {
+            const currentText = typewriterText.substring(0, i);
+            typewriterElement.textContent = currentText;
+
+            if (!isDeleting && i < typewriterText.length) {
+                // Typing forward
+                i++;
+                setTimeout(typeWriter, speed);
+            } else if (isDeleting && i > 0) {
+                // Deleting backward
+                i--;
+                setTimeout(typeWriter, speed / 2); // Faster deleting
+            } else if (!isDeleting && i === typewriterText.length) {
+                // End of typing, pause then start deleting
+                isDeleting = true;
+                setTimeout(typeWriter, 1500); // Pause before deleting
+            } else if (isDeleting && i === 0) {
+                // End of deleting, pause then start typing again
+                isDeleting = false;
+                setTimeout(typeWriter, 500); // Pause before re-typing
+            }
+        }
+        typeWriter(); // Start the typewriter effect
+
+        // Ripple effect for buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+
+                // Calculate position of the ripple relative to the button
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+
+                // Append ripple and remove it after animation
+                this.appendChild(ripple);
+                ripple.addEventListener('animationend', () => {
+                    ripple.remove();
+                });
+            });
+        });
+
+
+        // Scroll animation (fade-in): Elements fade and slide up as they enter viewport
+        const faders = document.querySelectorAll('.fade-in'); // Select all elements with 'fade-in' class
+
+        const appearOptions = {
+            threshold: 0.2, // When 20% of the element is visible
+            rootMargin: "0px 0px -50px 0px" // Start animation 50px before it's fully on screen
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(
+            entries,
+            appearOnScroll
+        ) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return; // If not intersecting, do nothing
+                } else {
+                    entry.target.classList.add('visible'); // Add 'visible' class to trigger animation
+                    appearOnScroll.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        },
+        appearOptions);
+
+        // Observe each 'fade-in' element
+        faders.forEach(fader => {
+            appearOnScroll.observe(fader);
+        });
+
+        // Active navigation link on scroll (Scrollspy): Highlight current section in navbar
+        const sections = document.querySelectorAll('section[id]'); // All sections with an ID
+        const navLinks = document.querySelectorAll('.nav-link'); // All navigation links
+
+        window.addEventListener('scroll', () => {
+            let current = ''; // Variable to store the ID of the current section
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop; // Top position of the section
+                const sectionHeight = section.clientHeight; // Height of the section
+                // Check if the current scroll position is within the section, adjusting for navbar height
+                if (pageYOffset >= sectionTop - navbar.offsetHeight - 20) {
+                    current = section.getAttribute('id'); // Set current section ID
+                }
+            });
+
+            // Remove 'active' class from all links and add to the current one
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
