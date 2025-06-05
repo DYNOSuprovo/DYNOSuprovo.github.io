@@ -95,7 +95,7 @@
             transition: all 0.3s ease; /* Smooth transitions for hover/scroll effects */
             display: flex; /* Use flexbox to align logo and nav links */
             align-items: center; /* Vertically center items */
-            justify-content: space-between; /* Distribute space between logo and links */
+            /* Removed justify-content: space-between; to allow custom positioning */
             width: 90%; /* Make navbar responsive */
             max-width: 1000px; /* Max width for navbar */
         }
@@ -110,8 +110,16 @@
         .navbar-logo {
             height: 40px; /* Set a fixed height for the logo */
             width: auto; /* Maintain aspect ratio */
-            margin-right: 20px; /* Space between logo and nav links */
+            margin-right: auto; /* Push logo to the left, and push the wrapper to the right */
             filter: drop-shadow(0 0 5px var(--primary)); /* Subtle glow for the logo */
+        }
+
+        /* New wrapper for navigation links to center them */
+        .nav-links-wrapper {
+            flex-grow: 1; /* Allows the wrapper to take available space */
+            display: flex; /* Make it a flex container */
+            justify-content: center; /* Centers the actual nav-links ul within this wrapper */
+            align-items: center; /* Vertically centers the nav links */
         }
 
         /* Navigation Links List */
@@ -800,14 +808,16 @@
     <nav class="navbar" id="navbar">
         <!-- Logo added here -->
         <img src="https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/image.png?raw=true" alt="Dragon Logo" class="navbar-logo">
-        <ul class="nav-links">
-            <li><a href="#home" class="nav-link active">Home</a></li>
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#resume" class="nav-link">Resume</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
+        <div class="nav-links-wrapper"> <!-- New wrapper for navigation links -->
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#resume" class="nav-link">Resume</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Hero Section: Introduction and Call to Action -->
