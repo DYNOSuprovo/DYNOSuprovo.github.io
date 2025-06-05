@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suprovo Mallick - AI/ML Developer</title>
-    <!-- Favicon link updated to represent 'my logo' -->
+    <!-- Favicon link updated to use your GitHub logo -->
     <link rel="icon" type="image/png" href="https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/image.png?raw=true">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -93,6 +93,11 @@
             padding: 12px 24px; /* Padding inside navbar */
             z-index: 1000; /* Ensure it's on top */
             transition: all 0.3s ease; /* Smooth transitions for hover/scroll effects */
+            display: flex; /* Use flexbox to align logo and nav links */
+            align-items: center; /* Vertically center items */
+            justify-content: space-between; /* Distribute space between logo and links */
+            width: 90%; /* Make navbar responsive */
+            max-width: 1000px; /* Max width for navbar */
         }
 
         /* Navbar style when scrolled */
@@ -101,11 +106,21 @@
             box-shadow: 0 8px 32px rgba(15, 240, 252, 0.1); /* Subtle shadow */
         }
 
+        /* Logo Styling in Navbar */
+        .navbar-logo {
+            height: 40px; /* Set a fixed height for the logo */
+            width: auto; /* Maintain aspect ratio */
+            margin-right: 20px; /* Space between logo and nav links */
+            filter: drop-shadow(0 0 5px var(--primary)); /* Subtle glow for the logo */
+        }
+
         /* Navigation Links List */
         .nav-links {
             display: flex; /* Flexbox for horizontal layout */
             list-style: none; /* Remove bullet points */
             gap: 30px; /* Space between links */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
         }
 
         /* Individual Navigation Link Styling */
@@ -382,7 +397,7 @@
 
         /* Skill Category Heading */
         .skill-category h3 {
-            font-family: 'Space Grootesk', sans-serif; /* Heading font */
+            font-family: 'Space Grotesk', sans-serif; /* Heading font */
             color: var(--primary); /* Primary color */
             margin-bottom: 20px; /* Spacing below heading */
         }
@@ -658,6 +673,12 @@
             .section {
                 padding: 60px 5%;
             }
+
+            /* Adjust logo size on smaller screens */
+            .navbar-logo {
+                height: 30px; /* Smaller logo on mobile */
+                margin-right: 10px; /* Less margin */
+            }
         }
 
         /* Scroll Animation Styles */
@@ -777,6 +798,8 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar" id="navbar">
+        <!-- Logo added here -->
+        <img src="https://generativelanguage.googleapis.com/v1beta/files/uploaded:ChatGPT Image Jun 6, 2025, 02_19_58 AM.jpg-d2834f52-d04f-4f73-a885-0ab84ba791ae" alt="Dragon Logo" class="navbar-logo">
         <ul class="nav-links">
             <li><a href="#home" class="nav-link active">Home</a></li>
             <li><a href="#about" class="nav-link">About</a></li>
@@ -1148,7 +1171,7 @@
         <div class="contact-grid">
             <div class="contact-info fade-in">
                 <h3>Let's Connect!</h3>
-                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel free to reach out!</p>
+                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel to reach out!</p>
                 <p style="margin-top: 20px;"><strong>Email:</strong> <a href="mailto:supromallick3@gmail.com" style="color: var(--primary); text-decoration: none;">supromallick3@gmail.com</a></p>
                 <!-- Mobile number removed as requested -->
                 <!-- <p><strong>Phone:</strong> +91 8276028272</p> -->
