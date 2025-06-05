@@ -640,6 +640,72 @@
             border: none; /* No border */
             border-radius: 8px; /* Rounded corners */
         }
+
+        /* Certifications section styling */
+        .certifications-list {
+            list-style: none; /* Remove default list bullets */
+            padding: 0;
+            margin-top: 30px;
+            text-align: left; /* Align text within list items to the left */
+        }
+
+        .certifications-list li {
+            background: rgba(42, 42, 45, 0.2); /* Slightly lighter background than main card */
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .certifications-list li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(15, 240, 252, 0.15);
+            border-color: var(--primary);
+        }
+
+        .cert-title {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .cert-issuer {
+            color: var(--foreground);
+            opacity: 0.9;
+        }
+
+        .cert-date {
+            font-size: 0.9rem;
+            color: var(--foreground);
+            opacity: 0.7;
+        }
+
+        .cert-skills {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        .cert-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .cert-link i {
+            margin-right: 8px;
+        }
+
+        .cert-link:hover {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -781,7 +847,7 @@
                     <span class="skill-tag"><i class="fas fa-paper-plane"></i>Postman</span>
                     <span class="skill-tag"><i class="fas fa-database"></i>MySQL</span>
                     <span class="skill-tag"><i class="fas fa-drafting-compass"></i>Fusion 360</span>
-                    <span class="skill-tag"><i class="fas fa-ruler-combined"></i>SolidWorks</span>
+                    <span class="fas fa-ruler-combined"></i>SolidWorks</span>
                 </div>
             </div>
         </div>
@@ -911,6 +977,108 @@
             <!-- Ensure 'Suprovo_Mallick_Resume.pdf' is in the same directory for this to work -->
             <iframe src="Suprovo_Mallick_Resume.pdf" title="Suprovo Mallick Resume"></iframe>
         </div>
+
+        <h2 class="section-title fade-in" style="margin-top: 80px;">Licenses & Certifications</h2>
+        <ul class="certifications-list fade-in">
+            <li>
+                <div class="cert-title">Supervised Machine Learning: Regression and Classification</div>
+                <div class="cert-issuer">DeepLearning.AI, Stanford University</div>
+                <div class="cert-date">Issued May 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Python (Programming Language) · Machine Learning</div>
+                <a href="https://www.coursera.org/account/accomplishments/certificate/AFZPVCBNNWFZ" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Python for Data Science, AI & Development</div>
+                <div class="cert-issuer">IBM</div>
+                <div class="cert-date">Issued May 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Python (Programming Language)</div>
+                <a href="https://www.coursera.org/account/accomplishments/certificate/UH8KMBNEUK7L" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Implementing Page Navigation in a Flutter Application</div>
+                <div class="cert-issuer">Google Cloud</div>
+                <div class="cert-date">Issued May 2024</div>
+                <div class="cert-skills">Skills: Computer Science</div>
+                <a href="https://www.coursera.org/account/accomplishments/certificate/ETAY2X5DFH5V" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Introduction to Front-End Development</div>
+                <div class="cert-issuer">Meta</div>
+                <div class="cert-date">Issued May 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Web Development</div>
+                <a href="https://www.coursera.org/account/accomplishments/certificate/53YU9V6Y67K9" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Career Essentials in Generative AI</div>
+                <div class="cert-issuer">Microsoft and LinkedIn</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Ethics</div>
+                <!-- No direct credential URL provided, so no link -->
+            </li>
+            <li>
+                <div class="cert-title">Digital Skills: Artificial Intelligence</div>
+                <div class="cert-issuer">Accenture</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science</div>
+                <!-- No direct credential URL provided, so no link -->
+            </li>
+            <li>
+                <div class="cert-title">Generative AI: The Evolution of Thoughtful Online Search</div>
+                <div class="cert-issuer">LinkedIn</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Artificial Intelligence for Business · Computer Science · Search Engine Technology</div>
+                <!-- No direct credential URL provided, so no link -->
+            </li>
+            <li>
+                <div class="cert-title">Google AI Essentials</div>
+                <div class="cert-issuer">Google</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Artificial Intelligence (AI) · Generative AI · Generative AI Tools</div>
+                <a href="https://www.credly.com/badges/KGLM9TZEJ8C4" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Introduction to Generative AI Learning Path Specialization</div>
+                <div class="cert-issuer">Google Cloud</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Generative AI</div>
+                <a href="https://www.credly.com/badges/WWZDLR7QL85S" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Introduction to Large Language Models</div>
+                <div class="cert-issuer">Google Cloud</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science</div>
+                <a href="https://www.coursera.org/account/accomplishments/certificate/D5ELP7BHZ224" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Learning Microsoft 365 Copilot</div>
+                <div class="cert-issuer">LinkedIn</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Artificial Intelligence for Business · Computer Science · Microsoft 365 · Microsoft Copilot</div>
+                <!-- No direct credential URL provided, so no link -->
+            </li>
+            <li>
+                <div class="cert-title">Machine Learning with PySpark: Customer Churn Analysis</div>
+                <div class="cert-issuer">Coursera Project Network</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Python (Programming Language) · Machine Learning</div>
+                <a href="https://www.coursera.org/account/accomplishments/certificate/GWQWBUJR4WJY" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Show credential</a>
+            </li>
+            <li>
+                <div class="cert-title">Streamlining Your Work with Microsoft Copilot</div>
+                <div class="cert-issuer">LinkedIn</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Productivity Improvement · Microsoft Copilot</div>
+                <!-- No direct credential URL provided, so no link -->
+            </li>
+            <li>
+                <div class="cert-title">What Is Generative AI?</div>
+                <div class="cert-issuer">LinkedIn</div>
+                <div class="cert-date">Issued Jul 2024</div>
+                <div class="cert-skills">Skills: Computer Science · Artificial Intelligence (AI) · Generative AI · Generative AI Tools</div>
+                <!-- No direct credential URL provided, so no link -->
+            </li>
+        </ul>
     </section>
 
     <!-- Contact Section: Get in Touch and Socials -->
