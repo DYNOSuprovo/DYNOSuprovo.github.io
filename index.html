@@ -8,6 +8,8 @@
     <link rel="icon" type="image/png" href="https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/image.png?raw=true">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Three.js for 3D visualization in Hero section -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* Define CSS Variables for colors */
         :root {
@@ -138,7 +140,7 @@
             font-weight: 500; /* Medium font weight */
             padding: 8px 16px; /* Padding for click area */
             border-radius: 25px; /* Rounded buttons */
-            transition: all 0.3s ease; /* Smooth transitions */
+            transition: all 0.3s ease; /* Smooth transitions for hover/scroll effects */
             position: relative;
         }
 
@@ -162,16 +164,37 @@
             justify-content: center; /* Center horizontally */
             padding: 0 5%; /* Horizontal padding */
             position: relative;
+            gap: 50px; /* Gap between left and right halves */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
 
-        /* Hero Content Container */
-        .hero-content {
-            text-align: center; /* Center text */
-            max-width: 800px; /* Max width for content */
-            /* Ensure alignment for the subtitle and terminal container */
+        /* Hero Left Half (3D Canvas) */
+        .hero-left {
+            flex: 1; /* Take available space */
+            min-width: 300px; /* Minimum width for responsiveness */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 400px; /* Fixed height for the canvas */
+        }
+
+        #neural-network-canvas {
+            width: 100%;
+            height: 100%;
+            display: block; /* Remove extra space below canvas */
+            border-radius: 15px; /* Rounded corners for the canvas */
+            box-shadow: 0 0 30px rgba(0, 255, 171, 0.5); /* Mint Neon glow */
+        }
+
+        /* Hero Right Half (Content) */
+        .hero-right {
+            flex: 1; /* Take available space */
+            min-width: 300px; /* Minimum width for responsiveness */
+            text-align: left; /* Align text left */
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center children horizontally when using flex column */
+            align-items: flex-start; /* Align items to the start */
         }
 
         /* Hero Heading (Name) */
@@ -179,7 +202,7 @@
             font-family: 'Space Grotesk', sans-serif; /* Heading font */
             font-size: clamp(2.5rem, 6vw, 4rem); /* Responsive font size */
             font-weight: 700; /* Bold font weight */
-            margin-bottom: 20px; /* Spacing below heading */
+            margin-bottom: 10px; /* Spacing below heading */
             /* Gradient text effect */
             background: linear-gradient(135deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
@@ -192,8 +215,21 @@
         /* Hero Subtitle */
         .hero .subtitle {
             font-size: 1.2rem; /* Font size for subtitle */
-            margin-bottom: 30px; /* Spacing below subtitle */
+            margin-bottom: 20px; /* Spacing below subtitle */
             opacity: 0.8; /* Slightly transparent */
+        }
+
+        /* Role Badge Styling */
+        .role-badge {
+            background: var(--alt-accent); /* Cyber Violet background */
+            color: var(--foreground); /* Soft White text */
+            padding: 8px 15px;
+            border-radius: 25px; /* More rounded */
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 30px; /* Spacing below badge */
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.5); /* Cyber Violet glow */
+            display: inline-block; /* Ensure padding applies correctly */
         }
 
         /* Terminal Container Styling */
@@ -250,7 +286,7 @@
         .cta-buttons {
             display: flex; /* Flexbox for buttons */
             gap: 20px; /* Space between buttons */
-            justify-content: center; /* Center buttons horizontally */
+            justify-content: flex-start; /* Align buttons to the start */
             margin-top: 40px; /* Spacing above buttons */
             flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
         }
@@ -329,7 +365,7 @@
             display: grid; /* Grid layout */
             grid-template-columns: 1fr 1fr; /* Two equal columns */
             gap: 60px; /* Gap between columns */
-            align-items: center; /* Vertically align items in center */
+            align-items: flex-start; /* Align items to the top */
         }
 
         /* About Section Text */
@@ -338,240 +374,374 @@
             line-height: 1.8; /* Improve line spacing */
         }
 
-        /* Stats Grid for About Section */
-        .stats-grid {
-            display: grid; /* Grid layout */
-            grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-            gap: 20px; /* Gap between stats cards */
-            margin-top: 30px; /* Spacing above grid */
-            place-items: center; /* Center grid items horizontally and vertically within their cells */
-            /* Ensure the grid itself is centered within its parent column */
-            justify-content: center; /* This centers the grid columns if space allows */
-        }
-
-        /* Individual Stat Card */
-        .stat-card {
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 12px; /* Rounded corners */
-            padding: 20px; /* Padding inside card */
-            text-align: center; /* Center align text */
-            backdrop-filter: blur(10px); /* Blur effect */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition for hover */
-            width: 100%; /* Ensure cards take full width of their grid cell */
-            max-width: 250px; /* Optional: limit individual card width for uniformity */
-            /* 3D Properties */
-            transform-style: preserve-3d;
-            transform: translateZ(0); /* Ensure GPU acceleration for initial state */
-            will-change: transform, box-shadow; /* Hint to browser for performance */
-        }
-
-        /* Stat Card Hover Effect - Subtle 3D and Neon */
-        .stat-card:hover {
-            transform: translateY(-5px) scale(1.02) rotateX(3deg) rotateY(3deg) translateZ(10px); /* Reduced 3D effect */
-            box-shadow: 0 0 15px var(--primary), /* Subtle inner glow */
-                        0 0 30px var(--accent), /* Subtle outer glow */
-                        0 5px 20px rgba(0, 0, 0, 0.4); /* Lighter main shadow */
-        }
-
-        /* Stat Number Styling */
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
-            font-size: 2rem; /* Font size */
-            font-weight: 700; /* Bold font weight */
-            color: var(--accent); /* Accent color */
-        }
-
-        /* Skills Section Grid Layout */
-        .skills-grid {
-            display: grid; /* Grid layout */
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
-            gap: 30px; /* Gap between skill categories */
-        }
-
-        /* Individual Skill Category Card */
-        .skill-category {
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 12px; /* Rounded corners */
-            padding: 30px; /* Padding inside card */
-            backdrop-filter: blur(10px); /* Blur effect */
-            /* 3D Properties */
-            transform-style: preserve-3d;
-            transform: translateZ(0); /* Ensure GPU acceleration for initial state */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-            will-change: transform, box-shadow; /* Hint to browser for performance */
-        }
-
-        /* Skill Category Heading */
-        .skill-category h3 {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
-            color: var(--primary); /* Primary color */
-            margin-bottom: 20px; /* Spacing below heading */
-        }
-
-        /* Container for Skill Tags */
-        .skill-items {
-            display: flex; /* Flexbox for tags */
-            flex-wrap: wrap; /* Allow tags to wrap */
-            gap: 10px; /* Space between tags */
-        }
-
-        /* Individual Skill Tag Styling */
-        .skill-tag {
-            background: rgba(15, 240, 252, 0.1); /* Light background */
-            color: var(--primary); /* Primary color */
-            padding: 5px 12px; /* Padding inside tag */
-            border-radius: 20px; /* Rounded corners */
-            font-size: 0.9rem; /* Smaller font size */
-            border: 1px solid var(--primary); /* Primary color border */
-            display: inline-flex; /* Use flexbox for icon and text alignment */
-            align-items: center; /* Vertically align items */
-            white-space: nowrap; /* Prevent text wrapping */
-            transition: all 0.3s ease; /* Smooth transition for hover */
-        }
-
-        /* Skill Tag Hover Effect */
-        .skill-tag:hover {
-            transform: translateY(-2px); /* Lift tag slightly */
-            box-shadow: 0 5px 15px rgba(15, 240, 252, 0.2); /* Add subtle shadow on hover */
-            border-color: var(--accent); /* Change border color on hover */
-            border-width: 2px; /* Make border thicker on hover for prominence */
-        }
-
-        /* Style for icons within skill tags */
-        .skill-tag i {
-            margin-right: 6px; /* Spacing between icon and text */
-            font-size: 0.8em; /* Slightly smaller icon relative to text */
-            color: var(--accent); /* Accent color for icons */
-        }
-        /* Skill Category Card Hover Effect - Subtle 3D and Neon */
-        .skill-category:hover {
-            transform: translateY(-5px) scale(1.01) rotateX(2deg) rotateY(2deg) translateZ(5px); /* Reduced 3D effect */
-            box-shadow: 0 0 10px var(--primary), /* Subtle inner glow */
-                        0 0 20px var(--alt-accent), /* Subtle outer glow */
-                        0 5px 20px rgba(0, 0, 0, 0.4); /* Lighter main shadow */
-        }
-
-        /* Projects Section Grid Layout */
-        .projects-grid {
-            display: grid; /* Grid layout */
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive columns */
-            gap: 30px; /* Gap between project cards */
-        }
-
-        /* Individual Project Card */
-        .project-card {
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 16px; /* Rounded corners */
-            padding: 30px; /* Padding inside card */
-            backdrop-filter: blur(10px); /* Blur effect */
-            transition: all 0.3s ease; /* Smooth transitions */
+        /* Timeline Styling */
+        .timeline {
             position: relative;
-            overflow: hidden; /* Hide overflow for pseudo-element */
-            /* 3D Properties */
-            transform-style: preserve-3d;
-            transform: translateZ(0); /* Ensure GPU acceleration for initial state */
-            will-change: transform, box-shadow; /* Hint to browser for performance */
+            padding-left: 20px; /* Space for the line */
+            border-left: 2px solid var(--border); /* Vertical line */
         }
 
-        /* Project Card Top Border Effect (Pseudo-element) */
-        .project-card::before {
+        .timeline-item {
+            margin-bottom: 40px;
+            position: relative;
+            padding-left: 30px; /* Space for dot */
+        }
+
+        .timeline-item::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%; /* Start off-screen to the left */
-            width: 100%; /* Cover the full width */
-            height: 3px; /* Height of the border */
-            background: linear-gradient(90deg, var(--primary), var(--accent)); /* Gradient for border */
-            transition: left 0.5s ease; /* Animate left property */
+            left: -8px; /* Position dot on the line */
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent); /* Dot color */
+            border-radius: 50%;
+            border: 2px solid var(--background); /* Background color border */
+            box-shadow: 0 0 10px var(--accent); /* Glow effect */
         }
 
-        /* Project Card Hover Effect - Subtle 3D and Neon */
-        .project-card:hover {
-            transform: translateY(-5px) scale(1.01) rotateX(3deg) rotateY(-3deg) translateZ(10px); /* Reduced 3D effect */
-            box-shadow: 0 0 15px var(--accent), /* Subtle inner glow */
-                        0 0 30px var(--primary), /* Subtle outer glow */
-                        0 5px 20px rgba(0, 0, 0, 0.4); /* Lighter main shadow */
+        .timeline-year {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            position: relative; /* For floating effect */
+            display: inline-block; /* To apply transform */
+            transition: transform 0.3s ease;
+        }
+        .timeline-year:hover {
+            transform: translateY(-5px); /* Floating effect on hover */
         }
 
-        /* Show top border sweeping on hover */
-        .project-card:hover::before {
-            left: 0; /* Sweep into view */
+        .timeline-description {
+            font-size: 1rem;
+            opacity: 0.9;
         }
 
-        /* Project Title Styling */
-        .project-title {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
-            font-size: 1.3rem; /* Font size */
-            font-weight: 600; /* Semi-bold */
-            color: var(--primary); /* Primary color */
-            margin-bottom: 15px; /* Spacing below title */
+        /* Skills Section Tabs */
+        .skills-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        /* Project Description Styling */
-        .project-description {
-            margin-bottom: 20px; /* Spacing below description */
-            opacity: 0.9; /* Slightly transparent */
+        .skill-tab {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 10px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--foreground);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
 
-        /* Container for Project Tech Tags */
-        .project-tech {
-            display: flex; /* Flexbox for tags */
-            flex-wrap: wrap; /* Allow tags to wrap */
-            gap: 8px; /* Space between tags */
-            margin-bottom: 20px; /* Spacing below tech tags */
+        .skill-tab:hover {
+            background: rgba(15, 240, 252, 0.1);
+            color: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
         }
 
-        /* Individual Project Tech Tag */
-        .tech-tag {
-            background: rgba(160, 32, 240, 0.2); /* Alternate accent background */
-            color: var(--alt-accent); /* Alternate accent color */
-            padding: 4px 10px; /* Padding inside tag */
-            border-radius: 12px; /* Rounded corners */
-            font-size: 0.8rem; /* Smaller font size */
-            border: 1px solid var(--alt-accent); /* Alternate accent border */
+        .skill-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--background);
+            box-shadow: 0 0 20px var(--primary);
+            transform: translateY(-2px);
         }
 
-        /* Project Links Container */
-        .project-links {
-            display: flex; /* Flexbox for links */
-            gap: 15px; /* Space between links */
-        }
-
-        /* Individual Project Link Styling */
-        .project-link {
-            color: var(--accent); /* Accent color for links */
-            text-decoration: none; /* Remove underline */
-            font-weight: 500; /* Medium font weight */
-            transition: all 0.3s ease; /* Smooth transitions */
-        }
-
-        /* Project Link Hover Effect */
-        .project-link:hover {
-            color: var(--primary); /* Primary color on hover */
-        }
-
-        /* Contact Section Grid Layout */
-        .contact-grid {
+        /* Skills Grid for Tab Content */
+        .skills-grid {
             display: grid; /* Grid layout */
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            gap: 60px; /* Gap between columns */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
+            gap: 20px; /* Gap between skill items */
+            transition: opacity 0.5s ease-in-out; /* Smooth transition for tab content */
         }
 
-        /* Contact Info Heading */
-        .contact-info h3 {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
-            color: var(--primary); /* Primary color */
-            margin-bottom: 20px; /* Spacing below heading */
+        .skill-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Social Links Container */
+        .skill-item:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 15px var(--alt-accent), 0 0 30px rgba(160, 32, 240, 0.3);
+        }
+
+        .skill-item i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .skill-item span {
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        /* Projects Section Carousel */
+        .projects-carousel-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            overflow: hidden; /* Hide overflowing slides */
+        }
+
+        .projects-carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out; /* Smooth slide transition */
+        }
+
+        .project-slide {
+            min-width: 100%; /* Each slide takes full width of container */
+            display: flex;
+            flex-wrap: wrap; /* Allow content to wrap */
+            gap: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-image-container {
+            flex: 1;
+            min-width: 300px; /* Minimum width for image */
+            text-align: center;
+        }
+
+        .project-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(15, 240, 252, 0.3); /* Primary glow */
+        }
+
+        .project-details {
+            flex: 1;
+            min-width: 300px; /* Minimum width for details */
+        }
+
+        .project-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .project-description {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tech-tag {
+            background: rgba(160, 32, 240, 0.2);
+            color: var(--alt-accent);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid var(--alt-accent);
+        }
+
+        .project-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: var(--primary);
+            color: var(--background);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .carousel-nav.prev {
+            left: -60px; /* Position outside the container */
+        }
+
+        .carousel-nav.next {
+            right: -60px; /* Position outside the container */
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Resume Section */
+        .resume-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        .resume-summary {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .resume-summary h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .resume-preview-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            overflow: hidden; /* For scrollable iframe */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .resume-preview-container iframe {
+            width: 100%;
+            height: 500px; /* Fixed height for preview */
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Contact Section (Chat Style) */
+        .chat-contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2); /* Slightly darker background for chat history */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-message {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--background);
+            align-self: flex-end; /* Align user messages to the right */
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-message.ai {
+            background: rgba(160, 32, 240, 0.2);
+            color: var(--foreground);
+            align-self: flex-start; /* Align AI messages to the left */
+            border-bottom-left-radius: 0;
+            border: 1px solid var(--alt-accent);
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--foreground);
+            font-family: inherit;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(15, 240, 252, 0.2);
+        }
+
+        /* Social Links (retained from previous, ensure glowing borders) */
         .social-links {
             display: flex; /* Flexbox for links */
             gap: 20px; /* Space between links */
             margin-top: 30px; /* Spacing above links */
+            justify-content: center; /* Center social links */
         }
 
         /* Individual Social Link Styling */
@@ -600,54 +770,102 @@
             box-shadow: 0 0 20px var(--primary); /* More pronounced glow */
         }
 
-        /* Contact Form Styling */
-        .contact-form {
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 16px; /* Rounded corners */
-            padding: 30px; /* Padding inside form */
-            backdrop-filter: blur(10px); /* Blur effect */
+        /* Command Bar */
+        .command-bar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 20px rgba(0, 255, 171, 0.3); /* Accent glow */
+            z-index: 1001; /* Above navbar */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 10px;
         }
 
-        /* Form Group (label + input/textarea) */
-        .form-group {
-            margin-bottom: 20px; /* Spacing below each form group */
+        .command-bar.active {
+            display: flex;
         }
 
-        /* Form Label Styling */
-        .form-group label {
-            display: block; /* Block level for label */
-            margin-bottom: 8px; /* Spacing below label */
-            color: var(--primary); /* Primary color for label */
-            font-weight: 500; /* Medium font weight */
+        .command-bar input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
         }
 
-        /* Form Input and Textarea Styling */
-        .form-group input,
-        .form-group textarea {
-            width: 100%; /* Full width */
-            padding: 12px; /* Padding inside fields */
-            background: rgba(255, 255, 255, 0.05); /* Light transparent background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 8px; /* Rounded corners */
-            color: var(--foreground); /* Text color inside fields */
-            font-family: inherit; /* Inherit font from body */
+        .command-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(15, 240, 252, 0.3);
         }
 
-        /* Form Input/Textarea Focus Effect */
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none; /* Remove default outline */
-            border-color: var(--primary); /* Primary color border on focus */
-            box-shadow: 0 0 0 2px rgba(15, 240, 252, 0.2), 0 0 10px rgba(15, 240, 252, 0.3); /* Glow effect on focus */
+        .command-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        /* Ensure textarea can be vertically resized */
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px; /* Minimum height for textarea */
+
+        .command-suggestion {
+            background: rgba(160, 32, 240, 0.1);
+            color: var(--alt-accent);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .command-suggestion:hover {
+            background: var(--alt-accent);
+            color: var(--background);
         }
 
         /* Responsive Design Adjustments */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column; /* Stack hero sections vertically */
+                text-align: center;
+                gap: 30px;
+            }
+            .hero-right {
+                align-items: center; /* Center content in right half when stacked */
+            }
+            .cta-buttons {
+                justify-content: center; /* Center buttons when stacked */
+            }
+            .about-grid,
+            .resume-grid {
+                grid-template-columns: 1fr; /* Single column for about and resume */
+                gap: 40px;
+            }
+            .project-slide {
+                flex-direction: column; /* Stack project image and details */
+                text-align: center;
+            }
+            .project-details {
+                align-items: center; /* Center project details */
+            }
+            .project-image-container {
+                order: -1; /* Move image above details on mobile */
+            }
+            .carousel-nav.prev {
+                left: 10px; /* Adjust carousel nav position */
+            }
+            .carousel-nav.next {
+                right: 10px; /* Adjust carousel nav position */
+            }
+        }
+
         @media (max-width: 768px) {
             /* Adjust navbar link spacing and font size */
             .nav-links {
@@ -687,6 +905,18 @@
                 height: 30px; /* Smaller logo on mobile */
                 margin-right: 10px; /* Less margin */
             }
+            .skills-tabs {
+                justify-content: flex-start; /* Align tabs left if many */
+            }
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Smaller skill items */
+            }
+            .skill-item i {
+                font-size: 2rem;
+            }
+            .project-slide {
+                padding: 20px; /* Less padding for project cards */
+            }
         }
 
         /* Scroll Animation Styles */
@@ -705,30 +935,6 @@
         /* Resume Section Specific Styles */
         .resume-section {
             text-align: center; /* Center content */
-        }
-
-        /* Resume Preview Container */
-        .resume-preview {
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 16px; /* Rounded corners */
-            padding: 40px; /* Padding inside */
-            margin: 30px auto; /* Center the preview horizontally */
-            max-width: 800px; /* Limit width for better readability */
-            backdrop-filter: blur(10px); /* Blur effect */
-            overflow: hidden; /* Ensure content stays within */
-            
-            /* Enhanced centering for child elements */
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center all flex items horizontally */
-        }
-        /* Styling for the embedded PDF iframe */
-        .resume-preview iframe {
-            width: 100%; /* Full width of its container */
-            height: 600px; /* Fixed height, adjust as needed */
-            border: none; /* No border */
-            border-radius: 8px; /* Rounded corners */
         }
 
         /* Certifications section styling */
@@ -796,6 +1002,75 @@
         .cert-link:hover {
             color: var(--primary);
         }
+
+        /* Modal for AI Demo */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            backdrop-filter: blur(5px); /* Blur background */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(15, 240, 252, 0.5); /* Primary glow */
+            position: relative;
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--foreground);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .modal-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .modal-content p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-content .btn {
+            display: block;
+            margin: 0 auto;
+            width: fit-content;
+        }
     </style>
 </head>
 <body>
@@ -822,12 +1097,17 @@
 
     <!-- Hero Section: Introduction and Call to Action -->
     <section id="home" class="hero">
-        <div class="hero-content fade-in">
+        <div class="hero-left fade-in">
+            <!-- Canvas for 3D Neural Network Visualization -->
+            <canvas id="neural-network-canvas"></canvas>
+        </div>
+        <div class="hero-right fade-in">
             <h1>Suprovo Mallick</h1>
             <p class="subtitle">AI/ML Developer • GenAI Enthusiast • Problem Solver</p>
+            <span class="role-badge">GenAI Developer | RAG Specialist</span>
             
             <!-- Terminal-style Introduction -->
-            <div class="terminal-container">
+            <div class="terminal-container" style="width: 100%; max-width: 500px;">
                 <div class="terminal-header">
                     <div class="terminal-dot red"></div>
                     <div class="terminal-dot yellow"></div>
@@ -842,234 +1122,292 @@
             <!-- Call to Action Buttons -->
             <div class="cta-buttons">
                 <a href="#projects" class="btn btn-primary">View My Work</a>
-                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                <button id="open-ai-demo-modal" class="btn btn-secondary">Try My AI Demo</button>
             </div>
         </div>
     </section>
 
-    <!-- About Section: Personal Introduction and Stats -->
+    <!-- About Section: Personal Introduction and Story Timeline -->
     <section id="about" class="section">
         <h2 class="section-title fade-in">About Me</h2>
         <div class="about-grid">
             <div class="about-text fade-in">
-                <p>I'm a passionate AI/ML developer from India, currently pursuing Computer Science at KIIT. I specialize in building intelligent applications using cutting-edge technologies like LangChain, Gemini API, and RAG architectures.</p>
+                <p>I'm a passionate AI/ML developer from India, currently pursuing Computer Science at KIIT. My journey in AI began with a deep curiosity about how machines can understand and generate human language, evolving into a mission to build intelligent applications that solve real-world problems.</p>
                 
-                <p>My journey in AI began with curiosity about how machines can understand and generate human language. Today, I create practical solutions that bridge the gap between complex AI models and real-world applications.</p>
+                <p>I specialize in leveraging cutting-edge technologies like LangChain, the Gemini API, and Retrieval-Augmented Generation (RAG) architectures to create dynamic and responsive solutions. I thrive on bringing innovative ideas to life through code and am constantly exploring the latest advancements in the field.</p>
 
-                <p>When I'm not coding, you'll find me exploring the latest research papers, contributing to open-source projects, or sharing knowledge with the developer community.</p>
+                <p>When I'm not immersed in development, you'll find me delving into new research papers, contributing to open-source projects, or sharing knowledge with the vibrant developer community.</p>
             </div>
             
-            <!-- Key Stats -->
-            <div class="stats-grid fade-in">
-                <div class="stat-card">
-                    <div class="stat-number">5+</div>
-                    <div>AI Projects</div>
+            <!-- Story Timeline -->
+            <div class="timeline fade-in">
+                <div class="timeline-item">
+                    <div class="timeline-year">2023</div>
+                    <div class="timeline-description">Began my deep dive into Machine Learning, mastering foundational concepts and algorithms.</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">150+</div>
-                    <div>LeetCode Problems</div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024 (Early)</div>
+                    <div class="timeline-description">Developed my first end-to-end RAG system, integrating LLMs with external knowledge bases.</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">5⭐</div>
-                    <div>HackerRank</div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024 (Mid)</div>
+                    <div class="timeline-description">Launched several GenAI-powered applications, including a Hindu Scripture Q&A app.</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">5+</div>
-                    <div>Certifications</div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <div class="timeline-description">Focused on advanced LLM Ops, deploying scalable AI solutions and exploring new frontiers in GenAI.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills Section: My Expertise -->
+    <!-- Skills Section: My Expertise (Tabbed Interface) -->
     <section id="skills" class="section">
         <h2 class="section-title fade-in">My Expertise</h2>
-        <div class="skills-grid">
-            <!-- Languages Category -->
-            <div class="skill-category fade-in">
-                <h3>Languages</h3>
-                <div class="skill-items">
-                    <span class="skill-tag"><i class="fab fa-python"></i>Python</span>
-                    <span class="skill-tag"><i class="fab fa-java"></i>Java</span>
-                    <span class="skill-tag"><i class="fas fa-cogs"></i>C</span>
-                    <span class="skill-tag"><i class="fas fa-cogs"></i>C++</span>
-                </div>
+        <div class="skills-tabs fade-in">
+            <button class="skill-tab active" data-category="all">All Skills</button>
+            <button class="skill-tab" data-category="languages">Languages</button>
+            <button class="skill-tab" data-category="ai-ml">AI/ML Libraries</button>
+            <button class="skill-tab" data-category="genai">GenAI & LLM Ops</button>
+            <button class="skill-tab" data-category="tools">Tools & Platforms</button>
+        </div>
+        <div id="skills-container" class="skills-grid fade-in">
+            <!-- Skills will be dynamically loaded/filtered here -->
+            <!-- Languages -->
+            <div class="skill-item" data-category="languages">
+                <i class="fab fa-python"></i><span>Python</span>
             </div>
-            <!-- AI/ML Libraries Category -->
-            <div class="skill-category fade-in">
-                <h3>AI/ML Libraries</h3>
-                <div class="skill-items">
-                    <span class="skill-tag"><i class="fas fa-brain"></i>TensorFlow</span>
-                    <span class="skill-tag"><i class="fas fa-robot"></i>PyTorch</span>
-                    <span class="skill-tag"><i class="fas fa-project-diagram"></i>scikit-learn</span>
-                    <span class="skill-tag"><i class="fas fa-calculator"></i>NumPy</span>
-                    <span class="skill-tag"><i class="fas fa-table"></i>Pandas</span>
-                    <span class="skill-tag"><i class="fas fa-chart-line"></i>Matplotlib</span>
-                    <span class="skill-tag"><i class="fas fa-chart-bar"></i>Seaborn</span>
-                </div>
+            <div class="skill-item" data-category="languages">
+                <i class="fab fa-java"></i><span>Java</span>
             </div>
-            <!-- GenAI & LLM Ops Category -->
-            <div class="skill-category fade-in">
-                <h3>GenAI & LLM Ops</h3>
-                <div class="skill-items">
-                    <span class="skill-tag"><i class="fas fa-link"></i>LangChain</span>
-                    <span class="skill-tag"><i class="fas fa-star-of-life"></i>Gemini API</span>
-                    <span class="skill-tag"><i class="fas fa-bolt"></i>Groq</span>
-                    <span class="skill-tag"><i class="fas fa-box-open"></i>Hugging Face Transformers</span>
-                    <span class="skill-tag"><i class="fas fa-sitemap"></i>RAG Architecture</span>
-                    <span class="skill-tag"><i class="fas fa-database"></i>ChromaDB</span>
-                    <span class="skill-tag"><i class="fas fa-cube"></i>FAISS</span>
-                    <span class="skill-tag"><i class="fas fa-download"></i>Ollama</span>
-                    <span class="skill-tag"><i class="fas fa-language"></i>Sentence Transformers</span>
-                    <span class="skill-tag"><i class="fas fa-cloud"></i>Vertex AI</span>
-                </div>
+            <div class="skill-item" data-category="languages">
+                <i class="fas fa-cogs"></i><span>C</span>
             </div>
-            <!-- Tools & Platforms Category -->
-            <div class="skill-category fade-in">
-                <h3>Tools & Platforms</h3>
-                <div class="skill-items">
-                    <span class="skill-tag"><i class="fab fa-git-alt"></i>Git</span>
-                    <span class="skill-tag"><i class="fab fa-github"></i>GitHub</span>
-                    <span class="skill-tag"><i class="fab fa-docker"></i>Docker</span>
-                    <span class="skill-tag"><i class="fas fa-stream"></i>Streamlit</span>
-                    <span class="skill-tag"><i class="fas fa-rocket"></i>FastAPI</span>
-                    <span class="skill-tag"><i class="fab fa-dev"></i>Flutter</span>
-                    <span class="skill-tag"><i class="fab fa-google"></i>Google Cloud</span>
-                    <span class="skill-tag"><i class="fas fa-code"></i>VS Code</span>
-                    <span class="skill-tag"><i class="fas fa-flask"></i>Jupyter Lab</span>
-                    <span class="skill-tag"><i class="fas fa-book"></i>Google Colab</span>
-                    <span class="skill-tag"><i class="fas fa-paper-plane"></i>Postman</span>
-                    <span class="skill-tag"><i class="fas fa-database"></i>MySQL</span>
-                    <span class="skill-tag"><i class="fas fa-drafting-compass"></i>Fusion 360</span>
-                    <span class="skill-tag"><i class="fas fa-ruler-combined"></i>SolidWorks</span>
-                </div>
+            <div class="skill-item" data-category="languages">
+                <i class="fas fa-cogs"></i><span>C++</span>
+            </div>
+            <!-- AI/ML Libraries -->
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-brain"></i><span>TensorFlow</span>
+            </div>
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-robot"></i><span>PyTorch</span>
+            </div>
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-project-diagram"></i><span>scikit-learn</span>
+            </div>
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-calculator"></i><span>NumPy</span>
+            </div>
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-table"></i><span>Pandas</span>
+            </div>
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-chart-line"></i><span>Matplotlib</span>
+            </div>
+            <div class="skill-item" data-category="ai-ml">
+                <i class="fas fa-chart-bar"></i><span>Seaborn</span>
+            </div>
+            <!-- GenAI & LLM Ops -->
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-link"></i><span>LangChain</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-star-of-life"></i><span>Gemini API</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-bolt"></i><span>Groq</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-box-open"></i><span>Hugging Face</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-sitemap"></i><span>RAG Arch.</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-database"></i><span>ChromaDB</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-cube"></i><span>FAISS</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-download"></i><span>Ollama</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-language"></i><span>Sentence Trans.</span>
+            </div>
+            <div class="skill-item" data-category="genai">
+                <i class="fas fa-cloud"></i><span>Vertex AI</span>
+            </div>
+            <!-- Tools & Platforms -->
+            <div class="skill-item" data-category="tools">
+                <i class="fab fa-git-alt"></i><span>Git</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fab fa-github"></i><span>GitHub</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fab fa-docker"></i><span>Docker</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-stream"></i><span>Streamlit</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-rocket"></i><span>FastAPI</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fab fa-dev"></i><span>Flutter</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fab fa-google"></i><span>Google Cloud</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-code"></i><span>VS Code</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-flask"></i><span>Jupyter Lab</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-book"></i><span>Google Colab</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-paper-plane"></i><span>Postman</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-database"></i><span>MySQL</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-drafting-compass"></i><span>Fusion 360</span>
+            </div>
+            <div class="skill-item" data-category="tools">
+                <i class="fas fa-ruler-combined"></i><span>SolidWorks</span>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section: Showcase of Work -->
+    <!-- Projects Section: Spotlight Carousel -->
     <section id="projects" class="section">
         <h2 class="section-title fade-in">My Projects</h2>
-        <div class="projects-grid">
-            <!-- Project Card 1: Hindu Scripture Q&A App -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">Hindu Scripture Q&A App</h3>
-                <p class="project-description">A cross-platform RAG-based assistant providing answers from Hindu scriptures, built with Flutter and FastAPI.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">Flutter</span>
-                    <span class="tech-tag">FastAPI</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">LangChain</span>
-                    <span class="tech-tag">ChromaDB</span>
-                    <span class="tech-tag">Hugging Face</span>
-                    <span class="tech-tag">RAG</span>
+        <div class="projects-carousel-container fade-in">
+            <div class="projects-carousel" id="projects-carousel">
+                <!-- Project Slide 1: Hindu Scripture Q&A App -->
+                <div class="project-slide">
+                    <div class="project-image-container">
+                        <img src="https://placehold.co/400x300/0FF0FC/1A1A1D?text=Hindu+App" alt="Hindu Scripture Q&A App" class="project-image">
+                    </div>
+                    <div class="project-details">
+                        <h3 class="project-title">Hindu Scripture Q&A App</h3>
+                        <p class="project-description">A cross-platform RAG-based assistant providing answers from Hindu scriptures, built with Flutter and FastAPI.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Flutter</span>
+                            <span class="tech-tag">FastAPI</span>
+                            <span class="tech-tag">Gemini API</span>
+                            <span class="tech-tag">LangChain</span>
+                            <span class="tech-tag">ChromaDB</span>
+                            <span class="tech-tag">Hugging Face</span>
+                            <span class="tech-tag">RAG</span>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
+                            <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="btn btn-secondary">View Code</a>
+                            <button class="btn btn-secondary ai-summary-btn" data-project="Hindu Scripture Q&A App">AI Summary</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="project-links">
-                    <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
 
-            <!-- Project Card 2: AI Expense Advisor (India Edition) -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">AI Expense Advisor (India Edition)</h3>
-                <p class="project-description">A budgeting app powered by Gemini API, offering sarcastic GenAI advice for managing expenses, integrated with LangChain and RAG.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">Streamlit</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">LangChain</span>
-                    <span class="tech-tag">Hugging Face Embeddings</span>
-                    <span class="tech-tag">RAG</span>
+                <!-- Project Slide 2: AI Expense Advisor (India Edition) -->
+                <div class="project-slide">
+                    <div class="project-image-container">
+                        <img src="https://placehold.co/400x300/00FFAB/1A1A1D?text=Expense+Advisor" alt="AI Expense Advisor" class="project-image">
+                    </div>
+                    <div class="project-details">
+                        <h3 class="project-title">AI Expense Advisor (India Edition)</h3>
+                        <p class="project-description">A budgeting app powered by Gemini API, offering sarcastic GenAI advice for managing expenses, integrated with LangChain and RAG.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Streamlit</span>
+                            <span class="tech-tag">Gemini API</span>
+                            <span class="tech-tag">LangChain</span>
+                            <span class="tech-tag">Hugging Face Embeddings</span>
+                            <span class="tech-tag">RAG</span>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
+                            <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="btn btn-secondary">View Code</a>
+                            <button class="btn btn-secondary ai-summary-btn" data-project="AI Expense Advisor (India Edition)">AI Summary</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="project-links">
-                    <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
 
-            <!-- Project Card 3: RAG-based Diet Advisor -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">RAG-based Diet Advisor</h3>
-                <p class="project-description">A GenAI assistant that provides context-aware diet suggestions by parsing PDFs, creating embeddings, and using RetrievalQA.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">LangChain</span>
-                    <span class="tech-tag">Gemini API</span>
-                    <span class="tech-tag">ChromaDB</span>
-                    <span class="tech-tag">Hugging Face</span>
-                    <span class="tech-tag">RetrievalQA</span>
+                <!-- Project Slide 3: RAG-based Diet Advisor -->
+                <div class="project-slide">
+                    <div class="project-image-container">
+                        <img src="https://placehold.co/400x300/A020F0/1A1A1D?text=Diet+Advisor" alt="RAG-based Diet Advisor" class="project-image">
+                    </div>
+                    <div class="project-details">
+                        <h3 class="project-title">RAG-based Diet Advisor</h3>
+                        <p class="project-description">A GenAI assistant that provides context-aware diet suggestions by parsing PDFs, creating embeddings, and using RetrievalQA.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">LangChain</span>
+                            <span class="tech-tag">Gemini API</span>
+                            <span class="tech-tag">ChromaDB</span>
+                            <span class="tech-tag">Hugging Face</span>
+                            <span class="tech-tag">RetrievalQA</span>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="https://github.com/DYNOSuprovo/Diet-Suggest" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
+                            <a href="https://github.com/DYNOSuprovo/Diet-Suggest" target="_blank" class="btn btn-secondary">View Code</a>
+                            <button class="btn btn-secondary ai-summary-btn" data-project="RAG-based Diet Advisor">AI Summary</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="project-links">
-                    <a href="https://github.com/DYNOSuprovo/Diet-Suggest" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
 
-            <!-- Project Card 4: ProblemSolverQP -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">ProblemSolverQP</h3>
-                <p class="project-description">A Python automation tool designed to parse academic question papers and generate solutions.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">Python</span>
-                    <span class="tech-tag">Automation</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="project-link"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
-
-            <!-- Project Card 5: Churn Prediction App -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">Churn Prediction App</h3>
-                <p class="project-description">A real-time churn predictor using TensorFlow and scikit-learn, deployed with a user-friendly Streamlit interface.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">TensorFlow</span>
-                    <span class="tech-tag">scikit-learn</span>
-                    <span class="tech-tag">Streamlit</span>
-                    <span class="tech-tag">Deep Learning</span>
-                </div>
-                <div class="project-links">
-                    <!-- Placeholder for demo/GitHub link -->
+                <!-- Project Slide 4: ProblemSolverQP -->
+                <div class="project-slide">
+                    <div class="project-image-container">
+                        <img src="https://placehold.co/400x300/0FF0FC/1A1A1D?text=ProblemSolverQP" alt="ProblemSolverQP" class="project-image">
+                    </div>
+                    <div class="project-details">
+                        <h3 class="project-title">ProblemSolverQP</h3>
+                        <p class="project-description">A Python automation tool designed to parse academic question papers and generate solutions.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Automation</span>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
+                            <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="btn btn-secondary">View Code</a>
+                            <button class="btn btn-secondary ai-summary-btn" data-project="ProblemSolverQP">AI Summary</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Project Card 6: Car Price Prediction -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">Car Price Prediction</h3>
-                <p class="project-description">A full ML pipeline for car price prediction, involving EDA, regression modeling, and hyperparameter tuning.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">NumPy</span>
-                    <span class="tech-tag">Pandas</span>
-                    <span class="tech-tag">Matplotlib</span>
-                    <span class="tech-tag">scikit-learn</span>
-                    <span class="tech-tag">Regression</span>
-                </div>
-                <div class="project-links">
-                    <!-- Placeholder for demo/GitHub link -->
-                </div>
-            </div>
-            
-            <!-- Project Card 7: Diabetes Prediction Model -->
-            <div class="project-card fade-in">
-                <h3 class="project-title">Diabetes Prediction Model</h3>
-                <p class="project-description">A classification model developed to predict diabetes using StandardScaler and medical datasets.</p>
-                <div class="project-tech">
-                    <span class="tech-tag">scikit-learn</span>
-                    <span class="tech-tag">Classification</span>
-                    <span class="tech-tag">StandardScaler</span>
-                </div>
-                <div class="project-links">
-                    <!-- Placeholder for demo/GitHub link -->
-                </div>
-            </div>
+            <div class="carousel-nav prev" id="carousel-prev"><i class="fas fa-chevron-left"></i></div>
+            <div class="carousel-nav next" id="carousel-next"><i class="fas fa-chevron-right"></i></div>
+            <div class="carousel-dots" id="carousel-dots"></div>
         </div>
     </section>
 
     <!-- Resume Section: Download and Preview -->
     <section id="resume" class="section resume-section">
-        <h2 class="section-title fade-in">My Resume</h2>
-        <div class="resume-preview fade-in">
-            <p>Download my full resume:</p>
-            <a href="Suprovo_Mallick_Resume.pdf" target="_blank" class="btn btn-primary" download>Download Resume (PDF)</a>
-            <p style="margin-top: 30px;">Or view it below:</p>
-            <!-- Ensure 'Suprovo_Mallick_Resume.pdf' is in the same directory for this to work -->
-            <iframe src="Suprovo_Mallick_Resume.pdf" title="Suprovo Mallick Resume"></iframe>
+        <h2 class="section-title fade-in">My Resume & Certifications</h2>
+        <div class="resume-grid">
+            <div class="resume-summary fade-in">
+                <h3>Personal Summary & Highlights</h3>
+                <p>As a driven AI/ML Developer, I bring a strong foundation in machine learning, deep learning, and generative AI. My expertise spans building intelligent applications, optimizing models, and implementing RAG architectures for enhanced context awareness.</p>
+                <p style="margin-top: 10px;">Key highlights include:</p>
+                <ul style="list-style: disc; margin-left: 20px; margin-top: 10px;">
+                    <li>Developed and deployed RAG-based AI assistants using LangChain and Gemini API.</li>
+                    <li>Proficient in Python, TensorFlow, PyTorch, and various data science libraries.</li>
+                    <li>Strong problem-solving skills demonstrated through competitive programming.</li>
+                    <li>Committed to continuous learning and open-source contributions.</li>
+                </ul>
+                <a href="Suprovo_Mallick_Resume.pdf" target="_blank" class="btn btn-primary" download style="margin-top: 30px;">Download Resume (PDF)</a>
+            </div>
+            <div class="resume-preview-container fade-in">
+                <h3>Resume Preview</h3>
+                <!-- Ensure 'Suprovo_Mallick_Resume.pdf' is in the same directory for this to work -->
+                <iframe src="Suprovo_Mallick_Resume.pdf" title="Suprovo Mallick Resume"></iframe>
+            </div>
         </div>
 
         <h2 class="section-title fade-in" style="margin-top: 80px;">Licenses & Certifications</h2>
@@ -1175,49 +1513,58 @@
         </ul>
     </section>
 
-    <!-- Contact Section: Get in Touch and Socials -->
+    <!-- Contact Section: Get in Touch and Socials (Chat Style) -->
     <section id="contact" class="section">
-        <h2 class="section-title fade-in">Get In Touch</h2>
-        <div class="contact-grid">
-            <div class="contact-info fade-in">
-                <h3>Let's Connect!</h3>
-                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel to reach out!</p>
-                <p style="margin-top: 20px;"><strong>Email:</strong> <a href="mailto:supromallick3@gmail.com" style="color: var(--primary); text-decoration: none;">supromallick3@gmail.com</a></p>
-                <!-- Mobile number removed as requested -->
-                <!-- <p><strong>Phone:</strong> +91 8276028272</p> -->
-
-                <!-- Social Media Links -->
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/suprovo-mallick-abb582287/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://github.com/DYNOSuprovo" target="_blank" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://twitter.com/suprovo1307" target="_blank" class="social-link" title="Twitter/X"><i class="fab fa-twitter"></i></a>
-                    <a href="https://leetcode.com/supromallick3/" target="_blank" class="social-link" title="LeetCode"><i class="fas fa-code"></i></a>
-                    <a href="https://www.hackerrank.com/profile/supromallick3" target="_blank" class="social-link" title="HackerRank"><i class="fab fa-hackerrank"></i></a>
-                </div>
+        <h2 class="section-title fade-in">Let's Chat!</h2>
+        <div class="chat-contact-container fade-in">
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-message ai">Hello! How can I help you today?</div>
             </div>
-
-            <!-- Contact Form -->
-            <div class="contact-form fade-in">
-                <h3>Send Me a Message</h3>
-                <!-- Replace 'YOUR_FORM_SUBMISSION_ENDPOINT' with your actual form submission URL -->
-                <form action="YOUR_FORM_SUBMISSION_ENDPOINT" method="POST">
-                    <div class="form-group">
-                        <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Your Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Your Message</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type your message here..." />
+                <button id="send-chat-btn" class="btn btn-primary">Send</button>
+            </div>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/suprovo-mallick-abb582287/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/DYNOSuprovo" target="_blank" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://twitter.com/suprovo1307" target="_blank" class="social-link" title="Twitter/X"><i class="fab fa-twitter"></i></a>
+                <a href="https://leetcode.com/supromallick3/" target="_blank" class="social-link" title="LeetCode"><i class="fas fa-code"></i></a>
+                <a href="https://www.hackerrank.com/profile/supromallick3" target="_blank" class="social-link" title="HackerRank"><i class="fab fa-hackerrank"></i></a>
             </div>
         </div>
     </section>
+
+    <!-- AI Demo Modal -->
+    <div id="ai-demo-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>AI Demo Coming Soon!</h3>
+            <p>This feature is under development. Stay tuned for an interactive AI demonstration!</p>
+            <button class="btn btn-primary" onclick="document.getElementById('ai-demo-modal').style.display='none'">Got It!</button>
+        </div>
+    </div>
+
+    <!-- AI Summary Modal -->
+    <div id="ai-summary-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>AI Summary</h3>
+            <p id="ai-summary-text">Generating summary...</p>
+            <button class="btn btn-primary" onclick="document.getElementById('ai-summary-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <!-- Command Bar -->
+    <div class="command-bar" id="command-bar">
+        <input type="text" id="command-input" placeholder="Type a command (e.g., 'projects', 'resume', 'contact'). Press Esc to close." />
+        <div class="command-suggestions">
+            <span class="command-suggestion" data-command="projects">Projects</span>
+            <span class="command-suggestion" data-command="resume">Resume</span>
+            <span class="command-suggestion" data-command="contact">Contact</span>
+            <span class="command-suggestion" data-command="about">About</span>
+            <span class="command-suggestion" data-command="skills">Skills</span>
+        </div>
+    </div>
 
     <!-- JavaScript for Interactivity and Animations -->
     <script>
@@ -1262,32 +1609,43 @@
         });
 
         // Typewriter effect for the hero subtitle
-        const typewriterText = "I build intelligent applications.";
+        const typewriterTexts = [
+            "I build intelligent applications.",
+            "I craft GenAI solutions.",
+            "I solve complex problems with AI.",
+            "I innovate with LLMs and RAG."
+        ];
         const typewriterElement = document.getElementById('typewriter');
-        let i = 0; // Current character index
-        let isDeleting = false; // Flag to indicate if text is being deleted
-        let speed = 80; // Typing speed in milliseconds
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 80;
+        let deleteSpeed = 40;
+        let pauseBeforeDelete = 1500;
+        let pauseBeforeType = 500;
 
         function typeWriter() {
-            const currentText = typewriterText.substring(0, i);
-            typewriterElement.textContent = currentText;
+            const currentFullText = typewriterTexts[textIndex];
+            const currentDisplayedText = currentFullText.substring(0, charIndex);
+            typewriterElement.textContent = currentDisplayedText;
 
-            if (!isDeleting && i < typewriterText.length) {
+            if (!isDeleting && charIndex < currentFullText.length) {
                 // Typing forward
-                i++;
-                setTimeout(typeWriter, speed);
-            } else if (isDeleting && i > 0) {
+                charIndex++;
+                setTimeout(typeWriter, typeSpeed);
+            } else if (isDeleting && charIndex > 0) {
                 // Deleting backward
-                i--;
-                setTimeout(typeWriter, speed / 2); // Faster deleting
-            } else if (!isDeleting && i === typewriterText.length) {
+                charIndex--;
+                setTimeout(typeWriter, deleteSpeed);
+            } else if (!isDeleting && charIndex === currentFullText.length) {
                 // End of typing, pause then start deleting
                 isDeleting = true;
-                setTimeout(typeWriter, 1500); // Pause before deleting
-            } else if (isDeleting && i === 0) {
+                setTimeout(typeWriter, pauseBeforeDelete);
+            } else if (isDeleting && charIndex === 0) {
                 // End of deleting, pause then start typing again
                 isDeleting = false;
-                setTimeout(typeWriter, 500); // Pause before re-typing
+                textIndex = (textIndex + 1) % typewriterTexts.length; // Move to next text
+                setTimeout(typeWriter, pauseBeforeType);
             }
         }
         typeWriter(); // Start the typewriter effect
@@ -1369,6 +1727,339 @@
                 }
             });
         });
+
+        // 3D Neural Network Visualization (Hero Section)
+        let scene, camera, renderer, nodes = [], connections = [];
+        const canvas = document.getElementById('neural-network-canvas');
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+            scene.add(ambientLight);
+
+            // Add directional light
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene.add(directionalLight);
+
+            // Create nodes (spheres)
+            const nodeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FFAB, emissive: 0x00FFAB, emissiveIntensity: 0.5 }); // Mint Neon
+            const numLayers = 3;
+            const nodesPerLayer = [5, 8, 5]; // Nodes in each layer
+            const layerSpacing = 3; // Z-axis spacing between layers
+            const maxNodeOffset = 2; // Max random offset for nodes
+
+            for (let i = 0; i < numLayers; i++) {
+                const layerNodes = [];
+                for (let j = 0; j < nodesPerLayer[i]; j++) {
+                    const geometry = new THREE.SphereGeometry(0.1, 16, 16);
+                    const node = new THREE.Mesh(geometry, nodeMaterial);
+                    node.position.set(
+                        (Math.random() - 0.5) * maxNodeOffset * 2,
+                        (Math.random() - 0.5) * maxNodeOffset * 2,
+                        i * layerSpacing - (numLayers - 1) * layerSpacing / 2
+                    );
+                    scene.add(node);
+                    layerNodes.push(node);
+                }
+                nodes.push(layerNodes);
+            }
+
+            // Create connections (lines)
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0FF0FC, transparent: true, opacity: 0.3 }); // Electric Cyan
+            for (let i = 0; i < numLayers - 1; i++) {
+                for (let j = 0; j < nodes[i].length; j++) {
+                    for (let k = 0; k < nodes[i+1].length; k++) {
+                        const points = [];
+                        points.push(nodes[i][j].position);
+                        points.push(nodes[i+1][k].position);
+                        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                        const line = new THREE.Line(geometry, lineMaterial);
+                        scene.add(line);
+                        connections.push(line);
+                    }
+                }
+            }
+
+            camera.position.z = 8; // Adjust camera distance
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+            function onWindowResize() {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            }
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            // Animate nodes
+            nodes.forEach(layer => {
+                layer.forEach(node => {
+                    node.rotation.x += 0.005;
+                    node.rotation.y += 0.005;
+                });
+            });
+
+            // Animate connections (subtle pulsing)
+            connections.forEach(line => {
+                line.material.opacity = 0.3 + Math.sin(Date.now() * 0.001 + line.id) * 0.1;
+            });
+
+            // Rotate the entire network slightly
+            scene.rotation.y += 0.002;
+            scene.rotation.x += 0.001;
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize and start animation only after window is loaded
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // Skills Section Tab Filtering
+        const skillTabs = document.querySelectorAll('.skill-tab');
+        const skillItems = document.querySelectorAll('.skill-item');
+        const skillsContainer = document.getElementById('skills-container');
+
+        skillTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                skillTabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+
+                const category = tab.dataset.category;
+
+                // Hide all skill items first
+                skillsContainer.style.opacity = 0; // Fade out
+
+                setTimeout(() => { // After fade out, change content and fade in
+                    skillItems.forEach(item => {
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.style.display = 'flex'; // Show relevant items
+                        } else {
+                            item.style.display = 'none'; // Hide irrelevant items
+                        }
+                    });
+                    skillsContainer.style.opacity = 1; // Fade in
+                }, 300); // Match CSS transition duration
+            });
+        });
+
+        // Projects Carousel
+        const projectsCarousel = document.getElementById('projects-carousel');
+        const carouselPrevBtn = document.getElementById('carousel-prev');
+        const carouselNextBtn = document.getElementById('carousel-next');
+        const carouselDotsContainer = document.getElementById('carousel-dots');
+        const projectSlides = document.querySelectorAll('.project-slide');
+        let currentSlideIndex = 0;
+
+        function updateCarousel() {
+            const offset = -currentSlideIndex * 100;
+            projectsCarousel.style.transform = `translateX(${offset}%)`;
+
+            // Update dots
+            carouselDotsContainer.innerHTML = ''; // Clear existing dots
+            projectSlides.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === currentSlideIndex) {
+                    dot.classList.add('active');
+                }
+                dot.addEventListener('click', () => {
+                    currentSlideIndex = index;
+                    updateCarousel();
+                });
+                carouselDotsContainer.appendChild(dot);
+            });
+        }
+
+        carouselPrevBtn.addEventListener('click', () => {
+            currentSlideIndex = (currentSlideIndex - 1 + projectSlides.length) % projectSlides.length;
+            updateCarousel();
+        });
+
+        carouselNextBtn.addEventListener('click', () => {
+            currentSlideIndex = (currentSlideIndex + 1) % projectSlides.length;
+            updateCarousel();
+        });
+
+        updateCarousel(); // Initialize carousel
+
+        // AI Demo Modal
+        const aiDemoModal = document.getElementById('ai-demo-modal');
+        const openAiDemoModalBtn = document.getElementById('open-ai-demo-modal');
+        const closeDemoModalBtn = aiDemoModal.querySelector('.close-button');
+
+        openAiDemoModalBtn.addEventListener('click', () => {
+            aiDemoModal.style.display = 'flex'; // Use flex to center content
+        });
+
+        closeDemoModalBtn.addEventListener('click', () => {
+            aiDemoModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === aiDemoModal) {
+                aiDemoModal.style.display = 'none';
+            }
+        });
+
+        // AI Summary Modal (for Projects)
+        const aiSummaryModal = document.getElementById('ai-summary-modal');
+        const closeSummaryModalBtn = aiSummaryModal.querySelector('.close-button');
+        const aiSummaryTextElement = document.getElementById('ai-summary-text');
+
+        document.querySelectorAll('.ai-summary-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const projectName = button.dataset.project;
+                aiSummaryTextElement.textContent = "Generating summary for " + projectName + "...";
+                aiSummaryModal.style.display = 'flex';
+
+                // Simulate API call for AI summary
+                try {
+                    const prompt = `Provide a concise, 2-3 sentence AI-generated summary for the project: "${projectName}". Focus on its core functionality and key technologies.`;
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // Canvas will provide this
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        aiSummaryTextElement.textContent = text;
+                    } else {
+                        aiSummaryTextElement.textContent = "Failed to generate summary. Please try again.";
+                        console.error("Gemini API response structure unexpected:", result);
+                    }
+                } catch (error) {
+                    aiSummaryTextElement.textContent = "Error generating summary: " + error.message;
+                    console.error("Error calling Gemini API:", error);
+                }
+            });
+        });
+
+        closeSummaryModalBtn.addEventListener('click', () => {
+            aiSummaryModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === aiSummaryModal) {
+                aiSummaryModal.style.display = 'none';
+            }
+        });
+
+        // Chat-style Contact Section
+        const chatInput = document.getElementById('chat-input');
+        const sendChatBtn = document.getElementById('send-chat-btn');
+        const chatMessagesContainer = document.getElementById('chat-messages');
+
+        sendChatBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const userMessage = chatInput.value.trim();
+            if (userMessage === '') return;
+
+            // Add user message to chat
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.classList.add('chat-message', 'user');
+            userMsgDiv.textContent = userMessage;
+            chatMessagesContainer.appendChild(userMsgDiv);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+
+            chatInput.value = ''; // Clear input
+
+            // Simulate AI response
+            setTimeout(() => {
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.classList.add('chat-message', 'ai');
+                aiMsgDiv.textContent = "Thanks for your message! I'll get back to you soon.";
+                chatMessagesContainer.appendChild(aiMsgDiv);
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+            }, 1000); // Simulate network delay
+        }
+
+        // Command Bar Functionality
+        const commandBar = document.getElementById('command-bar');
+        const commandInput = document.getElementById('command-input');
+        const commandSuggestions = document.querySelectorAll('.command-suggestion');
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== commandInput) {
+                e.preventDefault(); // Prevent typing '/' in other inputs
+                commandBar.classList.add('active');
+                commandInput.focus();
+            } else if (e.key === 'Escape') {
+                commandBar.classList.remove('active');
+                commandInput.value = '';
+                commandInput.blur();
+            }
+        });
+
+        commandSuggestions.forEach(suggestion => {
+            suggestion.addEventListener('click', () => {
+                const command = suggestion.dataset.command;
+                executeCommand(command);
+            });
+        });
+
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                executeCommand(commandInput.value.trim().toLowerCase());
+            }
+        });
+
+        function executeCommand(command) {
+            commandBar.classList.remove('active');
+            commandInput.value = '';
+            commandInput.blur();
+
+            switch (command) {
+                case 'projects':
+                    document.querySelector('#projects').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'resume':
+                    document.querySelector('#resume').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'contact':
+                    document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'about':
+                    document.querySelector('#about').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'skills':
+                    document.querySelector('#skills').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                default:
+                    // Optionally show a message for unknown commands
+                    console.log(`Unknown command: ${command}`);
+                    break;
+            }
+        }
     </script>
 </body>
 </html>
