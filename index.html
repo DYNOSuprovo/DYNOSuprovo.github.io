@@ -18,9 +18,9 @@
             --accent: #00FFAB; /* Mint Neon */
             --alt-accent: #A020F0; /* Cyber Violet */
             --foreground: #F2F2F2; /* Soft White */
-            --border: #2A2A2D; /* Clean Separation/Contrast */
-            --card-bg: rgba(42, 42, 45, 0.3); /* Card background with transparency */
-            --glass-bg: rgba(255, 255, 255, 0.05); /* Glassmorphism background with transparency */
+            --border: rgba(255, 255, 255, 0.1); /* Lighter border for glass */
+            --card-bg: rgba(42, 42, 45, 0.25); 
+            --glass-bg: rgba(255, 255, 255, 0.05); 
         }
 
         /* Universal Box-sizing and Reset */
@@ -32,13 +32,12 @@
 
         /* Body Styling */
         body {
-            font-family: 'Inter', sans-serif; /* Body text font */
-            background: var(--background); /* Main background color */
-            color: var(--foreground); /* Default text color */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-            line-height: 1.6; /* Improve readability */
-            /* Add padding to the top to prevent content from being hidden by the fixed navbar */
-            padding-top: 100px; /* Adjust based on navbar height + desired spacing */
+            font-family: 'Inter', sans-serif; 
+            background: var(--background); 
+            color: var(--foreground); 
+            overflow-x: hidden; 
+            line-height: 1.6; 
+            padding-top: 100px; 
         }
 
         /* Animated Background Container */
@@ -48,10 +47,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Send to back */
-            /* Radial gradients for subtle color glow */
-            background: radial-gradient(circle at 20% 80%, rgba(15, 240, 252, 0.1) 0%, transparent 50%),
-                                radial-gradient(circle at 80% 20%, rgba(160, 32, 240, 0.1) 0%, transparent 50%);
+            z-index: -1; 
+            background: linear-gradient(
+                -45deg, 
+                rgba(15, 240, 252, 0.15), 
+                rgba(160, 32, 240, 0.15), 
+                rgba(0, 255, 171, 0.15),
+                rgba(15, 240, 252, 0.15)
+            );
+            background-size: 400% 400%;
+            animation: subtle-gradient 25s ease infinite; 
         }
 
         /* Container for floating particles */
@@ -59,268 +64,285 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Keep particles within bounds */
+            overflow: hidden; 
         }
 
         /* Individual particle styling and animation */
         .particle {
             position: absolute;
-            background: var(--primary); /* Primary color for particles */
-            border-radius: 50%; /* Make them circular */
-            animation: float 15s infinite linear; /* Apply float animation */
-            opacity: 0.3; /* Slightly transparent */
-            /* Added for more visual variety */
-            box-shadow: 0 0 8px var(--primary); /* Subtle glow */
+            background: var(--primary); 
+            border-radius: 50%; 
+            animation: float 20s infinite linear; 
+            opacity: 0.2; 
+            box-shadow: 0 0 6px var(--primary); 
         }
 
         /* Keyframes for floating particle animation */
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; } /* Start from bottom, smaller, hidden */
-            10% { opacity: 0.4; transform: translateY(90vh) rotate(36deg) scale(0.7); } /* Fade in and grow */
-            50% { opacity: 0.5; transform: translateY(50vh) rotate(180deg) scale(1); } /* Fully visible, normal size */
-            90% { opacity: 0.4; transform: translateY(10vh) rotate(324deg) scale(0.7); } /* Shrink and fade out */
-            100% { transform: translateY(-10vh) rotate(360deg) scale(0.5); opacity: 0; } /* Move to top, hidden */
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; } 
+            10% { opacity: 0.2; transform: translateY(90vh) rotate(36deg) scale(0.7); } 
+            50% { opacity: 0.3; transform: translateY(50vh) rotate(180deg) scale(1); } 
+            90% { opacity: 0.2; transform: translateY(10vh) rotate(324deg) scale(0.7); } 
+            100% { transform: translateY(-10vh) rotate(360deg) scale(0.5); opacity: 0; } 
+        }
+        
+        /* Keyframe for the subtle background gradient */
+        @keyframes subtle-gradient { 
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Navigation Bar Styling */
         .navbar {
-            position: fixed; /* Fixed position */
-            top: 20px; /* Distance from top */
-            left: 50%; /* Center horizontally */
-            transform: translateX(-50%); /* Adjust for perfect centering */
-            background: var(--glass-bg); /* Glassmorphism background */
-            backdrop-filter: blur(20px); /* Blur effect for glassmorphism */
-            border: 1px solid var(--border); /* Border color */
-            border-radius: 50px; /* Rounded corners */
-            padding: 12px 24px; /* Padding inside navbar */
-            z-index: 1000; /* Ensure it's on top */
-            transition: all 0.3s ease; /* Smooth transitions for hover/scroll effects */
-            display: flex; /* Use flexbox to align logo and nav links */
-            align-items: center; /* Vertically center items */
-            /* Removed justify-content: space-between; to allow custom positioning */
-            width: 90%; /* Make navbar responsive */
-            max-width: 1000px; /* Max width for navbar */
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(30px); 
+            border: 1px solid var(--border); 
+            border-radius: 50px; 
+            padding: 12px 24px; 
+            z-index: 1000; 
+            transition: all 0.3s ease; 
+            display: flex; 
+            align-items: center; 
+            width: 90%; 
+            max-width: 1000px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* Navbar style when scrolled */
         .navbar.scrolled {
-            background: rgba(26, 26, 29, 0.9); /* Darker background on scroll */
-            box-shadow: 0 8px 32px rgba(15, 240, 252, 0.1); /* Subtle shadow */
+            background: rgba(26, 26, 29, 0.7); 
+            backdrop-filter: blur(25px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
         }
 
         /* Logo Styling in Navbar */
         .navbar-logo {
-            height: 40px; /* Set a fixed height for the logo */
-            width: auto; /* Maintain aspect ratio */
-            margin-right: auto; /* Push logo to the left, and push the wrapper to the right */
-            filter: drop-shadow(0 0 5px var(--primary)); /* Subtle glow for the logo */
+            height: 40px; 
+            width: auto; 
+            margin-right: auto; 
+            filter: drop-shadow(0 0 5px var(--primary)); 
         }
 
-        /* New wrapper for navigation links to center them */
+        /* Wrapper for navigation links */
         .nav-links-wrapper {
-            flex-grow: 1; /* Allows the wrapper to take available space */
-            display: flex; /* Make it a flex container */
-            justify-content: center; /* Centers the actual nav-links ul within this wrapper */
-            align-items: center; /* Vertically centers the nav links */
+            flex-grow: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
         }
 
         /* Navigation Links List */
         .nav-links {
-            display: flex; /* Flexbox for horizontal layout */
-            list-style: none; /* Remove bullet points */
-            gap: 30px; /* Space between links */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
+            display: flex; 
+            list-style: none; 
+            gap: 20px; /* Adjusted gap slightly for more items */
+            margin: 0; 
+            padding: 0; 
         }
 
         /* Individual Navigation Link Styling */
         .nav-links a {
-            color: var(--foreground); /* Default link color */
-            text-decoration: none; /* Remove underline */
-            font-weight: 500; /* Medium font weight */
-            padding: 8px 16px; /* Padding for click area */
-            border-radius: 25px; /* Rounded buttons */
-            transition: all 0.3s ease; /* Smooth transitions for hover/scroll effects */
+            color: var(--foreground); 
+            text-decoration: none; 
+            font-weight: 500; 
+            padding: 8px 14px; /* Adjusted padding slightly */
+            border-radius: 25px; 
+            transition: all 0.3s ease; 
             position: relative;
+            font-size: 0.95rem; /* Slightly smaller font */
         }
 
         /* Navigation Link Hover Effect */
         .nav-links a:hover {
-            color: var(--primary); /* Primary color on hover */
-            background: rgba(15, 240, 252, 0.1); /* Light background on hover */
+            color: var(--primary); 
+            background: rgba(15, 240, 252, 0.1); 
         }
 
         /* Active Navigation Link Styling */
         .nav-links a.active {
-            color: var(--primary); /* Primary color for active link */
-            background: rgba(15, 240, 252, 0.2); /* More prominent background for active link */
+            color: var(--primary); 
+            background: rgba(15, 240, 252, 0.2); 
         }
 
         /* Hero Section Styling */
         .hero {
-            min-height: calc(100vh - 100px); /* Adjust min-height to account for padding-top on body */
-            display: flex; /* Flexbox for centering content */
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            padding: 0 5%; /* Horizontal padding */
+            min-height: calc(100vh - 100px); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 0 5%; 
             position: relative;
-            gap: 50px; /* Gap between left and right halves */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 50px; 
+            flex-wrap: wrap; 
         }
 
         /* Hero Left Half (3D Canvas) */
         .hero-left {
-            flex: 1; /* Take available space */
-            min-width: 300px; /* Minimum width for responsiveness */
+            flex: 1; 
+            min-width: 300px; 
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            height: 400px; /* Fixed height for the canvas */
+            height: 400px; 
         }
 
         #neural-network-canvas {
             width: 100%;
             height: 100%;
-            display: block; /* Remove extra space below canvas */
-            border-radius: 15px; /* Rounded corners for the canvas */
-            box-shadow: 0 0 30px rgba(0, 255, 171, 0.5); /* Mint Neon glow */
+            display: block; 
+            border-radius: 15px; 
+            box-shadow: 0 0 30px rgba(0, 255, 171, 0.5); 
         }
 
         /* Hero Right Half (Content) */
         .hero-right {
-            flex: 1; /* Take available space */
-            min-width: 300px; /* Minimum width for responsiveness */
-            text-align: left; /* Align text left */
+            flex: 1; 
+            min-width: 300px; 
+            text-align: left; 
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Align items to the start */
+            align-items: flex-start; 
         }
 
         /* Hero Heading (Name) */
         .hero h1 {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
-            font-size: clamp(2.5rem, 6vw, 4rem); /* Responsive font size */
-            font-weight: 700; /* Bold font weight */
-            margin-bottom: 10px; /* Spacing below heading */
-            /* Gradient text effect */
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: clamp(2.5rem, 6vw, 4rem); 
+            font-weight: 700; 
+            margin-bottom: 10px; 
             background: linear-gradient(135deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            /* Added text shadow for glow */
             text-shadow: 0 0 10px rgba(15, 240, 252, 0.5);
         }
 
         /* Hero Subtitle */
         .hero .subtitle {
-            font-size: 1.2rem; /* Font size for subtitle */
-            margin-bottom: 20px; /* Spacing below subtitle */
-            opacity: 0.8; /* Slightly transparent */
+            font-size: 1.2rem; 
+            margin-bottom: 20px; 
+            opacity: 0.8; 
         }
 
         /* Role Badge Styling */
         .role-badge {
-            background: var(--alt-accent); /* Cyber Violet background */
-            color: var(--foreground); /* Soft White text */
+            background: var(--alt-accent); 
+            color: var(--foreground); 
             padding: 8px 15px;
-            border-radius: 25px; /* More rounded */
+            border-radius: 25px; 
             font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 30px; /* Spacing below badge */
-            box-shadow: 0 0 15px rgba(160, 32, 240, 0.5); /* Cyber Violet glow */
-            display: inline-block; /* Ensure padding applies correctly */
+            margin-bottom: 30px; 
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.5); 
+            display: inline-block; 
         }
 
         /* Terminal Container Styling */
         .terminal-container {
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 12px; /* Rounded corners */
-            padding: 20px; /* Padding inside terminal */
-            margin: 30px auto; /* Center horizontally with auto margins */
-            font-family: 'Courier New', monospace; /* Monospace font for terminal feel */
-            text-align: left; /* Align text left - keeping for terminal realism */
-            backdrop-filter: blur(10px); /* Blur effect */
-            max-width: 600px; /* Max width for terminal */
-            width: 90%; /* Ensure it's responsive */
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin: 30px auto; 
+            font-family: 'Courier New', monospace; 
+            text-align: left; 
+            backdrop-filter: blur(30px); 
+            max-width: 600px; 
+            width: 90%; 
+            position: relative; 
+            z-index: 1; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
         }
 
         /* Terminal Header Dots */
         .terminal-header {
-            display: flex; /* Flexbox for dots */
-            gap: 8px; /* Space between dots */
-            margin-bottom: 15px; /* Spacing below header */
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 15px; 
         }
 
         /* Individual Terminal Dot */
         .terminal-dot {
             width: 12px;
             height: 12px;
-            border-radius: 50%; /* Circular dots */
+            border-radius: 50%; 
         }
-
-        /* Color for terminal dots */
         .terminal-dot.red { background: #ff5f57; }
         .terminal-dot.yellow { background: #ffbd2e; }
         .terminal-dot.green { background: #28ca42; }
 
         /* Typewriter text styling */
         .typewriter {
-            color: var(--accent); /* Accent color for typed text */
-            border-right: 2px solid var(--primary); /* Blinking cursor */
-            animation: blink 1s infinite; /* Apply blinking animation */
-            white-space: nowrap; /* Prevent text wrapping */
-            overflow: hidden; /* Hide overflowing text before it's typed */
-            display: inline-block; /* Make it an inline block for width calculation */
-            vertical-align: middle; /* Align with the non-typewriter part */
+            color: var(--accent); 
+            border-right: 2px solid var(--primary); 
+            animation: blink 1s infinite; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            display: inline-block; 
+            vertical-align: middle; 
+            min-height: 1.2em; /* Ensure space even when empty */
         }
 
         /* Keyframes for blinking cursor */
         @keyframes blink {
-            0%, 50% { border-color: transparent; } /* Cursor off */
-            51%, 100% { border-color: var(--primary); } /* Cursor on */
+            0%, 50% { border-color: transparent; } 
+            51%, 100% { border-color: var(--primary); } 
         }
 
         /* Call to Action Buttons Container */
         .cta-buttons {
-            display: flex; /* Flexbox for buttons */
-            gap: 20px; /* Space between buttons */
-            justify-content: flex-start; /* Align buttons to the start */
-            margin-top: 40px; /* Spacing above buttons */
-            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            display: flex; 
+            gap: 20px; 
+            justify-content: flex-start; 
+            margin-top: 40px; 
+            flex-wrap: wrap; 
         }
 
         /* Base Button Styling */
         .btn {
-            padding: 12px 30px; /* Padding inside buttons */
-            border: none; /* No default border */
-            border-radius: 50px; /* Highly rounded corners */
-            font-weight: 600; /* Semi-bold font weight */
-            text-decoration: none; /* Remove underline */
-            transition: all 0.3s ease; /* Smooth transitions */
-            cursor: pointer; /* Pointer cursor on hover */
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            text-decoration: none; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
             position: relative;
-            overflow: hidden; /* Hide overflow for ripple effect */
+            overflow: hidden; 
+            display: inline-flex; /* Align icon and text */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between icon and text */
         }
 
         /* Primary Button Style */
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent)); /* Gradient background */
-            color: var(--background); /* Text color on primary button */
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: var(--background); 
         }
 
         /* Secondary Button Style */
         .btn-secondary {
-            background: transparent; /* Transparent background */
-            color: var(--primary); /* Primary color for text */
-            border: 2px solid var(--primary); /* Primary color border */
+            background: transparent; 
+            color: var(--primary); 
+            border: 2px solid var(--primary); 
         }
+        .btn-secondary:hover {
+            background: rgba(15, 240, 252, 0.1); /* Subtle background on hover */
+        }
+
 
         /* Button Hover Effect */
         .btn:hover {
-            transform: translateY(-2px); /* Lift button slightly */
-            box-shadow: 0 10px 30px rgba(15, 240, 252, 0.3); /* Add a shadow */
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 30px rgba(15, 240, 252, 0.3); 
         }
 
         /* Ripple effect for buttons */
@@ -329,90 +351,105 @@
             border-radius: 50%;
             transform: scale(0);
             animation: ripple 0.6s linear;
-            background-color: rgba(255, 255, 255, 0.7); /* White ripple */
-            opacity: 0; /* Hidden by default */
+            background-color: rgba(255, 255, 255, 0.7); 
+            opacity: 0; 
         }
 
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
         /* General Section Styling */
         .section {
-            padding: 100px 5%; /* Vertical and horizontal padding */
-            max-width: 1200px; /* Max width for content within sections */
-            margin: 0 auto; /* Center sections horizontally */
-            /* Establish 3D context for children - reduced for subtlety */
+            padding: 100px 5%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
             perspective: 1000px; 
         }
 
         /* Section Title Styling */
         .section-title {
-            font-family: 'Space Grotesk', sans-serif; /* Heading font */
-            font-size: 2.5rem; /* Font size */
-            font-weight: 700; /* Bold font weight */
-            text-align: center; /* Center align title */
-            margin-bottom: 60px; /* Spacing below title */
-            color: var(--primary); /* Primary color for title */
-            text-shadow: 0 0 10px rgba(15, 240, 252, 0.5); /* Added text shadow for glow */
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            text-align: center; 
+            margin-bottom: 60px; 
+            color: var(--primary); 
+            text-shadow: 0 0 10px rgba(15, 240, 252, 0.5); 
         }
 
         /* About Section Grid Layout */
         .about-grid {
-            display: grid; /* Grid layout */
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            gap: 60px; /* Gap between columns */
-            align-items: flex-start; /* Align items to the top */
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 60px; 
+            align-items: flex-start; 
         }
 
         /* About Section Text */
         .about-text {
-            font-size: 1.1rem; /* Font size */
-            line-height: 1.8; /* Improve line spacing */
+            font-size: 1.1rem; 
+            line-height: 1.8; 
         }
+        .about-text p { margin-bottom: 1em; } /* Add spacing between paragraphs */
 
-        /* Timeline Styling */
+        /* Timeline Styling (Used in About and Experience) */
         .timeline {
             position: relative;
-            padding-left: 20px; /* Space for the line */
-            border-left: 2px solid var(--border); /* Vertical line */
+            padding-left: 20px; 
+            border-left: 2px solid var(--border); 
         }
 
         .timeline-item {
             margin-bottom: 40px;
             position: relative;
-            padding-left: 30px; /* Space for dot */
+            padding-left: 30px; 
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -8px; /* Position dot on the line */
+            left: -8px; 
             top: 5px;
             width: 16px;
             height: 16px;
-            background: var(--accent); /* Dot color */
+            background: var(--accent); 
             border-radius: 50%;
-            border: 2px solid var(--background); /* Background color border */
-            box-shadow: 0 0 10px var(--accent); /* Glow effect */
+            border: 2px solid var(--background); 
+            box-shadow: 0 0 10px var(--accent); 
         }
 
-        .timeline-year {
+        .timeline-date, /* Updated from timeline-year */
+        .timeline-year { 
             font-family: 'Space Grotesk', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 5px;
-            position: relative; /* For floating effect */
-            display: inline-block; /* To apply transform */
+            position: relative; 
+            display: inline-block; 
             transition: transform 0.3s ease;
         }
+        .timeline-date:hover,
         .timeline-year:hover {
-            transform: translateY(-5px); /* Floating effect on hover */
+            transform: translateY(-5px); 
         }
+        /* Experience specific styles */
+        .timeline-role {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .timeline-company {
+            font-style: italic;
+             opacity: 0.8;
+             margin-bottom: 10px;
+        }
+        .timeline-details {
+             list-style: disc;
+             margin-left: 20px;
+             font-size: 0.95rem;
+             opacity: 0.9;
+        }
+
 
         .timeline-description {
             font-size: 1rem;
@@ -443,45 +480,50 @@
         .skill-tab:hover {
             background: rgba(15, 240, 252, 0.1);
             color: var(--primary);
-            box-shadow: 0 0 15px var(--primary);
+            box-shadow: 0 0 15px rgba(15, 240, 252, 0.3); 
         }
 
         .skill-tab.active {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: var(--background);
-            box-shadow: 0 0 20px var(--primary);
+            box-shadow: 0 0 20px rgba(15, 240, 252, 0.4); 
             transform: translateY(-2px);
         }
 
         /* Skills Grid for Tab Content */
         .skills-grid {
-            display: grid; /* Grid layout */
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
-            gap: 20px; /* Gap between skill items */
-            transition: opacity 0.5s ease-in-out; /* Smooth transition for tab content */
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Adjusted minmax slightly */
+            gap: 20px; 
+            transition: opacity 0.5s ease-in-out; 
         }
 
         .skill-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 12px;
             padding: 20px;
             text-align: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(30px); 
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative; 
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+            min-height: 120px; /* Ensure consistent height */
         }
 
         .skill-item:hover {
             transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 0 15px var(--alt-accent), 0 0 30px rgba(160, 32, 240, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 
+                        0 0 15px var(--alt-accent); 
         }
 
         .skill-item i {
-            font-size: 2.5rem;
+            font-size: 2.2rem; /* Slightly smaller icon */
             color: var(--accent);
             margin-bottom: 10px;
             text-shadow: 0 0 10px var(--accent);
@@ -490,6 +532,7 @@
         .skill-item span {
             font-weight: 500;
             color: var(--foreground);
+            font-size: 0.9rem; /* Slightly smaller text */
         }
 
         /* Projects Section Carousel */
@@ -497,31 +540,36 @@
             position: relative;
             max-width: 1000px;
             margin: 0 auto;
-            overflow: hidden; /* Hide overflowing slides */
+            overflow: hidden; 
         }
 
         .projects-carousel {
             display: flex;
-            transition: transform 0.5s ease-in-out; /* Smooth slide transition */
+            transition: transform 0.5s ease-in-out; 
         }
 
         .project-slide {
-            min-width: 100%; /* Each slide takes full width of container */
+            min-width: 100%; 
+            box-sizing: border-box; /* Ensure padding is included in width */
             display: flex;
-            flex-wrap: wrap; /* Allow content to wrap */
+            flex-wrap: wrap; 
             gap: 40px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 16px;
             padding: 40px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(30px); 
             align-items: center;
-            justify-content: center;
+            /* justify-content: center; /* Let content align naturally */
+            position: relative; 
+            z-index: 1; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
         }
-
+        
         .project-image-container {
             flex: 1;
-            min-width: 300px; /* Minimum width for image */
+            min-width: 280px; /* Adjusted min-width */
             text-align: center;
         }
 
@@ -529,12 +577,12 @@
             max-width: 100%;
             height: auto;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(15, 240, 252, 0.3); /* Primary glow */
+            box-shadow: 0 0 20px rgba(15, 240, 252, 0.3); 
         }
 
         .project-details {
-            flex: 1;
-            min-width: 300px; /* Minimum width for details */
+            flex: 1.5; /* Give details slightly more space */
+            min-width: 300px; 
         }
 
         .project-title {
@@ -549,12 +597,20 @@
             margin-bottom: 20px;
             opacity: 0.9;
         }
+         /* Style for project points */
+        .project-points {
+            list-style: disc;
+            margin-left: 20px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
 
         .project-tech {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* Increased margin */
         }
 
         .tech-tag {
@@ -563,13 +619,14 @@
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.8rem;
-            border: 1px solid var(--alt-accent);
+            border: 1px solid rgba(160, 32, 240, 0.5); /* Slightly stronger border */
         }
 
         .project-buttons {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
+            margin-top: auto; /* Push buttons to bottom if space allows */
         }
 
         .carousel-nav {
@@ -594,16 +651,19 @@
         .carousel-nav:hover {
             background: var(--primary);
             color: var(--background);
-            box-shadow: 0 0 20px var(--primary);
+            box-shadow: 0 0 20px rgba(15, 240, 252, 0.3); 
         }
 
         .carousel-nav.prev {
-            left: -60px; /* Position outside the container */
+            left: -60px; 
+            @media (max-width: 1150px) { left: 15px; } 
         }
 
         .carousel-nav.next {
-            right: -60px; /* Position outside the container */
+            right: -60px; 
+             @media (max-width: 1150px) { right: 15px; }
         }
+
 
         .carousel-dots {
             display: flex;
@@ -635,11 +695,15 @@
         }
 
         .resume-summary {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 16px;
             padding: 30px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(30px); 
+            position: relative; 
+            z-index: 1; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
         }
 
         .resume-summary h3 {
@@ -649,20 +713,24 @@
         }
 
         .resume-preview-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 16px;
             padding: 20px;
-            backdrop-filter: blur(10px);
-            overflow: hidden; /* For scrollable iframe */
+            backdrop-filter: blur(30px); 
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative; 
+            z-index: 1; 
+            transition: all 0.3s ease;
+             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
         }
-
+        
         .resume-preview-container iframe {
             width: 100%;
-            height: 500px; /* Fixed height for preview */
+            height: 500px; 
             border: none;
             border-radius: 8px;
         }
@@ -671,14 +739,18 @@
         .chat-contact-container {
             max-width: 700px;
             margin: 0 auto;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 16px;
             padding: 30px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(30px); 
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: relative; 
+            z-index: 1; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
         }
 
         .chat-messages {
@@ -687,7 +759,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.2); /* Slightly darker background for chat history */
+            background: rgba(0, 0, 0, 0.2); 
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -703,14 +775,14 @@
         .chat-message.user {
             background: linear-gradient(90deg, var(--primary), var(--accent));
             color: var(--background);
-            align-self: flex-end; /* Align user messages to the right */
+            align-self: flex-end; 
             border-bottom-right-radius: 0;
         }
 
         .chat-message.ai {
             background: rgba(160, 32, 240, 0.2);
             color: var(--foreground);
-            align-self: flex-start; /* Align AI messages to the left */
+            align-self: flex-start; 
             border-bottom-left-radius: 0;
             border: 1px solid var(--alt-accent);
         }
@@ -736,38 +808,40 @@
             box-shadow: 0 0 0 2px rgba(15, 240, 252, 0.2);
         }
 
-        /* Social Links (retained from previous, ensure glowing borders) */
+        /* Social Links */
         .social-links {
-            display: flex; /* Flexbox for links */
-            gap: 20px; /* Space between links */
-            margin-top: 30px; /* Spacing above links */
-            justify-content: center; /* Center social links */
+            display: flex; 
+            gap: 20px; 
+            margin-top: 30px; 
+            justify-content: center; 
         }
 
         /* Individual Social Link Styling */
         .social-link {
-            display: flex; /* Flexbox for icon centering */
-            align-items: center; /* Center icon vertically */
-            justify-content: center; /* Center icon horizontally */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
             width: 50px;
             height: 50px;
-            background: var(--card-bg); /* Card background */
-            border: 1px solid var(--border); /* Border */
-            border-radius: 50%; /* Circular shape */
-            color: var(--primary); /* Primary color for icon */
-            text-decoration: none; /* Remove underline */
-            transition: all 0.3s ease; /* Smooth transitions */
-            backdrop-filter: blur(10px); /* Blur effect */
-            font-size: 1.2rem; /* Icon size */
-            box-shadow: 0 0 5px rgba(15, 240, 252, 0.3); /* Initial subtle glow */
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 50%; 
+            color: var(--primary); 
+            text-decoration: none; 
+            transition: all 0.3s ease; 
+            backdrop-filter: blur(30px); 
+            font-size: 1.2rem; 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
+            position: relative; 
+            z-index: 1; 
         }
 
         /* Social Link Hover Effect */
         .social-link:hover {
-            background: var(--primary); /* Primary color background on hover */
-            color: var(--background); /* Dark text color on hover */
-            transform: translateY(-5px) scale(1.1); /* Lift and slightly scale */
-            box-shadow: 0 0 20px var(--primary); /* More pronounced glow */
+            background: var(--primary); 
+            color: var(--background); 
+            transform: translateY(-5px) scale(1.1); 
+            box-shadow: 0 0 20px rgba(15, 240, 252, 0.4); 
         }
 
         /* Command Bar */
@@ -778,21 +852,20 @@
             transform: translateX(-50%);
             width: 90%;
             max-width: 600px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 12px;
             padding: 15px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 20px rgba(0, 255, 171, 0.3); /* Accent glow */
-            z-index: 1001; /* Above navbar */
-            display: none; /* Hidden by default */
+            backdrop-filter: blur(30px); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 255, 171, 0.3); 
+            z-index: 1001; 
+            display: none; 
             flex-direction: column;
             gap: 10px;
+            position: relative; 
         }
 
-        .command-bar.active {
-            display: flex;
-        }
+        .command-bar.active { display: flex; }
 
         .command-bar input {
             width: 100%;
@@ -803,18 +876,12 @@
             color: var(--foreground);
             font-family: 'Inter', sans-serif;
         }
-
         .command-bar input:focus {
             outline: none;
             box-shadow: 0 0 0 2px rgba(15, 240, 252, 0.3);
         }
 
-        .command-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
+        .command-suggestions { display: flex; flex-wrap: wrap; gap: 8px; }
         .command-suggestion {
             background: rgba(160, 32, 240, 0.1);
             color: var(--alt-accent);
@@ -824,129 +891,49 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+        .command-suggestion:hover { background: var(--alt-accent); color: var(--background); }
 
-        .command-suggestion:hover {
-            background: var(--alt-accent);
-            color: var(--background);
-        }
-
-        /* Responsive Design Adjustments */
+        /* Responsive Design */
         @media (max-width: 992px) {
-            .hero {
-                flex-direction: column; /* Stack hero sections vertically */
-                text-align: center;
-                gap: 30px;
-            }
-            .hero-right {
-                align-items: center; /* Center content in right half when stacked */
-            }
-            .cta-buttons {
-                justify-content: center; /* Center buttons when stacked */
-            }
-            .about-grid,
-            .resume-grid {
-                grid-template-columns: 1fr; /* Single column for about and resume */
-                gap: 40px;
-            }
-            .project-slide {
-                flex-direction: column; /* Stack project image and details */
-                text-align: center;
-            }
-            .project-details {
-                align-items: center; /* Center project details */
-            }
-            .project-image-container {
-                order: -1; /* Move image above details on mobile */
-            }
-            .carousel-nav.prev {
-                left: 10px; /* Adjust carousel nav position */
-            }
-            .carousel-nav.next {
-                right: 10px; /* Adjust carousel nav position */
-            }
+            .hero { flex-direction: column; text-align: center; gap: 30px; }
+            .hero-right { align-items: center; }
+            .cta-buttons { justify-content: center; }
+            .about-grid, .resume-grid { grid-template-columns: 1fr; gap: 40px; }
+            .project-slide { flex-direction: column; text-align: center; }
+            .project-details { align-items: center; }
+            .project-image-container { order: -1; }
+            .carousel-nav.prev { left: 15px; }
+            .carousel-nav.next { right: 15px; }
         }
-
         @media (max-width: 768px) {
-            /* Adjust navbar link spacing and font size */
-            .nav-links {
-                gap: 15px;
-            }
+            .nav-links { gap: 10px; } /* Further reduced gap */
+            .nav-links a { padding: 6px 10px; font-size: 0.9rem; } /* Further reduced padding */
+            .about-grid, .contact-grid, .experience-grid { grid-template-columns: 1fr; gap: 30px; } /* Added experience */
+            .stats-grid { grid-template-columns: 1fr; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .section { padding: 60px 5%; }
+            .navbar-logo { height: 30px; margin-right: 10px; }
+            .skills-tabs { justify-content: flex-start; }
+            .skills-grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); } /* Smaller items */
+            .skill-item i { font-size: 2rem; }
+            .project-slide { padding: 25px; gap: 25px; } /* Reduced padding/gap */
+            .project-details { min-width: unset; } /* Allow details to shrink */
+            .project-image-container { min-width: unset; }
+            .timeline-date, .timeline-year { font-size: 1.3rem; } /* Smaller timeline date */
 
-            .nav-links a {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
-
-            /* Stack grid columns for about and contact sections */
-            .about-grid,
-            .contact-grid {
-                grid-template-columns: 1fr; /* Single column */
-                gap: 30px; /* Reduced gap */
-            }
-
-            /* Stack stats grid columns */
-            .stats-grid {
-                grid-template-columns: 1fr; /* Single column */
-            }
-
-            /* Stack CTA buttons vertically */
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            /* Adjust section padding */
-            .section {
-                padding: 60px 5%;
-            }
-
-            /* Adjust logo size on smaller screens */
-            .navbar-logo {
-                height: 30px; /* Smaller logo on mobile */
-                margin-right: 10px; /* Less margin */
-            }
-            .skills-tabs {
-                justify-content: flex-start; /* Align tabs left if many */
-            }
-            .skills-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Smaller skill items */
-            }
-            .skill-item i {
-                font-size: 2rem;
-            }
-            .project-slide {
-                padding: 20px; /* Less padding for project cards */
-            }
         }
 
-        /* Scroll Animation Styles */
-        .fade-in {
-            opacity: 0; /* Hidden by default */
-            transform: translateY(30px); /* Slightly moved down */
-            transition: all 0.6s ease; /* Smooth transition */
-        }
+        /* Scroll Animation */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        /* Visible state for scroll animation */
-        .fade-in.visible {
-            opacity: 1; /* Fully visible */
-            transform: translateY(0); /* Reset position */
-        }
+        /* Resume Section */
+        .resume-section { text-align: center; }
 
-        /* Resume Section Specific Styles */
-        .resume-section {
-            text-align: center; /* Center content */
-        }
-
-        /* Certifications section styling */
-        .certifications-list {
-            list-style: none; /* Remove default list bullets */
-            padding: 0;
-            margin-top: 30px;
-            text-align: left; /* Align text within list items to the left */
-        }
-
+        /* Certifications List */
+        .certifications-list { list-style: none; padding: 0; margin-top: 30px; text-align: left; }
         .certifications-list li {
-            background: rgba(42, 42, 45, 0.2); /* Slightly lighter background than main card */
+            background: rgba(42, 42, 45, 0.2); 
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 15px 20px;
@@ -956,121 +943,45 @@
             gap: 5px;
             transition: all 0.3s ease;
         }
-
         .certifications-list li:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(15, 240, 252, 0.15);
             border-color: var(--primary);
         }
+        .cert-title { font-weight: 600; color: var(--primary); font-size: 1.1rem; }
+        .cert-issuer { color: var(--foreground); opacity: 0.9; }
+        .cert-date { font-size: 0.9rem; color: var(--foreground); opacity: 0.7; }
+        .cert-skills { font-size: 0.9rem; color: var(--accent); margin-top: 5px; }
+        .cert-link { display: inline-flex; align-items: center; color: var(--accent); text-decoration: none; font-weight: 500; margin-top: 10px; }
+        .cert-link i { margin-right: 8px; }
+        .cert-link:hover { color: var(--primary); }
 
-        .cert-title {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        .cert-issuer {
-            color: var(--foreground);
-            opacity: 0.9;
-        }
-
-        .cert-date {
-            font-size: 0.9rem;
-            color: var(--foreground);
-            opacity: 0.7;
-        }
-
-        .cert-skills {
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-top: 5px;
-        }
-
-        .cert-link {
-            display: inline-flex;
-            align-items: center;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-
-        .cert-link i {
-            margin-right: 8px;
-        }
-
-        .cert-link:hover {
-            color: var(--primary);
-        }
-
-        /* Modal for AI Demo */
+        /* Modal Base */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 2000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
-            backdrop-filter: blur(5px); /* Blur background */
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto; 
+            background-color: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(5px); 
+            justify-content: center; align-items: center;
         }
-
         .modal-content {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            background: var(--glass-bg); 
+            border: 1px solid var(--border); 
             border-radius: 16px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 0 30px rgba(15, 240, 252, 0.5); /* Primary glow */
-            position: relative;
-            animation: fadeInScale 0.3s ease-out;
+            padding: 30px; width: 90%; max-width: 600px;
+            box-shadow: 0 0 30px rgba(15, 240, 252, 0.5); 
+            position: relative; animation: fadeInScale 0.3s ease-out;
+            z-index: 1; 
         }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .close-button {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: var(--foreground);
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
+            position: absolute; top: 15px; right: 20px; color: var(--foreground);
+            font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s ease; z-index: 5; 
         }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .modal-content h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            color: var(--primary);
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.8rem;
-        }
-
-        .modal-content p {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-content .btn {
-            display: block;
-            margin: 0 auto;
-            width: fit-content;
-        }
+        .close-button:hover, .close-button:focus { color: var(--primary); text-decoration: none; }
+        .modal-content h3 { font-family: 'Space Grotesk', sans-serif; color: var(--primary); margin-bottom: 20px; text-align: center; font-size: 1.8rem; }
+        .modal-content p { text-align: center; margin-bottom: 20px; }
+        .modal-content .btn { display: block; margin: 0 auto; width: fit-content; }
     </style>
 </head>
 <body>
@@ -1081,12 +992,12 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar" id="navbar">
-        <!-- Logo added here -->
         <img src="https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/image.png?raw=true" alt="Dragon Logo" class="navbar-logo">
-        <div class="nav-links-wrapper"> <!-- New wrapper for navigation links -->
+        <div class="nav-links-wrapper">
             <ul class="nav-links">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li> <!-- ADDED Experience Link -->
                 <li><a href="#skills" class="nav-link">Skills</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
                 <li><a href="#resume" class="nav-link">Resume</a></li>
@@ -1095,18 +1006,15 @@
         </div>
     </nav>
 
-    <!-- Hero Section: Introduction and Call to Action -->
+    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-left fade-in">
-            <!-- Canvas for 3D Neural Network Visualization -->
             <canvas id="neural-network-canvas"></canvas>
         </div>
         <div class="hero-right fade-in">
             <h1>Suprovo Mallick</h1>
             <p class="subtitle">AI/ML Developer • GenAI Enthusiast • Problem Solver</p>
             <span class="role-badge">GenAI Developer | RAG Specialist</span>
-            
-            <!-- Terminal-style Introduction -->
             <div class="terminal-container" style="width: 100%; max-width: 500px;">
                 <div class="terminal-header">
                     <div class="terminal-dot red"></div>
@@ -1118,8 +1026,6 @@
                     <span class="typewriter" id="typewriter"></span>
                 </div>
             </div>
-
-            <!-- Call to Action Buttons -->
             <div class="cta-buttons">
                 <a href="#projects" class="btn btn-primary">View My Work</a>
                 <button id="open-ai-demo-modal" class="btn btn-secondary">Try My AI Demo</button>
@@ -1127,19 +1033,15 @@
         </div>
     </section>
 
-    <!-- About Section: Personal Introduction and Story Timeline -->
+    <!-- About Section -->
     <section id="about" class="section">
         <h2 class="section-title fade-in">About Me</h2>
         <div class="about-grid">
             <div class="about-text fade-in">
-                <p>I'm a passionate AI/ML developer from India, currently pursuing Computer Science at KIIT. My journey in AI began with a deep curiosity about how machines can understand and generate human language, evolving into a mission to build intelligent applications that solve real-world problems.</p>
-                
-                <p>I specialize in leveraging cutting-edge technologies like LangChain, the Gemini API, and Retrieval-Augmented Generation (RAG) architectures to create dynamic and responsive solutions. I thrive on bringing innovative ideas to life through code and am constantly exploring the latest advancements in the field.</p>
-
-                <p>When I'm not immersed in development, you'll find me delving into new research papers, contributing to open-source projects, or sharing knowledge with the vibrant developer community.</p>
+                 <p>I'm a passionate AI/ML developer from India, currently pursuing Computer Science at KIIT. My journey in AI began with a deep curiosity about how machines can understand and generate human language, evolving into a mission to build intelligent applications that solve real-world problems.</p>
+                 <p>I specialize in leveraging cutting-edge technologies like LangChain, Gemini API, and Retrieval-Augmented Generation (RAG) architectures to create dynamic and responsive solutions. My experience includes designing personalized chatbots, developing intelligent recommendation systems like Aahar AI, and building multilingual translation applications.</p>
+                 <p>I thrive on bringing innovative ideas to life through code, optimizing model performance, and deploying scalable AI solutions. When I'm not immersed in development, you'll find me delving into new research papers, contributing to open-source projects, or sharing knowledge within the developer community.</p>
             </div>
-            
-            <!-- Story Timeline -->
             <div class="timeline fade-in">
                 <div class="timeline-item">
                     <div class="timeline-year">2023</div>
@@ -1149,9 +1051,13 @@
                     <div class="timeline-year">2024 (Early)</div>
                     <div class="timeline-description">Developed my first end-to-end RAG system, integrating LLMs with external knowledge bases.</div>
                 </div>
+                 <div class="timeline-item">
+                     <div class="timeline-year">Jul 2024</div>
+                     <div class="timeline-description">Started role as AI Chatbot & GenAI App Developer at Fed Society, designing and deploying personalized chatbots and the Aahar AI diet assistant.</div>
+                 </div>
                 <div class="timeline-item">
                     <div class="timeline-year">2024 (Mid)</div>
-                    <div class="timeline-description">Launched several GenAI-powered applications, including a Hindu Scripture Q&A app.</div>
+                    <div class="timeline-description">Launched several GenAI-powered applications, including Hindu Scripture Q&A and Translate-V2.</div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-year">2025</div>
@@ -1161,225 +1067,275 @@
         </div>
     </section>
 
-    <!-- Skills Section: My Expertise (Tabbed Interface) -->
-    <section id="skills" class="section">
-        <h2 class="section-title fade-in">My Expertise</h2>
-        <div class="skills-tabs fade-in">
-            <button class="skill-tab active" data-category="all">All Skills</button>
-            <button class="skill-tab" data-category="languages">Languages</button>
-            <button class="skill-tab" data-category="ai-ml">AI/ML Libraries</button>
-            <button class="skill-tab" data-category="genai">GenAI & LLM Ops</button>
-            <button class="skill-tab" data-category="tools">Tools & Platforms</button>
-        </div>
-        <div id="skills-container" class="skills-grid fade-in">
-            <!-- Skills will be dynamically loaded/filtered here -->
-            <!-- Languages -->
-            <div class="skill-item" data-category="languages">
-                <i class="fab fa-python"></i><span>Python</span>
-            </div>
-            <div class="skill-item" data-category="languages">
-                <i class="fab fa-java"></i><span>Java</span>
-            </div>
-            <div class="skill-item" data-category="languages">
-                <i class="fas fa-cogs"></i><span>C</span>
-            </div>
-            <div class="skill-item" data-category="languages">
-                <i class="fas fa-cogs"></i><span>C++</span>
-            </div>
-            <!-- AI/ML Libraries -->
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-brain"></i><span>TensorFlow</span>
-            </div>
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-robot"></i><span>PyTorch</span>
-            </div>
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-project-diagram"></i><span>scikit-learn</span>
-            </div>
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-calculator"></i><span>NumPy</span>
-            </div>
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-table"></i><span>Pandas</span>
-            </div>
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-chart-line"></i><span>Matplotlib</span>
-            </div>
-            <div class="skill-item" data-category="ai-ml">
-                <i class="fas fa-chart-bar"></i><span>Seaborn</span>
-            </div>
-            <!-- GenAI & LLM Ops -->
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-link"></i><span>LangChain</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-star-of-life"></i><span>Gemini API</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-bolt"></i><span>Groq</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-box-open"></i><span>Hugging Face</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-sitemap"></i><span>RAG Arch.</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-database"></i><span>ChromaDB</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-cube"></i><span>FAISS</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-download"></i><span>Ollama</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-language"></i><span>Sentence Trans.</span>
-            </div>
-            <div class="skill-item" data-category="genai">
-                <i class="fas fa-cloud"></i><span>Vertex AI</span>
-            </div>
-            <!-- Tools & Platforms -->
-            <div class="skill-item" data-category="tools">
-                <i class="fab fa-git-alt"></i><span>Git</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fab fa-github"></i><span>GitHub</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fab fa-docker"></i><span>Docker</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-stream"></i><span>Streamlit</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-rocket"></i><span>FastAPI</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fab fa-dev"></i><span>Flutter</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fab fa-google"></i><span>Google Cloud</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-code"></i><span>VS Code</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-flask"></i><span>Jupyter Lab</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-book"></i><span>Google Colab</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-paper-plane"></i><span>Postman</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-database"></i><span>MySQL</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-drafting-compass"></i><span>Fusion 360</span>
-            </div>
-            <div class="skill-item" data-category="tools">
-                <i class="fas fa-ruler-combined"></i><span>SolidWorks</span>
-            </div>
-        </div>
+    <!-- Experience Section - NEW -->
+    <section id="experience" class="section">
+         <h2 class="section-title fade-in">Experience</h2>
+         <div class="timeline fade-in">
+             <div class="timeline-item">
+                 <div class="timeline-date">Jul 2024 – Present</div>
+                 <div class="timeline-role">AI Chatbot & GenAI App Developer</div>
+                 <div class="timeline-company">Fed Society</div>
+                 <ul class="timeline-details" style="margin-top: 15px;"> <!-- Added margin-top -->
+                     <li style="margin-bottom: 8px;">Designed and deployed personalized chatbot using Gemini API for community engagement.</li> <!-- Added margin-bottom -->
+                     <li style="margin-bottom: 8px;">Developed <strong>Aahar AI</strong>, an intelligent diet assistant for the Fed Society’s startup initiative.</li>
+                     <li style="margin-bottom: 8px;">Created a modular FastAPI backend with retrieval-augmented generation (RAG) pipeline.</li>
+                     <li style="margin-bottom: 8px;">Integrated medical history parsing and PDF chunking with 93% retrieval accuracy.</li>
+                     <li style="margin-bottom: 8px;">Achieved 30% faster data retrieval using optimized ChromaDB embeddings.</li>
+                     <li style="margin-bottom: 8px;">Collaborated in Agile environment ensuring cross-team coordination and timely delivery.</li>
+                 </ul>
+             </div>
+             <!-- Add more timeline-item blocks here for future experiences -->
+         </div>
     </section>
 
-    <!-- Projects Section: Spotlight Carousel -->
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <h2 class="section-title fade-in">Technical Skills</h2>
+        <div class="skills-tabs fade-in">
+            <button class="skill-tab active" data-category="all">All</button>
+            <button class="skill-tab" data-category="languages">Languages</button>
+            <button class="skill-tab" data-category="libs-fw">Libraries & Frameworks</button> <!-- MERGED Libs & FW -->
+            <button class="skill-tab" data-category="genai">GenAI & Tools</button> <!-- MERGED GenAI & Tools -->
+            <button class="skill-tab" data-category="dev-platforms">Dev Tools & Platforms</button> <!-- MERGED Dev Tools & Platforms -->
+             <!-- Removed 'practices' and 'soft skills' as tabs - better listed elsewhere or implied -->
+        </div>
+        <div id="skills-container" class="skills-grid fade-in">
+            <!-- Languages -->
+            <div class="skill-item" data-category="languages"><i class="fab fa-python"></i><span>Python</span></div>
+            <div class="skill-item" data-category="languages"><i class="fab fa-java"></i><span>Java</span></div>
+            <div class="skill-item" data-category="languages"><i class="fas fa-c"></i><span>C</span></div> <!-- Specific C icon -->
+            <div class="skill-item" data-category="languages"><i class="fas fa-c"></i><span>C++</span></div> <!-- Specific C++ icon (using C) -->
+            <div class="skill-item" data-category="languages"><i class="fab fa-dev"></i><span>Dart</span></div> <!-- Added Dart -->
+            
+            <!-- Libraries & Frameworks -->
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-brain"></i><span>TensorFlow</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-robot"></i><span>PyTorch</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-project-diagram"></i><span>scikit-learn</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-calculator"></i><span>NumPy</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-table"></i><span>Pandas</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-chart-line"></i><span>Matplotlib</span></div>
+             <div class="skill-item" data-category="libs-fw"><i class="fas fa-link"></i><span>LangChain</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-stream"></i><span>Streamlit</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-rocket"></i><span>FastAPI</span></div>
+            <div class="skill-item" data-category="libs-fw"><i class="fab fa-react"></i><span>React</span></div> <!-- Added React -->
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-fire"></i><span>Firebase</span></div> <!-- Added Firebase -->
+            <div class="skill-item" data-category="libs-fw"><i class="fas fa-box-open"></i><span>Transformers</span></div> <!-- Added Transformers -->
+             <div class="skill-item" data-category="libs-fw"><i class="fas fa-language"></i><span>Sentence Trans.</span></div>
+
+            <!-- GenAI & Tools -->
+            <div class="skill-item" data-category="genai"><i class="fas fa-star-of-life"></i><span>Gemini API</span></div>
+            <div class="skill-item" data-category="genai"><i class="fas fa-database"></i><span>ChromaDB</span></div>
+            <div class="skill-item" data-category="genai"><i class="fas fa-cube"></i><span>FAISS</span></div>
+            <div class="skill-item" data-category="genai"><i class="fas fa-download"></i><span>Ollama</span></div>
+            <div class="skill-item" data-category="genai"><i class="fab fa-hugging-face"></i><span>Hugging Face</span></div> <!-- Specific HF icon -->
+            
+            <!-- Dev Tools & Platforms -->
+            <div class="skill-item" data-category="dev-platforms"><i class="fab fa-git-alt"></i><span>Git</span></div>
+            <div class="skill-item" data-category="dev-platforms"><i class="fab fa-github"></i><span>GitHub</span></div>
+            <div class="skill-item" data-category="dev-platforms"><i class="fab fa-docker"></i><span>Docker</span></div>
+            <div class="skill-item" data-category="dev-platforms"><i class="fab fa-google"></i><span>Google Cloud</span></div> <!-- Added GC -->
+             <div class="skill-item" data-category="dev-platforms"><i class="fas fa-book"></i><span>Google Colab</span></div>
+             <div class="skill-item" data-category="dev-platforms"><i class="fas fa-flask"></i><span>Jupyter</span></div> <!-- Combined Lab/Notebook -->
+            <div class="skill-item" data-category="dev-platforms"><i class="fas fa-code"></i><span>VS Code</span></div>
+            <div class="skill-item" data-category="dev-platforms"><i class="fab fa-dev"></i><span>Flutter</span></div>
+            <div class="skill-item" data-category="dev-platforms"><i class="fab fa-figma"></i><span>Figma</span></div> <!-- Added Figma -->
+            <div class="skill-item" data-category="dev-platforms"><i class="fas fa-drafting-compass"></i><span>Fusion 360</span></div>
+            <div class="skill-item" data-category="dev-platforms"><i class="fas fa-ruler-combined"></i><span>SolidWorks</span></div>
+             <!-- Removed Postman, MySQL as they are less core maybe -->
+        </div>
+         <!-- Optional: Add Practices/Soft Skills as text below the grid -->
+         <div style="text-align: center; margin-top: 40px; opacity: 0.8; font-size: 0.9rem;" class="fade-in">
+              <p><strong>Development Practices:</strong> Agile Development, Object-Relational Mapping (ORM), REST API Design, CI/CD</p>
+              <p style="margin-top: 10px;"><strong>Also proficient in:</strong> Leadership, Communication, Problem Solving, Teamwork, Adaptability, Time Management</p>
+         </div>
+    </section>
+
+    <!-- Projects Section -->
     <section id="projects" class="section">
-        <h2 class="section-title fade-in">My Projects</h2>
+        <h2 class="section-title fade-in">Featured Projects</h2> <!-- Updated Title -->
         <div class="projects-carousel-container fade-in">
             <div class="projects-carousel" id="projects-carousel">
-                <!-- Project Slide 1: Hindu Scripture Q&A App -->
+
+                <!-- Project Slide 1: Translate-V2 -->
                 <div class="project-slide">
                     <div class="project-image-container">
-                        <img src="https://placehold.co/400x300/0FF0FC/1A1A1D?text=Hindu+App" alt="Hindu Scripture Q&A App" class="project-image">
+                         <img src="https://placehold.co/400x300/0FF0FC/1A1A1D?text=Translate-V2" alt="Translate-V2" class="project-image">
                     </div>
                     <div class="project-details">
-                        <h3 class="project-title">Hindu Scripture Q&A App</h3>
-                        <p class="project-description">A cross-platform RAG-based assistant providing answers from Hindu scriptures, built with Flutter and FastAPI.</p>
+                        <h3 class="project-title">Translate-V2 – Neural Machine Translation</h3>
+                        <ul class="project-points">
+                             <li>Built and deployed a multilingual translation system (Nepali & Sinhala → English) using fine-tuned NLLB-200 model.</li>
+                             <li>Integrated FastAPI backend and interactive web UI for real-time translations.</li>
+                             <li>Containerized app with Docker and deployed to Hugging Face Spaces.</li>
+                             <li>Achieved 92% BLEU score on test corpus; reduced inference latency by 38%.</li>
+                        </ul>
                         <div class="project-tech">
-                            <span class="tech-tag">Flutter</span>
-                            <span class="tech-tag">FastAPI</span>
-                            <span class="tech-tag">Gemini API</span>
-                            <span class="tech-tag">LangChain</span>
-                            <span class="tech-tag">ChromaDB</span>
-                            <span class="tech-tag">Hugging Face</span>
-                            <span class="tech-tag">RAG</span>
+                            <span class="tech-tag">FastAPI</span><span class="tech-tag">Transformers</span><span class="tech-tag">PyTorch</span><span class="tech-tag">Docker</span><span class="tech-tag">Hugging Face</span>
                         </div>
                         <div class="project-buttons">
-                            <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
-                            <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="btn btn-secondary">View Code</a>
-                            <button class="btn btn-secondary ai-summary-btn" data-project="Hindu Scripture Q&A App">AI Summary</button>
+                            <a href="https://huggingface.co/spaces/Dyno1307/Translate-V2" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Live Demo</a>
+                            <!-- No GitHub link provided for this one -->
+                             <button class="btn btn-secondary ai-summary-btn" data-project="Translate-V2 Neural Machine Translation App"><i class="fas fa-robot"></i> AI Summary</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project Slide 2: AI Expense Advisor (India Edition) -->
+                <!-- Project Slide 2: AI Expense Advisor -->
                 <div class="project-slide">
                     <div class="project-image-container">
                         <img src="https://placehold.co/400x300/00FFAB/1A1A1D?text=Expense+Advisor" alt="AI Expense Advisor" class="project-image">
                     </div>
                     <div class="project-details">
                         <h3 class="project-title">AI Expense Advisor (India Edition)</h3>
-                        <p class="project-description">A budgeting app powered by Gemini API, offering sarcastic GenAI advice for managing expenses, integrated with LangChain and RAG.</p>
+                         <ul class="project-points">
+                              <li>Built a budgeting assistant that generates sarcastic financial advice using Gemini API.</li>
+                              <li>Integrated embeddings, sentence transformers, and FAQ matcher for dynamic query understanding.</li>
+                              <li>Enhanced UI with income sliders and visual charts, boosting user engagement by 25%.</li>
+                         </ul>
                         <div class="project-tech">
-                            <span class="tech-tag">Streamlit</span>
-                            <span class="tech-tag">Gemini API</span>
-                            <span class="tech-tag">LangChain</span>
-                            <span class="tech-tag">Hugging Face Embeddings</span>
-                            <span class="tech-tag">RAG</span>
+                            <span class="tech-tag">Streamlit</span><span class="tech-tag">Gemini API</span><span class="tech-tag">LangChain</span><span class="tech-tag">Hugging Face</span><span class="tech-tag">RAG</span>
                         </div>
                         <div class="project-buttons">
-                            <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
-                            <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="btn btn-secondary">View Code</a>
-                            <button class="btn btn-secondary ai-summary-btn" data-project="AI Expense Advisor (India Edition)">AI Summary</button>
+                            <a href="https://nltk-exp-hfdde4w7vwxjnjjijvcsdi.streamlit.app/" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Live Demo</a>
+                            <a href="https://github.com/DYNOSuprovo/NLTK-EXP" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> View Code</a>
+                            <button class="btn btn-secondary ai-summary-btn" data-project="AI Expense Advisor (India Edition)"><i class="fas fa-robot"></i> AI Summary</button>
+                        </div>
+                    </div>
+                </div>
+                
+                 <!-- Project Slide 3: Aahar AI -->
+                <div class="project-slide">
+                    <div class="project-image-container">
+                         <img src="https://placehold.co/400x300/A020F0/1A1A1D?text=Aahar+AI" alt="Aahar AI" class="project-image">
+                    </div>
+                    <div class="project-details">
+                        <h3 class="project-title">Aahar AI -- Diet & Health Recommendation</h3>
+                         <ul class="project-points">
+                              <li>Developed AI-powered diet advisor that parses PDF-based diet plans and generates health insights.</li>
+                              <li>Implemented RetrievalQA with vector embeddings for contextual query response.</li>
+                              <li>Reduced response latency by 40% via API caching and async processing.</li>
+                              <li>Backend hosted with FastAPI and frontend built in Flutter for cross-platform access.</li>
+                         </ul>
+                        <div class="project-tech">
+                            <span class="tech-tag">FastAPI</span><span class="tech-tag">Flutter</span><span class="tech-tag">Gemini</span><span class="tech-tag">ChromaDB</span><span class="tech-tag">Hugging Face</span>
+                        </div>
+                        <div class="project-buttons">
+                            <a href="https://aaharai.firebaseapp.com/" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Live Demo</a>
+                             <!-- No GitHub link provided -->
+                            <button class="btn btn-secondary ai-summary-btn" data-project="Aahar AI Diet & Health Recommendation System"><i class="fas fa-robot"></i> AI Summary</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project Slide 3: RAG-based Diet Advisor -->
+                <!-- Project Slide 4: Hindu Scripture Q&A -->
                 <div class="project-slide">
                     <div class="project-image-container">
-                        <img src="https://placehold.co/400x300/A020F0/1A1A1D?text=Diet+Advisor" alt="RAG-based Diet Advisor" class="project-image">
+                        <img src="https://placehold.co/400x300/FF9933/1A1A1D?text=Hindu+GPT" alt="Hindu Scripture Q&A App" class="project-image"> <!-- Changed Color -->
                     </div>
                     <div class="project-details">
-                        <h3 class="project-title">RAG-based Diet Advisor</h3>
-                        <p class="project-description">A GenAI assistant that provides context-aware diet suggestions by parsing PDFs, creating embeddings, and using RetrievalQA.</p>
+                        <h3 class="project-title">Hindu Scripture Q&A App</h3>
+                         <ul class="project-points">
+                              <li>Built a RAG-based AI assistant that answers questions from Hindu scriptures.</li>
+                              <li>Embedded scripture PDFs into ChromaDB vectors for contextual conversation memory.</li>
+                              <li>Enabled multi-turn reasoning and LAN-based backend for faster access.</li>
+                         </ul>
                         <div class="project-tech">
-                            <span class="tech-tag">LangChain</span>
-                            <span class="tech-tag">Gemini API</span>
-                            <span class="tech-tag">ChromaDB</span>
-                            <span class="tech-tag">Hugging Face</span>
-                            <span class="tech-tag">RetrievalQA</span>
+                           <span class="tech-tag">FastAPI</span><span class="tech-tag">Flutter</span> <span class="tech-tag">Streamlit</span><span class="tech-tag">LangChain</span><span class="tech-tag">Gemini</span><span class="tech-tag">ChromaDB</span>
                         </div>
                         <div class="project-buttons">
-                            <a href="https://github.com/DYNOSuprovo/Diet-Suggest" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
-                            <a href="https://github.com/DYNOSuprovo/Diet-Suggest" target="_blank" class="btn btn-secondary">View Code</a>
-                            <button class="btn btn-secondary ai-summary-btn" data-project="RAG-based Diet Advisor">AI Summary</button>
+                             <a href="https://hindugptbydrago.streamlit.app/" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Live Demo</a>
+                            <a href="https://github.com/DYNOSuprovo/Hindu" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> View Code</a>
+                            <button class="btn btn-secondary ai-summary-btn" data-project="Hindu Scripture Q&A App"><i class="fas fa-robot"></i> AI Summary</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project Slide 4: ProblemSolverQP -->
+                <!-- Project Slide 5: ProblemSolverQP -->
                 <div class="project-slide">
-                    <div class="project-image-container">
-                        <img src="https://placehold.co/400x300/0FF0FC/1A1A1D?text=ProblemSolverQP" alt="ProblemSolverQP" class="project-image">
-                    </div>
-                    <div class="project-details">
-                        <h3 class="project-title">ProblemSolverQP</h3>
-                        <p class="project-description">A Python automation tool designed to parse academic question papers and generate solutions.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Automation</span>
-                        </div>
-                        <div class="project-buttons">
-                            <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="btn btn-primary">Live Demo (Coming Soon)</a>
-                            <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="btn btn-secondary">View Code</a>
-                            <button class="btn btn-secondary ai-summary-btn" data-project="ProblemSolverQP">AI Summary</button>
-                        </div>
-                    </div>
-                </div>
+                     <div class="project-image-container">
+                         <img src="https://placehold.co/400x300/0FF0FC/1A1A1D?text=ProblemSolverQP" alt="ProblemSolverQP" class="project-image">
+                     </div>
+                     <div class="project-details">
+                         <h3 class="project-title">ProblemSolverQP</h3>
+                          <ul class="project-points">
+                              <li>Automated parser that reads academic question papers and generates model answers.</li>
+                              <li>Used regex and NLP-based keyword detection to structure output efficiently.</li>
+                          </ul>
+                         <div class="project-tech">
+                             <span class="tech-tag">Python</span><span class="tech-tag">Streamlit</span><span class="tech-tag">Regex</span><span class="tech-tag">NLP</span>
+                         </div>
+                         <div class="project-buttons">
+                             <a href="https://question-paper-solver-4hrjgkllywsdrzxchusqb3.streamlit.app/" target="_blank" class="btn btn-primary"><i class="fas fa-rocket"></i> Live Demo</a>
+                             <a href="https://github.com/DYNOSuprovo/ProblemSolverQP" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> View Code</a>
+                             <button class="btn btn-secondary ai-summary-btn" data-project="ProblemSolverQP"><i class="fas fa-robot"></i> AI Summary</button>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <!-- Project Slide 6: Churn Prediction -->
+                 <div class="project-slide">
+                     <div class="project-image-container">
+                          <img src="https://placehold.co/400x300/FF5733/1A1A1D?text=Churn+Prediction" alt="Churn Prediction" class="project-image"> <!-- New Color -->
+                     </div>
+                     <div class="project-details">
+                         <h3 class="project-title">User Churn Prediction Model</h3>
+                          <ul class="project-points">
+                              <li>Built real-time user churn prediction model with logistic regression and TensorFlow.</li>
+                              <li>Achieved 0.87 AUC and 85% accuracy on validation data through feature scaling.</li>
+                              <li>Deployed ML pipeline for live input inference.</li>
+                          </ul>
+                         <div class="project-tech">
+                             <span class="tech-tag">TensorFlow</span><span class="tech-tag">scikit-learn</span><span class="tech-tag">Python</span>
+                         </div>
+                         <div class="project-buttons">
+                              <!-- No links provided -->
+                             <button class="btn btn-secondary ai-summary-btn" data-project="User Churn Prediction Model"><i class="fas fa-robot"></i> AI Summary</button>
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Project Slide 7: Car Price Prediction -->
+                  <div class="project-slide">
+                     <div class="project-image-container">
+                          <img src="https://placehold.co/400x300/33FF57/1A1A1D?text=Car+Price" alt="Car Price Prediction" class="project-image"> <!-- New Color -->
+                     </div>
+                     <div class="project-details">
+                         <h3 class="project-title">Car Price Prediction</h3>
+                          <ul class="project-points">
+                              <li>Trained regression models on car dataset with hyperparameter tuning.</li>
+                              <li>Conducted EDA and model comparison (Ridge, Lasso, Random Forest) with MAE = 2.4.</li>
+                          </ul>
+                         <div class="project-tech">
+                             <span class="tech-tag">NumPy</span><span class="tech-tag">Pandas</span><span class="tech-tag">scikit-learn</span><span class="tech-tag">Python</span>
+                         </div>
+                         <div class="project-buttons">
+                              <!-- No links provided -->
+                             <button class="btn btn-secondary ai-summary-btn" data-project="Car Price Prediction Model"><i class="fas fa-robot"></i> AI Summary</button>
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Project Slide 8: Diabetes Prediction -->
+                  <div class="project-slide">
+                     <div class="project-image-container">
+                          <img src="https://placehold.co/400x300/5733FF/1A1A1D?text=Diabetes+Prediction" alt="Diabetes Prediction" class="project-image"> <!-- New Color -->
+                     </div>
+                     <div class="project-details">
+                         <h3 class="project-title">Diabetes Prediction Model</h3>
+                          <ul class="project-points">
+                              <li>Built classification pipeline on real-world data using Logistic Regression and Random Forest.</li>
+                              <li>Improved model F1-score by 10% via feature scaling and class balancing.</li>
+                          </ul>
+                         <div class="project-tech">
+                             <span class="tech-tag">scikit-learn</span><span class="tech-tag">Matplotlib</span><span class="tech-tag">Python</span>
+                         </div>
+                         <div class="project-buttons">
+                              <!-- No links provided -->
+                             <button class="btn btn-secondary ai-summary-btn" data-project="Diabetes Prediction Model"><i class="fas fa-robot"></i> AI Summary</button>
+                         </div>
+                     </div>
+                 </div>
+
             </div>
             <div class="carousel-nav prev" id="carousel-prev"><i class="fas fa-chevron-left"></i></div>
             <div class="carousel-nav next" id="carousel-next"><i class="fas fa-chevron-right"></i></div>
@@ -1387,7 +1343,7 @@
         </div>
     </section>
 
-    <!-- Resume Section: Download and Preview -->
+    <!-- Resume Section -->
     <section id="resume" class="section resume-section">
         <h2 class="section-title fade-in">My Resume & Certifications</h2>
         <div class="resume-grid">
@@ -1396,22 +1352,23 @@
                 <p>As a driven AI/ML Developer, I bring a strong foundation in machine learning, deep learning, and generative AI. My expertise spans building intelligent applications, optimizing models, and implementing RAG architectures for enhanced context awareness.</p>
                 <p style="margin-top: 10px;">Key highlights include:</p>
                 <ul style="list-style: disc; margin-left: 20px; margin-top: 10px;">
-                    <li>Developed and deployed RAG-based AI assistants using LangChain and Gemini API.</li>
+                    <li>Developed and deployed RAG-based AI assistants (Aahar AI, Hindu Q&A) using LangChain and Gemini API.</li>
+                    <li>Built and deployed multilingual NMT systems (Translate-V2) using Transformers & FastAPI.</li>
                     <li>Proficient in Python, TensorFlow, PyTorch, and various data science libraries.</li>
-                    <li>Strong problem-solving skills demonstrated through competitive programming.</li>
+                    <li>Experienced in cloud platforms (Hugging Face Spaces, Firebase, Google Cloud) and containerization (Docker).</li>
                     <li>Committed to continuous learning and open-source contributions.</li>
                 </ul>
-                <a href="Suprovo_Mallick_Resume.pdf" target="_blank" class="btn btn-primary" download style="margin-top: 30px;">Download Resume (PDF)</a>
+                <a href="Suprovo_Mallick_Resume.pdf" target="_blank" class="btn btn-primary" download style="margin-top: 30px;"><i class="fas fa-download"></i> Download Resume (PDF)</a>
             </div>
             <div class="resume-preview-container fade-in">
                 <h3>Resume Preview</h3>
-                <!-- Ensure 'Suprovo_Mallick_Resume.pdf' is in the same directory for this to work -->
-                <iframe src="Suprovo_Mallick_Resume.pdf" title="Suprovo Mallick Resume"></iframe>
+                <iframe src="Suprovo_Mallick_Resume.pdf" title="Suprovo Mallick Resume" loading="lazy"></iframe> <!-- Added lazy loading -->
             </div>
         </div>
 
         <h2 class="section-title fade-in" style="margin-top: 80px;">Licenses & Certifications</h2>
         <ul class="certifications-list fade-in">
+             <!-- Certifications List Items... -->
             <li>
                 <div class="cert-title">Supervised Machine Learning: Regression and Classification</div>
                 <div class="cert-issuer">DeepLearning.AI, Stanford University</div>
@@ -1445,21 +1402,18 @@
                 <div class="cert-issuer">Microsoft and LinkedIn</div>
                 <div class="cert-date">Issued Jul 2024</div>
                 <div class="cert-skills">Skills: Computer Ethics</div>
-                <!-- No direct credential URL provided, so no link -->
             </li>
             <li>
                 <div class="cert-title">Digital Skills: Artificial Intelligence</div>
                 <div class="cert-issuer">Accenture</div>
                 <div class="cert-date">Issued Jul 2024</div>
                 <div class="cert-skills">Skills: Computer Science</div>
-                <!-- No direct credential URL provided, so no link -->
             </li>
             <li>
                 <div class="cert-title">Generative AI: The Evolution of Thoughtful Online Search</div>
                 <div class="cert-issuer">LinkedIn</div>
                 <div class="cert-date">Issued Jul 2024</div>
                 <div class="cert-skills">Skills: Artificial Intelligence for Business · Computer Science · Search Engine Technology</div>
-                <!-- No direct credential URL provided, so no link -->
             </li>
             <li>
                 <div class="cert-title">Google AI Essentials</div>
@@ -1487,7 +1441,6 @@
                 <div class="cert-issuer">LinkedIn</div>
                 <div class="cert-date">Issued Jul 2024</div>
                 <div class="cert-skills">Skills: Artificial Intelligence for Business · Computer Science · Microsoft 365 · Microsoft Copilot</div>
-                <!-- No direct credential URL provided, so no link -->
             </li>
             <li>
                 <div class="cert-title">Machine Learning with PySpark: Customer Churn Analysis</div>
@@ -1498,27 +1451,26 @@
             </li>
             <li>
                 <div class="cert-title">Streamlining Your Work with Microsoft Copilot</div>
-                <div class="cert-issuer">LinkedIn</div>
+                <div class="cert-issuer">LinkedIn</div> 
                 <div class="cert-date">Issued Jul 2024</div>
                 <div class="cert-skills">Skills: Computer Science · Productivity Improvement · Microsoft Copilot</div>
-                <!-- No direct credential URL provided, so no link -->
             </li>
             <li>
                 <div class="cert-title">What Is Generative AI?</div>
                 <div class="cert-issuer">LinkedIn</div>
                 <div class="cert-date">Issued Jul 2024</div>
                 <div class="cert-skills">Skills: Computer Science · Artificial Intelligence (AI) · Generative AI · Generative AI Tools</div>
-                <!-- No direct credential URL provided, so no link -->
             </li>
         </ul>
     </section>
 
-    <!-- Contact Section: Get in Touch and Socials (Chat Style) -->
+    <!-- Contact Section -->
     <section id="contact" class="section">
-        <h2 class="section-title fade-in">Let's Chat!</h2>
+        <h2 class="section-title fade-in">Let's Connect!</h2> <!-- Updated Title -->
         <div class="chat-contact-container fade-in">
+             <p style="text-align: center; opacity: 0.9;">Interested in collaborating or have a question? Drop me a message below or connect with me on social media!</p> <!-- Added intro text -->
             <div class="chat-messages" id="chat-messages">
-                <div class="chat-message ai">Hello! How can I help you today?</div>
+                <div class="chat-message ai">Hello! How can I help you today? Or feel free to connect!</div> <!-- Updated greeting -->
             </div>
             <div class="chat-input-area">
                 <input type="text" id="chat-input" placeholder="Type your message here..." />
@@ -1534,7 +1486,7 @@
         </div>
     </section>
 
-    <!-- AI Demo Modal -->
+    <!-- Modals -->
     <div id="ai-demo-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -1543,13 +1495,11 @@
             <button class="btn btn-primary" onclick="document.getElementById('ai-demo-modal').style.display='none'">Got It!</button>
         </div>
     </div>
-
-    <!-- AI Summary Modal -->
-    <div id="ai-summary-modal" class="modal">
+    <div id="ai-summary-modal" class="modal"> 
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h3>AI Summary</h3>
-            <p id="ai-summary-text">Generating summary...</p>
+            <h3>AI Project Summary</h3> <!-- Updated Title -->
+            <p id="ai-summary-text" style="text-align: left;"></p> <!-- Align text left -->
             <button class="btn btn-primary" onclick="document.getElementById('ai-summary-modal').style.display='none'">Close</button>
         </div>
     </div>
@@ -1558,324 +1508,347 @@
     <div class="command-bar" id="command-bar">
         <input type="text" id="command-input" placeholder="Type a command (e.g., 'projects', 'resume', 'contact'). Press Esc to close." />
         <div class="command-suggestions">
+            <span class="command-suggestion" data-command="home">Home</span> <!-- Added Home -->
+            <span class="command-suggestion" data-command="about">About</span>
+            <span class="command-suggestion" data-command="experience">Experience</span> <!-- Added Experience -->
+            <span class="command-suggestion" data-command="skills">Skills</span>
             <span class="command-suggestion" data-command="projects">Projects</span>
             <span class="command-suggestion" data-command="resume">Resume</span>
             <span class="command-suggestion" data-command="contact">Contact</span>
-            <span class="command-suggestion" data-command="about">About</span>
-            <span class="command-suggestion" data-command="skills">Skills</span>
         </div>
     </div>
 
-    <!-- JavaScript for Interactivity and Animations -->
+    <!-- JavaScript -->
     <script>
-        // Particle animation: Dynamically create and animate background particles
-        const particlesContainer = document.getElementById('particles');
-        const numParticles = 70; // Increased number of particles for denser effect
-
-        for (let i = 0; i < numParticles; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            // Randomize width and height for visual variety
-            const size = Math.random() * 3 + 1; // Size between 1px and 4px
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            // Randomly position particles across the viewport
-            particle.style.left = `${Math.random() * 100}vw`;
-            // Randomize animation duration and delay for varied movement
-            particle.style.animationDuration = `${Math.random() * 10 + 10}s`; // Duration between 10s and 20s
-            particle.style.animationDelay = `${Math.random() * -15}s`; // Negative delay to start particles at different stages
-            particlesContainer.appendChild(particle);
-        }
-
-        // Navbar scroll effect: Change navbar style on scroll
+        // --- Setup ---
         const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // If scrolled down more than 50px
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('.nav-links a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent default anchor click behavior
-                // Scroll to the target section smoothly
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Typewriter effect for the hero subtitle
-        const typewriterTexts = [
-            "I build intelligent applications.",
-            "I craft GenAI solutions.",
-            "I solve complex problems with AI.",
-            "I innovate with LLMs and RAG."
-        ];
+        const particlesContainer = document.getElementById('particles');
         const typewriterElement = document.getElementById('typewriter');
-        let textIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        let typeSpeed = 80;
-        let deleteSpeed = 40;
-        let pauseBeforeDelete = 1500;
-        let pauseBeforeType = 500;
+        const skillsContainer = document.getElementById('skills-container');
+        const projectsCarousel = document.getElementById('projects-carousel');
+        const carouselDotsContainer = document.getElementById('carousel-dots');
+        const chatInput = document.getElementById('chat-input');
+        const sendChatBtn = document.getElementById('send-chat-btn');
+        const chatMessagesContainer = document.getElementById('chat-messages');
+        const commandBar = document.getElementById('command-bar');
+        const commandInput = document.getElementById('command-input');
+        const aiSummaryModal = document.getElementById('ai-summary-modal');
+        const aiSummaryTextElement = document.getElementById('ai-summary-text');
 
-        function typeWriter() {
-            const currentFullText = typewriterTexts[textIndex];
-            const currentDisplayedText = currentFullText.substring(0, charIndex);
-            typewriterElement.textContent = currentDisplayedText;
-
-            if (!isDeleting && charIndex < currentFullText.length) {
-                // Typing forward
-                charIndex++;
-                setTimeout(typeWriter, typeSpeed);
-            } else if (isDeleting && charIndex > 0) {
-                // Deleting backward
-                charIndex--;
-                setTimeout(typeWriter, deleteSpeed);
-            } else if (!isDeleting && charIndex === currentFullText.length) {
-                // End of typing, pause then start deleting
-                isDeleting = true;
-                setTimeout(typeWriter, pauseBeforeDelete);
-            } else if (isDeleting && charIndex === 0) {
-                // End of deleting, pause then start typing again
-                isDeleting = false;
-                textIndex = (textIndex + 1) % typewriterTexts.length; // Move to next text
-                setTimeout(typeWriter, pauseBeforeType);
+        // --- Particle Animation ---
+        if (particlesContainer) {
+            const numParticles = 50; 
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 2 + 1; 
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.animationDuration = `${Math.random() * 15 + 15}s`; 
+                particle.style.animationDelay = `${Math.random() * -20}s`; 
+                particlesContainer.appendChild(particle);
             }
         }
-        typeWriter(); // Start the typewriter effect
 
-        // Ripple effect for buttons
-        document.querySelectorAll('.btn').forEach(button => {
+        // --- Navbar Scroll Effect ---
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            });
+        }
+
+        // --- Smooth Scrolling ---
+        document.querySelectorAll('.nav-links a, .cta-buttons a, .command-suggestion').forEach(anchor => {
+             const href = anchor.getAttribute('href') || `#${anchor.dataset.command}`; // Handle command bar clicks too
+             if (href && href.startsWith('#')) {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault(); 
+                    const targetId = href.substring(1); // Get id without #
+                    const targetElement = document.getElementById(targetId); // Use getElementById
+                    if (targetElement) {
+                        // Calculate offset position considering fixed navbar height
+                        const navHeight = navbar ? navbar.offsetHeight : 80;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navHeight - 20; // Extra 20px padding
+
+                         window.scrollTo({
+                             top: offsetPosition,
+                             behavior: "smooth"
+                         });
+
+                         // Close command bar if open
+                         if (commandBar && commandBar.classList.contains('active')) {
+                              commandBar.classList.remove('active');
+                              if (commandInput) commandInput.blur();
+                         }
+                    } else if (commandBar && commandBar.classList.contains('active')) { // Close command bar even if target not found (for command bar clicks)
+                        commandBar.classList.remove('active');
+                        if (commandInput) commandInput.blur();
+                    }
+                });
+            }
+        });
+
+
+        // --- Typewriter Effect ---
+        if (typewriterElement) {
+            const typewriterTexts = [
+                "I build intelligent applications.",
+                "I craft GenAI solutions.",
+                "I solve complex problems with AI.",
+                "I innovate with LLMs and RAG."
+            ];
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const typeSpeed = 80;
+            const deleteSpeed = 40;
+            const pauseBeforeDelete = 1500;
+            const pauseBeforeType = 500;
+
+            function typeWriter() {
+                const currentFullText = typewriterTexts[textIndex];
+                const currentDisplayedText = currentFullText.substring(0, charIndex);
+                typewriterElement.textContent = currentDisplayedText;
+                let timeoutSpeed = typeSpeed;
+
+                if (isDeleting) {
+                    timeoutSpeed = deleteSpeed;
+                    charIndex--;
+                } else {
+                    charIndex++;
+                }
+
+                if (!isDeleting && charIndex === currentFullText.length) {
+                    timeoutSpeed = pauseBeforeDelete;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    timeoutSpeed = pauseBeforeType;
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % typewriterTexts.length; 
+                }
+                setTimeout(typeWriter, timeoutSpeed);
+            }
+            typeWriter(); 
+        }
+
+        // --- Ripple Effect ---
+        document.querySelectorAll('.btn:not(a):not(#open-ai-demo-modal):not(.ai-summary-btn)').forEach(button => {
+             // Apply only to buttons that aren't links or modal triggers
             button.addEventListener('click', function (e) {
                 const ripple = document.createElement('span');
                 ripple.classList.add('ripple');
-
-                // Calculate position of the ripple relative to the button
                 const rect = button.getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height);
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
-
                 ripple.style.width = ripple.style.height = `${size}px`;
                 ripple.style.left = `${x}px`;
                 ripple.style.top = `${y}px`;
-
-                // Append ripple and remove it after animation
                 this.appendChild(ripple);
-                ripple.addEventListener('animationend', () => {
-                    ripple.remove();
+                ripple.addEventListener('animationend', () => ripple.remove());
+            });
+        });
+
+        // --- Scroll Fade-In Animation ---
+        const faders = document.querySelectorAll('.fade-in'); 
+        if (faders.length > 0) {
+            const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }; 
+            const appearOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible'); 
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, appearOptions);
+            faders.forEach(fader => appearOnScroll.observe(fader));
+        }
+
+        // --- Active Nav Link (Scrollspy) ---
+        const sections = document.querySelectorAll('section[id]'); 
+        const navLinks = document.querySelectorAll('.nav-link'); 
+        if (sections.length > 0 && navLinks.length > 0) {
+            window.addEventListener('scroll', () => {
+                let current = ''; 
+                const scrollPosY = window.pageYOffset;
+                const navHeight = navbar ? navbar.offsetHeight : 80;
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - navHeight - 50; // Increased offset margin
+                    const sectionHeight = section.clientHeight;
+                    if (scrollPosY >= sectionTop && scrollPosY < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id'); 
+                    }
+                });
+                 
+                // If scrolled past the last section, keep the last link active
+                const lastSection = sections[sections.length - 1];
+                if (scrollPosY >= lastSection.offsetTop + lastSection.clientHeight - window.innerHeight) {
+                    current = lastSection.getAttribute('id');
+                }
+                 // If scrolled near the top, activate 'home'
+                if (scrollPosY < sections[0].offsetTop - navHeight - 50) {
+                     current = 'home';
+                }
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    if (linkHref && linkHref.includes(current)) {
+                        link.classList.add('active');
+                    }
                 });
             });
-        });
+             // Initial check on load
+             window.dispatchEvent(new Event('scroll'));
+        }
 
-
-        // Scroll animation (fade-in): Elements fade and slide up as they enter viewport
-        const faders = document.querySelectorAll('.fade-in'); // Select all elements with 'fade-in' class
-
-        const appearOptions = {
-            threshold: 0.2, // When 20% of the element is visible
-            rootMargin: "0px 0px -50px 0px" // Start animation 50px before it's fully on screen
-        };
-
-        const appearOnScroll = new IntersectionObserver(function(
-            entries,
-            appearOnScroll
-        ) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    return; // If not intersecting, do nothing
-                } else {
-                    entry.target.classList.add('visible'); // Add 'visible' class to trigger animation
-                    appearOnScroll.unobserve(entry.target); // Stop observing once visible
-                }
-            });
-        },
-        appearOptions);
-
-        // Observe each 'fade-in' element
-        faders.forEach(fader => {
-            appearOnScroll.observe(fader);
-        });
-
-        // Active navigation link on scroll (Scrollspy): Highlight current section in navbar
-        const sections = document.querySelectorAll('section[id]'); // All sections with an ID
-        const navLinks = document.querySelectorAll('.nav-link'); // All navigation links
-
-        window.addEventListener('scroll', () => {
-            let current = ''; // Variable to store the ID of the current section
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop; // Top position of the section
-                const sectionHeight = section.clientHeight; // Height of the section
-                // Check if the current scroll position is within the section, adjusting for navbar height
-                if (pageYOffset >= sectionTop - navbar.offsetHeight - 20) {
-                    current = section.getAttribute('id'); // Set current section ID
-                }
-            });
-
-            // Remove 'active' class from all links and add to the current one
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // 3D Neural Network Visualization (Hero Section)
+        // --- 3D Neural Network (Hero Section) ---
         let scene, camera, renderer, nodes = [], connections = [];
         const canvas = document.getElementById('neural-network-canvas');
 
         function initThreeJS() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            if (!canvas) return; 
+            try {
+                 scene = new THREE.Scene();
+                 camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                 renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+                 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
-            // Add ambient light
-            const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
-            scene.add(ambientLight);
+                const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // Slightly brighter ambient
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // Slightly brighter directional
+                directionalLight.position.set(1, 1, 1).normalize();
+                scene.add(directionalLight);
 
-            // Add directional light
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight.position.set(1, 1, 1).normalize();
-            scene.add(directionalLight);
+                const nodeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FFAB, emissive: 0x00FFAB, emissiveIntensity: 0.6 }); 
+                const numLayers = 3;
+                const nodesPerLayer = [5, 8, 5]; 
+                const layerSpacing = 3; 
+                const maxNodeOffset = 2; 
 
-            // Create nodes (spheres)
-            const nodeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FFAB, emissive: 0x00FFAB, emissiveIntensity: 0.5 }); // Mint Neon
-            const numLayers = 3;
-            const nodesPerLayer = [5, 8, 5]; // Nodes in each layer
-            const layerSpacing = 3; // Z-axis spacing between layers
-            const maxNodeOffset = 2; // Max random offset for nodes
-
-            for (let i = 0; i < numLayers; i++) {
-                const layerNodes = [];
-                for (let j = 0; j < nodesPerLayer[i]; j++) {
-                    const geometry = new THREE.SphereGeometry(0.1, 16, 16);
-                    const node = new THREE.Mesh(geometry, nodeMaterial);
-                    node.position.set(
-                        (Math.random() - 0.5) * maxNodeOffset * 2,
-                        (Math.random() - 0.5) * maxNodeOffset * 2,
-                        i * layerSpacing - (numLayers - 1) * layerSpacing / 2
-                    );
-                    scene.add(node);
-                    layerNodes.push(node);
+                nodes = []; 
+                for (let i = 0; i < numLayers; i++) {
+                    const layerNodes = [];
+                    for (let j = 0; j < nodesPerLayer[i]; j++) {
+                        const geometry = new THREE.SphereGeometry(0.1, 16, 16);
+                        const node = new THREE.Mesh(geometry, nodeMaterial);
+                        node.position.set(
+                            (Math.random() - 0.5) * maxNodeOffset * 2,
+                            (Math.random() - 0.5) * maxNodeOffset * 2,
+                            i * layerSpacing - (numLayers - 1) * layerSpacing / 2
+                        );
+                        scene.add(node);
+                        layerNodes.push(node);
+                    }
+                    nodes.push(layerNodes);
                 }
-                nodes.push(layerNodes);
-            }
 
-            // Create connections (lines)
-            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0FF0FC, transparent: true, opacity: 0.3 }); // Electric Cyan
-            for (let i = 0; i < numLayers - 1; i++) {
-                for (let j = 0; j < nodes[i].length; j++) {
-                    for (let k = 0; k < nodes[i+1].length; k++) {
-                        const points = [];
-                        points.push(nodes[i][j].position);
-                        points.push(nodes[i+1][k].position);
-                        const geometry = new THREE.BufferGeometry().setFromPoints(points);
-                        const line = new THREE.Line(geometry, lineMaterial);
-                        scene.add(line);
-                        connections.push(line);
+                connections = []; 
+                 scene.children.filter(child => child instanceof THREE.Line).forEach(line => scene.remove(line));
+
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0FF0FC, transparent: true, opacity: 0.3 }); 
+                for (let i = 0; i < numLayers - 1; i++) {
+                    for (let j = 0; j < nodes[i].length; j++) {
+                        for (let k = 0; k < nodes[i+1].length; k++) {
+                            const points = [nodes[i][j].position, nodes[i+1][k].position];
+                            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                            const line = new THREE.Line(geometry, lineMaterial);
+                            scene.add(line);
+                            connections.push(line);
+                        }
                     }
                 }
-            }
 
-            camera.position.z = 8; // Adjust camera distance
+                camera.position.z = 7; // Slightly closer
 
-            // Handle window resize
-            window.addEventListener('resize', onWindowResize, false);
-            function onWindowResize() {
-                camera.aspect = canvas.clientWidth / canvas.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                window.addEventListener('resize', onWindowResize, false);
+                onWindowResize(); 
+            } catch(e) {
+                 console.error("Three.js Init Error:", e);
+                 if(canvas) canvas.style.display = 'none'; // Hide canvas if error
             }
         }
 
+         function onWindowResize() {
+             if (!canvas || !camera || !renderer) return; 
+             const width = canvas.clientWidth;
+             const height = canvas.clientHeight;
+             if (width > 0 && height > 0) {
+                 camera.aspect = width / height;
+                 camera.updateProjectionMatrix();
+                 renderer.setSize(width, height);
+             }
+         }
+
         function animateThreeJS() {
+             if (!scene || !camera || !renderer) return; 
             requestAnimationFrame(animateThreeJS);
 
-            // Animate nodes
-            nodes.forEach(layer => {
-                layer.forEach(node => {
-                    node.rotation.x += 0.005;
-                    node.rotation.y += 0.005;
-                });
+            nodes.forEach(layer => layer.forEach(node => {
+                node.rotation.x += 0.003; 
+                node.rotation.y += 0.003;
+            }));
+
+            connections.forEach((line, index) => { 
+                 if (line && line.material) { 
+                    line.material.opacity = 0.2 + Math.sin(Date.now() * 0.0005 + index * 0.1) * 0.1; 
+                 }
             });
 
-            // Animate connections (subtle pulsing)
-            connections.forEach(line => {
-                line.material.opacity = 0.3 + Math.sin(Date.now() * 0.001 + line.id) * 0.1;
-            });
-
-            // Rotate the entire network slightly
-            scene.rotation.y += 0.002;
-            scene.rotation.x += 0.001;
+            scene.rotation.y += 0.001;
+            scene.rotation.x += 0.0005;
 
             renderer.render(scene, camera);
         }
-
-        // Initialize and start animation only after window is loaded
-        window.onload = function() {
-            initThreeJS();
-            animateThreeJS();
-        };
-
-        // Skills Section Tab Filtering
-        const skillTabs = document.querySelectorAll('.skill-tab');
-        const skillItems = document.querySelectorAll('.skill-item');
-        const skillsContainer = document.getElementById('skills-container');
-
-        skillTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs
-                skillTabs.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                tab.classList.add('active');
-
-                const category = tab.dataset.category;
-
-                // Hide all skill items first
-                skillsContainer.style.opacity = 0; // Fade out
-
-                setTimeout(() => { // After fade out, change content and fade in
-                    skillItems.forEach(item => {
-                        if (category === 'all' || item.dataset.category === category) {
-                            item.style.display = 'flex'; // Show relevant items
-                        } else {
-                            item.style.display = 'none'; // Hide irrelevant items
-                        }
-                    });
-                    skillsContainer.style.opacity = 1; // Fade in
-                }, 300); // Match CSS transition duration
-            });
+        
+        // Use requestAnimationFrame for initialization to ensure layout is ready
+        requestAnimationFrame(() => {
+             initThreeJS();
+             animateThreeJS();
         });
 
-        // Projects Carousel
-        const projectsCarousel = document.getElementById('projects-carousel');
+
+        // --- Skills Tab Filtering ---
+        const skillTabs = document.querySelectorAll('.skill-tab');
+        const skillItems = document.querySelectorAll('.skill-item');
+        if (skillTabs.length > 0 && skillItems.length > 0 && skillsContainer) {
+            skillTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    skillTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const category = tab.dataset.category;
+                    
+                    skillsContainer.style.opacity = 0; 
+                    setTimeout(() => { 
+                        skillItems.forEach(item => {
+                            item.style.display = (category === 'all' || item.dataset.category === category) ? 'flex' : 'none';
+                        });
+                        skillsContainer.style.opacity = 1; 
+                    }, 200); 
+                });
+            });
+        }
+
+        // --- Projects Carousel ---
         const carouselPrevBtn = document.getElementById('carousel-prev');
         const carouselNextBtn = document.getElementById('carousel-next');
-        const carouselDotsContainer = document.getElementById('carousel-dots');
         const projectSlides = document.querySelectorAll('.project-slide');
         let currentSlideIndex = 0;
 
         function updateCarousel() {
+            if (!projectsCarousel || projectSlides.length === 0) return; 
             const offset = -currentSlideIndex * 100;
             projectsCarousel.style.transform = `translateX(${offset}%)`;
-
-            // Update dots
-            carouselDotsContainer.innerHTML = ''; // Clear existing dots
+            
+            if (!carouselDotsContainer) return;
+            carouselDotsContainer.innerHTML = ''; 
             projectSlides.forEach((_, index) => {
                 const dot = document.createElement('span');
                 dot.classList.add('dot');
-                if (index === currentSlideIndex) {
-                    dot.classList.add('active');
-                }
+                if (index === currentSlideIndex) dot.classList.add('active');
                 dot.addEventListener('click', () => {
                     currentSlideIndex = index;
                     updateCarousel();
@@ -1883,183 +1856,178 @@
                 carouselDotsContainer.appendChild(dot);
             });
         }
-
-        carouselPrevBtn.addEventListener('click', () => {
+        if(carouselPrevBtn) carouselPrevBtn.addEventListener('click', () => {
             currentSlideIndex = (currentSlideIndex - 1 + projectSlides.length) % projectSlides.length;
             updateCarousel();
         });
-
-        carouselNextBtn.addEventListener('click', () => {
+        if(carouselNextBtn) carouselNextBtn.addEventListener('click', () => {
             currentSlideIndex = (currentSlideIndex + 1) % projectSlides.length;
             updateCarousel();
         });
+        updateCarousel(); // Initialize
 
-        updateCarousel(); // Initialize carousel
+        // --- Modal Handling ---
+        function setupModal(modalId, openBtnId) {
+            const modal = document.getElementById(modalId);
+            const openBtn = document.getElementById(openBtnId);
+            const closeBtns = modal ? modal.querySelectorAll('.close-button, .btn-primary[onclick*="style.display=\'none\'"]') : []; // Include button too
 
-        // AI Demo Modal
-        const aiDemoModal = document.getElementById('ai-demo-modal');
-        const openAiDemoModalBtn = document.getElementById('open-ai-demo-modal');
-        const closeDemoModalBtn = aiDemoModal.querySelector('.close-button');
+            if (!modal || !openBtn || closeBtns.length === 0) return; 
 
-        openAiDemoModalBtn.addEventListener('click', () => {
-            aiDemoModal.style.display = 'flex'; // Use flex to center content
-        });
+            const openModal = () => modal.style.display = 'flex';
+            const closeModal = () => modal.style.display = 'none';
 
-        closeDemoModalBtn.addEventListener('click', () => {
-            aiDemoModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === aiDemoModal) {
-                aiDemoModal.style.display = 'none';
-            }
-        });
-
-        // AI Summary Modal (for Projects)
-        const aiSummaryModal = document.getElementById('ai-summary-modal');
-        const closeSummaryModalBtn = aiSummaryModal.querySelector('.close-button');
-        const aiSummaryTextElement = document.getElementById('ai-summary-text');
-
-        document.querySelectorAll('.ai-summary-btn').forEach(button => {
-            button.addEventListener('click', async () => {
-                const projectName = button.dataset.project;
-                aiSummaryTextElement.textContent = "Generating summary for " + projectName + "...";
-                aiSummaryModal.style.display = 'flex';
-
-                // Simulate API call for AI summary
-                try {
-                    const prompt = `Provide a concise, 2-3 sentence AI-generated summary for the project: "${projectName}". Focus on its core functionality and key technologies.`;
-                    let chatHistory = [];
-                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                    const payload = { contents: chatHistory };
-                    const apiKey = ""; // Canvas will provide this
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        aiSummaryTextElement.textContent = text;
-                    } else {
-                        aiSummaryTextElement.textContent = "Failed to generate summary. Please try again.";
-                        console.error("Gemini API response structure unexpected:", result);
-                    }
-                } catch (error) {
-                    aiSummaryTextElement.textContent = "Error generating summary: " + error.message;
-                    console.error("Error calling Gemini API:", error);
-                }
+            openBtn.addEventListener('click', openModal);
+            closeBtns.forEach(btn => btn.addEventListener('click', closeModal)); // Attach to all close triggers
+            
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) closeModal();
             });
-        });
+             window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.style.display === 'flex') closeModal();
+             });
+        }
+        setupModal('ai-demo-modal', 'open-ai-demo-modal');
+        
+        // AI Summary Modal Setup (Triggered by multiple buttons)
+        if (aiSummaryModal) {
+            const closeSummaryBtns = aiSummaryModal.querySelectorAll('.close-button, .btn-primary[onclick*="style.display=\'none\'"]');
+            const closeAiSummaryModal = () => aiSummaryModal.style.display = 'none';
+            closeSummaryBtns.forEach(btn => btn.addEventListener('click', closeAiSummaryModal));
+            
+            window.addEventListener('click', (event) => {
+                if (event.target === aiSummaryModal) closeAiSummaryModal();
+            });
+             window.addEventListener('keydown', (event) => {
+                 if (event.key === 'Escape' && aiSummaryModal.style.display === 'flex') closeAiSummaryModal();
+             });
+        }
 
-        closeSummaryModalBtn.addEventListener('click', () => {
-            aiSummaryModal.style.display = 'none';
-        });
+        // --- AI Summary API Call ---
+        if (aiSummaryModal && aiSummaryTextElement) {
+            document.querySelectorAll('.ai-summary-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const projectName = button.dataset.project;
+                    aiSummaryTextElement.innerHTML = "Generating summary for <i>" + projectName + "</i>..."; // Use innerHTML for italics
+                    aiSummaryModal.style.display = 'flex';
 
-        window.addEventListener('click', (event) => {
-            if (event.target === aiSummaryModal) {
-                aiSummaryModal.style.display = 'none';
-            }
-        });
+                    try {
+                        const prompt = `Provide a concise, 2-3 sentence AI-generated summary for the project: "${projectName}". Focus on its core functionality and key technologies. Make it sound professional and engaging for a portfolio website visitor.`;
+                        const payload = { contents: [{ parts: [{ text: prompt }] }] };
+                        const apiKey = ""; 
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                        
+                        // Exponential backoff
+                        let response; let attempts = 0; const maxAttempts = 5; let delay = 1000;
+                        while (attempts < maxAttempts) {
+                            try {
+                                response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                                if (response.ok) break; 
+                                if (response.status === 429 || response.status >= 500) {
+                                    console.log(`Retrying API call (${attempts + 1}/${maxAttempts}) in ${delay / 1000}s...`);
+                                    await new Promise(resolve => setTimeout(resolve, delay));
+                                    delay *= 2; attempts++;
+                                } else throw new Error(`API error: ${response.statusText}`);
+                            } catch (fetchError) {
+                                 console.log(`Fetch error (${attempts + 1}/${maxAttempts}). Retrying in ${delay / 1000}s...`);
+                                 await new Promise(resolve => setTimeout(resolve, delay));
+                                 delay *= 2; attempts++;
+                                 if (attempts >= maxAttempts) throw fetchError; 
+                            }
+                        }
+                        if (!response || !response.ok) throw new Error(`API call failed after ${maxAttempts} attempts.`);
 
-        // Chat-style Contact Section
-        const chatInput = document.getElementById('chat-input');
-        const sendChatBtn = document.getElementById('send-chat-btn');
-        const chatMessagesContainer = document.getElementById('chat-messages');
+                        const result = await response.json();
+                        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        sendChatBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+                        if (text) {
+                            aiSummaryTextElement.textContent = text; // Set as plain text
+                        } else {
+                             const blockReason = result?.promptFeedback?.blockReason;
+                             if (blockReason) {
+                                  aiSummaryTextElement.textContent = `Content generation blocked: ${blockReason}.`;
+                                  console.error("Gemini API blocked:", result.promptFeedback);
+                             } else {
+                                 aiSummaryTextElement.textContent = "Failed to generate summary. Unexpected response format.";
+                                 console.error("Gemini API response structure unexpected:", result);
+                             }
+                        }
+                    } catch (error) {
+                        aiSummaryTextElement.textContent = "Error generating summary. Please check console."; 
+                        console.error("Error calling Gemini API:", error);
+                    }
+                });
+            });
+        }
 
+        // --- Chat Contact ---
         function sendMessage() {
+             if (!chatInput || !chatMessagesContainer) return;
             const userMessage = chatInput.value.trim();
             if (userMessage === '') return;
 
-            // Add user message to chat
             const userMsgDiv = document.createElement('div');
             userMsgDiv.classList.add('chat-message', 'user');
             userMsgDiv.textContent = userMessage;
             chatMessagesContainer.appendChild(userMsgDiv);
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; 
+            chatInput.value = ''; 
 
-            chatInput.value = ''; // Clear input
-
-            // Simulate AI response
             setTimeout(() => {
+                 if (!chatMessagesContainer) return; 
                 const aiMsgDiv = document.createElement('div');
                 aiMsgDiv.classList.add('chat-message', 'ai');
-                aiMsgDiv.textContent = "Thanks for your message! I'll get back to you soon.";
+                aiMsgDiv.textContent = "Thanks for reaching out! I've received your message and will get back to you soon. Feel free to connect on LinkedIn too!"; // Updated response
                 chatMessagesContainer.appendChild(aiMsgDiv);
-                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
-            }, 1000); // Simulate network delay
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; 
+            }, 800); 
         }
-
-        // Command Bar Functionality
-        const commandBar = document.getElementById('command-bar');
-        const commandInput = document.getElementById('command-input');
-        const commandSuggestions = document.querySelectorAll('.command-suggestion');
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === '/' && document.activeElement !== commandInput) {
-                e.preventDefault(); // Prevent typing '/' in other inputs
-                commandBar.classList.add('active');
-                commandInput.focus();
-            } else if (e.key === 'Escape') {
-                commandBar.classList.remove('active');
-                commandInput.value = '';
-                commandInput.blur();
-            }
-        });
-
-        commandSuggestions.forEach(suggestion => {
-            suggestion.addEventListener('click', () => {
-                const command = suggestion.dataset.command;
-                executeCommand(command);
-            });
-        });
-
-        commandInput.addEventListener('keypress', (e) => {
+        if(sendChatBtn) sendChatBtn.addEventListener('click', sendMessage);
+        if(chatInput) chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                executeCommand(commandInput.value.trim().toLowerCase());
+                e.preventDefault(); // Prevent form submission if it's in a form
+                sendMessage();
             }
         });
 
-        function executeCommand(command) {
-            commandBar.classList.remove('active');
-            commandInput.value = '';
-            commandInput.blur();
+        // --- Command Bar ---
+        const commandSuggestions = document.querySelectorAll('.command-suggestion');
+        if (commandBar && commandInput) {
+             document.addEventListener('keydown', (e) => {
+                 const activeEl = document.activeElement;
+                 const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+                 if (e.key === '/' && !isInputFocused) {
+                     e.preventDefault(); 
+                     commandBar.classList.add('active');
+                     commandInput.focus();
+                 } else if (e.key === 'Escape' && commandBar.classList.contains('active')) {
+                     commandBar.classList.remove('active');
+                     commandInput.value = '';
+                     commandInput.blur();
+                 }
+             });
 
-            switch (command) {
-                case 'projects':
-                    document.querySelector('#projects').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'resume':
-                    document.querySelector('#resume').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'contact':
-                    document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'about':
-                    document.querySelector('#about').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'skills':
-                    document.querySelector('#skills').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                default:
-                    // Optionally show a message for unknown commands
-                    console.log(`Unknown command: ${command}`);
-                    break;
-            }
+            commandInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const command = commandInput.value.trim().toLowerCase();
+                     // Find matching suggestion to trigger scroll
+                     const matchingSuggestion = Array.from(commandSuggestions).find(s => s.dataset.command === command);
+                     if (matchingSuggestion) {
+                          matchingSuggestion.click(); // Simulate click on suggestion
+                     } else {
+                          console.log(`Unknown command: ${command}`);
+                           // Optionally close the bar even for unknown commands
+                           commandBar.classList.remove('active');
+                           commandInput.value = '';
+                           commandInput.blur();
+                     }
+
+                }
+            });
         }
+
     </script>
 </body>
 </html>
+
+
