@@ -11,989 +11,724 @@
     <!-- Fonts (Minimalist Editorial Style) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Three.js (Aurora Background) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
-        /* --- 1. Root & Color Palette (Minimalist Light Mode) --- */
         :root {
             --font-heading: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
 
-            /* Light Mode Palette */
-            --bg-deep: #f8f8f8;
-            --bg-panel: #FFFFFF;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --border-hover: #A855F7; /* Purple Accent */
+            /* Default: Dark Mode Palette (Lightened the dark background) */
+            --bg-color: #121216; 
+            --text-main: #ffffff;
+            --text-muted: #a0a0a5;
+            --accent-color: #A855F7; /* Purple Accent */
+            --accent-glow: rgba(168, 85, 247, 0.4);
             
-            --text-primary: #1a1a1a;
-            --text-secondary: #777777;
+            --card-bg: rgba(25, 25, 30, 0.5);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-bg: rgba(35, 35, 42, 0.7);
+            --card-shadow: rgba(0, 0, 0, 0.3);
             
-            --accent-color: #A855F7;
+            --nav-bg: rgba(18, 18, 22, 0.4); /* Highly translucent for Liquid Glass */
+            
+            --blend-mode: difference; /* Crucial for dark mode text contrast */
         }
 
-        /* --- 2. Global Resets & Base --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Light Mode Palette (Morning Purple & Rose Gold) */
+        body.light-theme {
+            --bg-color: #f4f0f8; /* Morning light purple / whitish */
+            --text-main: #3a3542; /* Soft dark contrast */
+            --text-muted: #857e90;
+            --accent-color: #b76e79; /* Rose Gold */
+            --accent-glow: rgba(183, 110, 121, 0.3);
+            
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-border: rgba(183, 110, 121, 0.2);
+            --card-hover-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: rgba(183, 110, 121, 0.1);
+            
+            --nav-bg: rgba(255, 255, 255, 0.4); /* Highly translucent for Liquid Glass */
+            
+            --blend-mode: normal; /* Disable difference blending in light mode */
         }
-        html {
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%; 
+            background-color: var(--bg-color); color: var(--text-main);
+            font-family: var(--font-body); overflow-x: hidden; cursor: none; 
             scroll-behavior: smooth;
-        }
-        body {
-            font-family: var(--font-body);
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-        
-        /* --- 3. 3D Background Canvas (Aurora) --- */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.3; /* Subtle on light background */
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        /* --- 4. Main Layout & Container --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        /* Elegant Smooth Ring & Negative Dot Cursor */
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            width: 8px; height: 8px; background: #ffffff; border-radius: 50%;
+            pointer-events: none; z-index: 9999; 
+            mix-blend-mode: difference; /* Always difference for the negative invert effect */
+            transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), height 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        
-        /* --- 5. Navigation (Minimalist) --- */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            /* Semi-transparent light background */
-            background: linear-gradient(180deg, rgba(248, 248, 248, 0.7) 0%, rgba(248, 248, 248, 0) 100%);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            z-index: 100;
-        }
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        .nav-logo img {
-            height: 30px;
-        }
-        .nav-links {
-            display: flex;
-            gap: 10px; /* Reduced gap */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            justify-content: flex-end;
-        }
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding: 6px 10px; /* Slightly smaller padding */
-            border-radius: 20px;
-            transition: all 0.2s ease;
-            font-size: 0.9rem; /* Slightly smaller font */
-        }
-        .nav-link:hover {
-            color: var(--text-primary);
-            background: rgba(0,0,0,0.05);
-        }
-        .nav-link.active { /* Style for active link */
-             color: var(--accent-color);
-             font-weight: 600;
-        }
-        /* CTA button is now dark */
-        .nav-cta {
-            background: var(--text-primary);
-            color: var(--bg-deep);
-            font-weight: 600;
-        }
-        .nav-cta:hover {
-            color: var(--bg-deep);
-            background: var(--accent-color);
-            border-color: var(--accent-color);
+        #cursor-ring {
+            position: fixed; top: 0; left: 0; 
+            width: 36px; height: 36px; border: 1px solid var(--accent-color); 
+            border-radius: 50%; pointer-events: none; z-index: 9998; 
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s;
+            mix-blend-mode: difference;
         }
 
-        /* --- 6. Hero Section (Minimalist Typography) --- */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            min-height: 100vh;
-            padding: 120px 20px 60px; /* Adjusted padding */
-        }
-        .hero h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 6vw, 4rem); /* Adjusted size slightly */
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-            line-height: 1.2; /* Adjusted line height */
-            animation: fadeInHero 1s ease-out 0.3s backwards;
-        }
-        .hero h1 .highlight {
-            font-style: italic;
-            color: var(--accent-color);
-        }
-        .hero .subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.15rem); /* Adjusted size */
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-            animation: fadeInHero 1s ease-out 0.6s backwards;
-        }
-         .hero .role-badge { /* Added Role Badge */
-            background: var(--accent-color);
-            color: var(--bg-panel);
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 30px;
-            display: inline-block;
-            animation: fadeInHero 1s ease-out 0.8s backwards;
-        }
-        .hero .hero-buttons { /* Container for buttons */
-             display: flex;
-             gap: 15px;
-             margin-top: 20px;
-             animation: fadeInHero 1s ease-out 0.9s backwards;
-        }
-        .hero .btn {
-            font-family: var(--font-body); /* Sans-serif for button */
-            font-size: 0.95rem; /* Adjusted size */
-            text-decoration: none;
-            color: var(--bg-deep);
-            background: var(--text-primary);
-            padding: 10px 20px; /* Adjusted padding */
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            display: inline-flex; /* Align icon and text */
-            align-items: center;
-            gap: 8px;
-        }
-         .hero .btn.secondary { /* Secondary button style */
-             background: transparent;
-             color: var(--text-primary);
-             border: 1px solid var(--border-color);
-         }
-        .hero .btn:hover {
-            transform: scale(1.05);
-            background: var(--accent-color);
-            color: var(--bg-deep); /* Ensure text is readable */
-            border-color: var(--accent-color); /* Match border */
-        }
-        
-        @keyframes fadeInHero {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* --- 7. Bento Grid Layout & Sections --- */
-        .section { /* Added section wrapper */
-            padding: 80px 0;
-        }
-        .section-title { /* Added global section title */
-             font-family: var(--font-heading);
-             font-size: clamp(2rem, 5vw, 3rem);
-             color: var(--text-primary);
-             text-align: center;
-             margin-bottom: 60px;
-             opacity: 0;
-             transform: translateY(20px);
-        }
-        .section-title.visible { /* Animation for section title */
-             opacity: 1;
-             transform: translateY(0);
-             transition: all 0.6s ease-out;
-        }
-        .bento-grid {
-            display: grid;
-            /* Adjust grid template for better layout */
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: minmax(200px, auto);
-            gap: 20px;
-        }
-        .bento-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            display: flex;
-            flex-direction: column;
+        /* --- Clean Premium Project Image Hover Preview --- */
+        #project-preview-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 360px; height: 220px; 
+            pointer-events: none;
+            z-index: 90;
             opacity: 0;
-            transform: translateY(20px);
-            /* Add individual transition delays */
+            visibility: hidden;
+            /* Center exactly on the cursor with a slight initial scale-down */
+            transform: translate(-50%, -50%) scale(0.85);
+            transition: opacity 0.3s ease, visibility 0.3s, transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px var(--card-border);
         }
-        .bento-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Minimalist hover effect */
-        .bento-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-        
-        /* Card Sizing - Adjusting for new layout */
-        .grid-col-span-1 { grid-column: span 1; }
-        .grid-col-span-2 { grid-column: span 2; }
-        .grid-col-span-3 { grid-column: span 3; }
-        .grid-row-span-1 { grid-row: span 1; }
-        .grid-row-span-2 { grid-row: span 2; }
 
-        @media (max-width: 950px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
-            }
-             /* Adjust spans for tablet */
-            .bento-card.tablet-col-span-2 { grid-column: span 2; }
+        #project-preview-container.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
         }
-         @media (max-width: 640px) {
-            .bento-grid {
-                grid-template-columns: 1fr; /* 1 column on mobile */
-            }
-            /* Reset spans for mobile */
-             .grid-col-span-1, .grid-col-span-2, .grid-col-span-3,
-             .grid-row-span-1, .grid-row-span-2,
-             .tablet-col-span-2 {
-                 grid-column: span 1;
-                 grid-row: span 1;
-             }
-         }
+
+        .preview-image {
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            /* Inner image scales down as the outer container scales up */
+            transform: scale(1.2); 
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        #project-preview-container.active .preview-image {
+            transform: scale(1);
+        }
+
+        /* --- APP STATE TRANSITIONS (For Initial Load Reveal) --- */
+        #webgl-canvas, #ui-layer {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.2s cubic-bezier(0.165, 0.84, 0.44, 1), transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        nav {
+            opacity: 0; /* Initial hidden state for the loading screen */
+            transition: opacity 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s; /* Delay nav fade in to match merge */
+        }
+
+        body.app-ready #webgl-canvas, 
+        body.app-ready #ui-layer {
+            opacity: 1;
+            transform: none; 
+        }
+
+        body.app-ready nav {
+            opacity: 1;
+        }
+
+        #webgl-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none;
+        }
+
+        /* Portfolio UI Layer */
+        #ui-layer { position: relative; z-index: 10; width: 100%; pointer-events: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 5vw; }
+
+        /* --- Liquid Glass Navigation --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 5vw; 
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; 
+            pointer-events: auto; z-index: 100;
+            background: var(--nav-bg); 
+            backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid var(--card-border); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        nav, nav * {
+            mix-blend-mode: normal !important; /* Forces solid crisp rendering over the glass */
+        }
+        .nav-logo { 
+            justify-self: start;
+            display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main);
+            font-family: var(--font-heading); font-weight: 700; font-size: 1.5rem; letter-spacing: 1px; 
+            transition: color 0.5s ease;
+        }
+        .nav-logo img { height: 35px; border-radius: 4px; }
         
-        /* --- 8. Bento Card Content --- */
-        .card-header {
-            font-family: var(--font-heading);
-            font-size: 1.5rem; /* Slightly smaller header */
-            margin-bottom: 15px;
-            color: var(--text-primary);
-        }
-        .card-content {
-            font-size: 0.95rem; /* Slightly smaller text */
-            color: var(--text-secondary);
-            line-height: 1.7;
-            flex-grow: 1; /* Allow content to fill space */
-        }
-        .card-content p + p {
-            margin-top: 15px;
-        }
-         .card-content ul { /* Style lists */
-             list-style-position: inside;
-             padding-left: 0;
-             margin-top: 10px;
-         }
-          .card-content li {
-             margin-bottom: 8px;
-         }
+        /* The invisible target for the merging text */
+        #nav-logo-text { opacity: 0; transition: opacity 0.3s; }
         
-        /* About Card Specifics */
-        .about-timeline {
-             margin-top: 20px;
+        .nav-center {
+            justify-self: center;
+            display: flex; gap: 30px; align-items: center;
         }
-        .about-timeline-item {
-             position: relative;
-             padding-left: 20px;
-             margin-bottom: 15px;
-        }
-         .about-timeline-item::before {
-             content: '';
-             position: absolute;
-             left: 0;
-             top: 5px;
-             width: 10px;
-             height: 10px;
-             background-color: var(--border-color);
-             border-radius: 50%;
-         }
-         .about-year {
-             font-weight: 600;
-             color: var(--text-primary);
-             font-size: 1rem;
-         }
-         .about-desc {
-             font-size: 0.9rem;
-             color: var(--text-secondary);
-         }
         
-        /* Experience Card Specifics */
-        .timeline { /* Reuse timeline style */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 5px; /* Added margin */
+        .nav-right {
+            justify-self: end;
+            display: flex; gap: 20px; align-items: center;
         }
-        .timeline-item {
-            position: relative;
-            padding-left: 25px;
-            border-left: 1px solid var(--border-color); /* Thinner line */
+
+        .nav-link { 
+            color: var(--text-muted); text-decoration: none; font-size: 0.75rem; letter-spacing: 2px; 
+            text-transform: uppercase; transition: color 0.3s; position: relative; font-weight: 600; 
+            padding-bottom: 6px;
         }
+        .nav-link::after { 
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; 
+            background: var(--accent-color); transition: width 0.3s; 
+        }
+        .nav-link:hover { color: var(--text-main); }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: var(--text-main); }
+        
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--card-border); color: var(--text-muted);
+            width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.3s ease; font-size: 0.9rem;
+        }
+        .theme-toggle:hover { border-color: var(--accent-color); color: var(--accent-color); transform: rotate(45deg); }
+
+        .nav-cta {
+            color: var(--text-muted);
+        }
+        .nav-cta::after { display: none; }
+        .nav-cta:hover { color: var(--text-main); }
+
+        /* Typography & Sections */
+        section {
+            min-height: 100vh; padding: 15vh 0; display: flex; flex-direction: column;
+            justify-content: center; position: relative; pointer-events: none;
+        }
+        h1, h2, h3, p, a, div, span, ul, li { pointer-events: auto; mix-blend-mode: var(--blend-mode); } 
+        
+        /* Hero Section */
+        .hero { text-align: left; align-items: flex-start; }
+        .hero-title { 
+            font-family: var(--font-heading); font-size: clamp(3.5rem, 8vw, 7rem); 
+            line-height: 1; letter-spacing: -1px; font-weight: 700; color: var(--text-main);
+            transition: color 0.5s ease;
+        }
+        .hero-title .highlight { font-style: italic; color: var(--accent-color); }
+        .hero-subtitle { 
+            margin-top: 20px; font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--text-muted); 
+            max-width: 600px; line-height: 1.6; font-weight: 300; transition: color 0.5s ease;
+        }
+        .role-badge {
+            background: transparent; border: 1px solid var(--accent-color);
+            color: var(--text-main); padding: 8px 18px; border-radius: 4px; font-size: 0.85rem; font-weight: 500;
+            margin: 30px 0; display: inline-block; backdrop-filter: blur(5px);
+            border-left: 4px solid var(--accent-color);
+        }
+        .hero-buttons { display: flex; gap: 15px; }
+        .btn {
+            font-family: var(--font-body); font-size: 0.9rem; text-decoration: none; color: var(--bg-color);
+            background: var(--text-main); padding: 12px 24px; border-radius: 4px; font-weight: 600;
+            transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--text-main);
+            mix-blend-mode: normal !important; 
+        }
+        .btn.secondary { background: transparent; color: var(--text-main); border-color: var(--card-border); }
+        .btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
+
+        .section-title { 
+            font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4rem); color: var(--text-main);
+            letter-spacing: -1px; margin-bottom: 3rem; font-weight: 700; text-align: center;
+            opacity: 0; transform: translateY(20px); transition: all 0.6s ease;
+        }
+        .section-title.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- REDESIGNED EDITORIAL CARDS --- */
+        .editorial-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; width: 100%;
+        }
+        .editorial-card {
+            background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border); border-top: 3px solid var(--accent-color);
+            border-radius: 8px; padding: 40px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; opacity: 0; transform: translateY(20px);
+            box-shadow: 0 10px 30px var(--card-shadow);
+            mix-blend-mode: normal !important; 
+        }
+        .editorial-card * { mix-blend-mode: normal !important; } 
+        
+        .editorial-card.visible { opacity: 1; transform: translateY(0); }
+        .editorial-card:hover { 
+            background: var(--card-hover-bg); transform: translateY(-8px); 
+            box-shadow: 0 20px 40px var(--card-shadow), 0 0 15px var(--accent-glow); 
+        }
+        
+        .card-header { font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 15px; color: var(--text-main); }
+        .card-content { font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; flex-grow: 1; }
+        .card-content p { margin-bottom: 15px; }
+
+        /* Timelines */
+        .timeline { display: flex; flex-direction: column; gap: 20px; }
+        .timeline-item { position: relative; padding-left: 25px; border-left: 1px solid var(--card-border); }
         .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -6px; /* Adjust position */
-            top: 4px;
-            width: 10px; /* Smaller dot */
-            height: 10px;
-            background: var(--text-secondary);
-            border-radius: 50%;
+            content: ''; position: absolute; left: -5px; top: 5px; width: 9px; height: 9px;
+            background: var(--accent-color); border-radius: 50%; box-shadow: 0 0 10px var(--accent-glow);
         }
-        .timeline-date {
-            font-family: var(--font-body);
-            font-size: 0.85rem; /* Smaller date */
-            color: var(--text-secondary);
-            font-weight: 500;
-             margin-bottom: 3px;
-        }
-        .timeline-role {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 1rem; /* Adjusted size */
-             margin-bottom: 2px;
-        }
-        .timeline-company {
-            color: var(--text-secondary);
-             font-style: italic;
-             font-size: 0.9rem;
-             margin-bottom: 8px;
-        }
-         .timeline-details {
-             list-style: disc;
-             margin-left: 15px;
-             padding-left: 5px;
-             font-size: 0.9rem;
-             color: var(--text-secondary);
-         }
-          .timeline-details li {
-             margin-bottom: 5px;
-         }
-        
-        /* --- START: New Skills Section Styles --- */
+        .timeline-date { font-size: 0.8rem; color: var(--accent-color); font-weight: 600; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase;}
+        .timeline-role { font-weight: 600; color: var(--text-main); font-size: 1.1rem; margin-bottom: 2px; }
+        .timeline-company { color: var(--text-muted); font-style: italic; font-size: 0.9rem; margin-bottom: 10px; }
+        .timeline-details { list-style: none; color: var(--text-muted); font-size: 0.9rem; }
+        .timeline-details li { margin-bottom: 8px; position: relative; padding-left: 15px; }
+        .timeline-details li::before { content: '▹'; position: absolute; left: 0; color: var(--accent-color); }
+
+        /* Skills Grid */
         .skills-section-grid {
-             display: grid;
-             /* Responsive columns */
-             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
-             gap: 15px;
-             margin-top: 10px; /* Add some space below header if needed */
+             display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;
         }
         .skill-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 12px; /* Slightly less rounded */
-            padding: 20px 15px; /* Adjust padding */
-            text-align: center;
-            transition: all 0.2s ease-in-out;
-            opacity: 0; /* For scroll animation */
-            transform: translateY(20px);
-            cursor: default; /* Change cursor if needed */
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px;
+            padding: 20px 10px; text-align: center; transition: all 0.3s ease;
+            opacity: 0; transform: translateY(20px); backdrop-filter: blur(10px);
+            mix-blend-mode: normal !important;
         }
-        .skill-card.visible {
-             opacity: 1;
-             transform: translateY(0);
-        }
-         .skill-card i {
-             font-size: 2rem; /* Larger icon */
-             color: var(--accent-color);
-             margin-bottom: 12px; /* More space below icon */
-             display: block; /* Center icon */
-             transition: color 0.2s ease;
-         }
-         .skill-card span {
-             font-size: 0.9rem; /* Skill name font size */
-             color: var(--text-primary);
-             font-weight: 500;
-         }
-         .skill-card:hover {
-             border-color: var(--border-hover);
-             transform: translateY(-5px) scale(1.03); /* Subtle scale */
-             box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-         }
-         .skill-card:hover i {
-             color: var(--border-hover); /* Change icon color on hover */
-         }
-          .skills-footer-text { /* Reusing style for text below grid */
-             margin-top: 40px;
-             text-align: center;
-             font-size: 0.9rem;
-             color: var(--text-secondary);
-         }
-          .skills-footer-text p { margin-bottom: 5px; }
-         .skills-footer-text strong { color: var(--text-primary); font-weight: 600; }
-        /* --- END: New Skills Section Styles --- */
+        .skill-card * { mix-blend-mode: normal !important; }
+        
+        .skill-card.visible { opacity: 1; transform: translateY(0); }
+        .skill-card i { font-size: 2rem; color: var(--text-main); margin-bottom: 12px; display: block; transition: color 0.3s ease; }
+        .skill-card span { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .skill-card:hover { border-color: var(--accent-color); transform: translateY(-5px); box-shadow: 0 10px 20px var(--card-shadow); }
+        .skill-card:hover i { color: var(--accent-color); }
+        
+        .skills-footer-text { margin-top: 30px; text-align: center; font-size: 0.9rem; color: var(--text-muted); }
+        .skills-footer-text strong { color: var(--text-main); font-weight: 600; }
 
-        /* Projects Card */
-        .project-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 10px;
-        }
+        /* Projects List */
+        .project-list { display: flex; flex-direction: column; gap: 20px; }
         .project-item {
-            padding: 15px;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.03);
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            padding: 25px; border-radius: 8px; background: transparent;
+            border: 1px solid var(--card-border); cursor: pointer; transition: all 0.3s ease;
+            border-left: 4px solid var(--card-border);
         }
-        .project-item:hover {
-            background: rgba(0,0,0,0.05);
-            transform: scale(1.02);
-            border-color: var(--border-color);
+        .project-item:hover { 
+            background: var(--card-hover-bg); transform: translateX(10px); 
+            border-left-color: var(--accent-color); box-shadow: 0 10px 20px var(--card-shadow);
         }
-        .project-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-        .project-desc {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        
-        /* Resume & Certs Card */
-         .resume-summary p {
-             margin-bottom: 15px;
-         }
-         .resume-download-btn {
-             display: inline-flex;
-             align-items: center;
-             gap: 8px;
-             margin-top: 15px;
-             text-decoration: none;
-             font-size: 0.9rem;
-             color: var(--bg-deep);
-             background: var(--text-primary);
-             padding: 8px 15px;
-             border-radius: 20px;
-             font-weight: 600;
-             transition: all 0.2s ease;
-         }
-         .resume-download-btn:hover {
-             background: var(--accent-color);
-         }
-         .certifications-list {
-             list-style: none;
-             margin-top: 25px;
-             max-height: 250px; /* Limit height and scroll */
-             overflow-y: auto;
-             padding-right: 10px; /* Space for scrollbar */
-         }
-         /* Simple scrollbar */
-         .certifications-list::-webkit-scrollbar { width: 5px; }
-         .certifications-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px;}
-         .certifications-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px;}
+        .project-title { font-weight: 600; font-family: var(--font-heading); font-size: 1.3rem; color: var(--text-main); margin-bottom: 8px; }
+        .project-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
 
-         .cert-item {
-             border-bottom: 1px solid var(--border-color);
-             padding: 10px 0;
-             margin-bottom: 10px;
-         }
-          .cert-item:last-child { border-bottom: none; margin-bottom: 0;}
-         .cert-title {
-             font-weight: 600;
-             color: var(--text-primary);
-             font-size: 0.95rem;
-             margin-bottom: 3px;
-         }
-         .cert-issuer, .cert-date {
-             font-size: 0.8rem;
-             color: var(--text-secondary);
-         }
-         .cert-link {
-             display: inline-flex;
-             align-items: center;
-             gap: 5px;
-             text-decoration: none;
-             color: var(--accent-color);
-             font-size: 0.8rem;
-             margin-top: 5px;
-             opacity: 0.8;
-             transition: opacity 0.2s ease;
-         }
-         .cert-link:hover { opacity: 1; }
+        /* Certifications & Publications */
+        .certifications-list { list-style: none; max-height: 300px; overflow-y: auto; padding-right: 15px; }
+        .certifications-list::-webkit-scrollbar { width: 4px; }
+        .certifications-list::-webkit-scrollbar-track { background: transparent; }
+        .certifications-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px;}
+        .cert-item { border-bottom: 1px solid var(--card-border); padding: 15px 0; }
+        .cert-item:last-child { border-bottom: none; }
+        .cert-title { font-weight: 600; color: var(--text-main); font-size: 1rem; margin-bottom: 5px; }
+        .cert-issuer { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;}
+        .cert-link { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: var(--accent-color); font-size: 0.8rem; font-weight: 600; transition: opacity 0.2s ease; }
+        .cert-link:hover { opacity: 0.7; }
 
+        /* Footer / Contact */
+        .contact-links { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+        .contact-link-icon {
+            display: flex; justify-content: center; align-items: center; width: 50px; height: 50px;
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%;
+            color: var(--text-main); font-size: 1.2rem; text-decoration: none; transition: all 0.3s ease; backdrop-filter: blur(10px);
+        }
+        .contact-link-icon:hover { color: white; background: var(--accent-color); border-color: var(--accent-color); transform: scale(1.1) rotate(5deg); box-shadow: 0 10px 20px var(--accent-glow); }
 
-        /* Contact Card */
-        .contact-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap; /* Ensure links wrap */
-            justify-content: center; /* Center links */
-        }
-        .contact-link {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 45px; /* Slightly smaller */
-            height: 45px;
-            background: rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            color: var(--text-secondary);
-            font-size: 1.1rem; /* Slightly smaller */
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .contact-link:hover {
-            color: var(--text-primary);
-            border-color: var(--accent-color);
-            transform: scale(1.1);
-        }
-        
-        /* --- 9. Footer --- */
-        .footer {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
+        footer.footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 1px; border-top: 1px solid var(--card-border); margin-top: 10vh;}
 
-        /* --- 10. Modal (Minimalist Skin) --- */
+        /* --- Modals --- */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px; /* Padding for small screens */
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); z-index: 1000;
+            justify-content: center; align-items: center; padding: 20px;
         }
         .modal-content {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 30px;
-            width: 100%; /* Use padding for spacing */
-            max-width: 600px;
-            position: relative;
-            animation: zoomIn 0.3s ease-out;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-height: 90vh; /* Prevent overflow */
-            overflow-y: auto; /* Allow scroll if needed */
+            background: var(--bg-color); border: 1px solid var(--card-border);
+            border-radius: 8px; padding: 40px; width: 100%; max-width: 650px; position: relative;
+            animation: zoomIn 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-height: 90vh; overflow-y: auto; border-top: 4px solid var(--accent-color);
+            color: var(--text-main);
         }
-        @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
         .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            position: absolute; top: 20px; right: 20px; background: var(--card-bg);
+            border: 1px solid var(--card-border); color: var(--text-main); width: 35px; height: 35px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.3s ease;
         }
-        .modal-close:hover {
-            color: var(--text-primary);
-            border-color: var(--accent-color);
-        }
-        #modal-project-title {
-            font-family: var(--font-heading);
-            font-size: 1.8rem;
-            color: var(--accent-color); /* No gradient */
-            margin-bottom: 15px;
-        }
-        #modal-project-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-         /* Use skill-tag style for consistency */
-         #modal-project-stack .skill-tag { 
-             font-size: 0.8rem; 
-             padding: 3px 8px; 
-             background: rgba(0,0,0,0.03); /* Slightly different background */
-         }
-        #modal-project-description {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 20px;
-             font-size: 0.95rem;
-        }
-         #modal-project-description ul { /* Style lists inside description */
-             list-style: disc;
-             margin-left: 20px;
-             margin-top: 10px;
-             padding-left: 5px;
-         }
-         #modal-project-description li { margin-bottom: 5px; }
+        .modal-close:hover { background: var(--accent-color); border-color: var(--accent-color); transform: rotate(90deg); color: white;}
+        
+        #modal-project-title { font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 20px; color: var(--text-main); }
+        #modal-project-stack { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .skill-tag { font-size: 0.75rem; padding: 5px 12px; background: transparent; border: 1px solid var(--accent-color); border-radius: 4px; color: var(--accent-color); letter-spacing: 1px;}
+        
+        #modal-project-description { color: var(--text-muted); line-height: 1.7; font-size: 1rem; margin-bottom: 30px; }
+        #modal-project-description ul { margin-left: 20px; margin-top: 15px; }
+        #modal-project-description li { margin-bottom: 8px; }
 
-        .modal-links {
-            display: flex;
-            gap: 15px;
-             flex-wrap: wrap; /* Allow wrapping */
-        }
+        .modal-links { display: flex; gap: 15px; flex-wrap: wrap; }
         .modal-link {
-            text-decoration: none;
-            padding: 8px 18px; /* Adjusted padding */
-            border-radius: 20px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-             font-size: 0.9rem;
-             display: inline-flex;
-             align-items: center;
-             gap: 8px;
+            text-decoration: none; padding: 12px 24px; border-radius: 4px; font-weight: 600;
+            transition: all 0.3s ease; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px;
         }
-        .modal-link.primary {
-            background: var(--text-primary);
-            color: var(--bg-deep);
-        }
-        .modal-link.secondary {
-            background: rgba(0,0,0,0.05);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-        .modal-link:hover {
-            opacity: 0.8;
-        }
-        /* AI Summary Button Style */
-         .btn-ai-summary {
-             background: transparent;
-             color: var(--accent-color);
-             border: 1px solid var(--accent-color);
-             opacity: 0.8;
-         }
-         .btn-ai-summary:hover {
-             background: var(--accent-color);
-             color: var(--bg-deep);
-             opacity: 1;
-         }
+        .modal-link.primary { background: var(--text-main); color: var(--bg-color); }
+        .modal-link.primary:hover { background: var(--accent-color); color: white; box-shadow: 0 5px 15px var(--accent-glow); }
+        .modal-link.secondary { background: transparent; color: var(--text-main); border: 1px solid var(--card-border); }
+        .modal-link.secondary:hover { background: var(--card-bg); border-color: var(--accent-color); color: var(--accent-color); }
 
-         /* Simple AI Summary Modal */
-          #ai-summary-modal .modal-content { max-width: 500px; }
-          #ai-summary-text { font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); }
-          #ai-summary-text i { color: var(--text-primary); } /* Style loading text */
+        /* --- Premium Loading / Landing Screen --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: #030305; 
+            z-index: 99999; display: flex; justify-content: center; align-items: center;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), border-radius 1s cubic-bezier(0.77, 0, 0.175, 1);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            pointer-events: all;
+        }
+        
+        #loader.slide-out {
+            transform: translateY(-100vh);
+            border-bottom-left-radius: 50vw; 
+            border-bottom-right-radius: 50vw;
+        }
 
+        .loader-content {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
 
+        #loader.slide-out .loader-content {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        
+        /* Dynamic Suuu Typing Animation */
+        .suuu-dynamic {
+            font-family: var(--font-heading); 
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            letter-spacing: 6px;
+            color: #ffffff;
+            text-shadow: 0 0 25px rgba(168, 85, 247, 0.7); 
+            margin-bottom: 40px;
+            height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        /* Loading Bar */
+        .loader-bar-container {
+            width: 220px; height: 2px; background: rgba(255,255,255,0.1);
+            border-radius: 2px; overflow: hidden; margin-bottom: 15px;
+            position: relative; transition: opacity 0.3s ease;
+        }
+        .loader-bar {
+            height: 100%; width: 0%; background: var(--accent-color); 
+            border-radius: 2px; transition: width 0.2s ease-out;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+        .loader-percentage {
+            font-family: 'Space Mono', monospace; font-size: 0.75rem;
+            color: #888; letter-spacing: 3px; transition: opacity 0.3s ease;
+        }
+        .loader-ready-text {
+            color: var(--accent-color);
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--accent-glow);
+            animation: pulseText 1.5s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 950px) {
+            .editorial-grid { grid-template-columns: 1fr !important; }
+            .grid-col-span-2 { grid-column: span 1 !important; }
+        }
+        @media (max-width: 768px) {
+            nav { display: flex; justify-content: space-between; }
+            .nav-center { display: none; }
+            .nav-right { gap: 15px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Canvas (Dark particles on light bg) -->
-    <canvas id="bg-canvas"></canvas>
+    <!-- Premium Modern Loading / Landing Screen -->
+    <div id="loader">
+        <div class="loader-content">
+            <div id="dynamic-suuu" class="suuu-dynamic">S</div>
+            <div class="loader-bar-container">
+                <div class="loader-bar" id="loader-bar"></div>
+            </div>
+            <div class="loader-percentage" id="loader-percentage">0%</div>
+        </div>
+    </div>
 
-    <!-- Navigation -->
-    <nav class="navbar container">
-        <a href="#home" class="nav-logo">
+    <!-- Dynamic Smooth Ring & Negative Dot Cursor -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+    
+    <!-- Sleek Project Hover Image Reveal -->
+    <div id="project-preview-container">
+        <div class="preview-image" id="project-preview-image"></div>
+    </div>
+
+    <!-- 3D Nexus Background -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Liquid Glass Navigation -->
+    <nav>
+        <a href="#home" class="nav-logo hover-target">
             <img src="https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/image.png?raw=true" alt="Logo">
-            Suprovo Mallick
+            <span id="nav-logo-text">SUPROVO</span>
         </a>
-        <div class="nav-links">
-            <a href="#home" class="nav-link active">Home</a>
-            <a href="#about" class="nav-link">About</a>
-            <a href="#experience" class="nav-link">Experience</a>
-            <a href="#skills" class="nav-link">Skills</a>
-            <a href="#projects" class="nav-link">Projects</a>
-            <a href="#resume" class="nav-link">Resume</a>
-            <a href="#contact" class="nav-link nav-cta">Contact</a>
+        <div class="nav-center">
+            <a href="#home" class="nav-link active hover-target">Home</a>
+            <a href="#about" class="nav-link hover-target">About</a>
+            <a href="#experience" class="nav-link hover-target">Experience</a>
+            <a href="#skills" class="nav-link hover-target">Skills</a>
+            <a href="#projects" class="nav-link hover-target">Projects</a>
+        </div>
+        <div class="nav-right">
+            <button id="theme-toggle" class="theme-toggle hover-target" aria-label="Toggle Theme">
+                <i class="fas fa-sun" id="theme-icon"></i>
+            </button>
+            <a href="#contact" class="nav-link nav-cta hover-target">Contact</a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section id="home" class="hero container">
-        <h1>Suprovo <span class="highlight">Mallick</span></h1>
-        <p class="subtitle">AI/ML Developer • GenAI Enthusiast • Problem Solver</p>
-         <span class="role-badge">GenAI Developer | RAG Specialist</span>
-         <div class="hero-buttons">
-            <a href="#projects" class="btn">View My Work</a>
-            <a href="#resume" class="btn secondary">View Resume</a> 
-         </div>
-    </section>
-
-    <!-- Main Content Sections -->
-    <main class="container">
+    <!-- Main Content Layer -->
+    <div id="ui-layer">
         
+        <!-- Hero Section -->
+        <section id="home" class="hero container">
+            <h1 class="hero-title">Suprovo <span class="highlight">Mallick</span></h1>
+            <p class="hero-subtitle">AI/ML Developer • GenAI Enthusiast • Problem Solver</p>
+            <span class="role-badge">GenAI Developer | RAG Specialist</span>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn hover-target">View My Work</a>
+                <a href="#resume" class="btn secondary hover-target">View Resume</a> 
+            </div>
+        </section>
+
         <!-- About Section -->
-         <section id="about" class="section">
-             <h2 id="about-title" class="section-title">About Me</h2>
-            <div class="bento-grid">
-                <div class="bento-card grid-col-span-2 tablet-col-span-2"> 
+        <section id="about" class="container">
+            <h2 id="about-title" class="section-title">About Me</h2>
+            <div class="editorial-grid">
+                <div class="editorial-card hover-target"> 
+                    <h3 class="card-header">The Vision</h3>
                     <div class="card-content">
                         <p>I'm a passionate AI/ML developer from India, currently pursuing Computer Science at KIIT. My journey in AI began with a deep curiosity about how machines can understand and generate human language, evolving into a mission to build intelligent applications that solve real-world problems.</p>
                         <p>I specialize in leveraging cutting-edge technologies like LangChain, Gemini API, and Retrieval-Augmented Generation (RAG) architectures to create dynamic and responsive solutions. My experience includes designing personalized chatbots, developing intelligent recommendation systems like Aahar AI, and building multilingual translation applications.</p>
-                        <p>I thrive on bringing innovative ideas to life through code, optimizing model performance, and deploying scalable AI solutions. When I'm not immersed in development, you'll find me delving into new research papers, contributing to open-source projects, or sharing knowledge within the developer community.</p>
                     </div>
                 </div>
-                 <div class="bento-card grid-col-span-1 grid-row-span-1">
-                     <h3 class="card-header" style="font-size: 1.5rem;">Timeline</h3> 
-                    <div class="card-content about-timeline">
-                         <div class="about-timeline-item">
-                             <div class="about-year">2023</div>
-                             <div class="about-desc">Began deep dive into Machine Learning.</div>
+                <div class="editorial-card hover-target">
+                    <h3 class="card-header">Timeline</h3> 
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">2023</div>
+                            <div class="timeline-role" style="font-size: 0.95rem;">Began deep dive into ML.</div>
                         </div>
-                         <div class="about-timeline-item">
-                             <div class="about-year">2024 (Early)</div>
-                             <div class="about-desc">Developed first end-to-end RAG system.</div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Early 2024</div>
+                            <div class="timeline-role" style="font-size: 0.95rem;">Developed first RAG system.</div>
                         </div>
-                         <div class="about-timeline-item">
-                             <div class="about-year">Jul 2024</div>
-                             <div class="about-desc">Started role at Fed Society (AI/GenAI Dev).</div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Jul 2024</div>
+                            <div class="timeline-role" style="font-size: 0.95rem;">Started role at Fed Society.</div>
                         </div>
-                         <div class="about-timeline-item">
-                             <div class="about-year">2024 (Mid)</div>
-                             <div class="about-desc">Launched Hindu Q&A & Translate-V2.</div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">2025</div>
+                            <div class="timeline-role" style="font-size: 0.95rem;">Advanced LLM Ops Focus.</div>
                         </div>
-                         <div class="about-timeline-item">
-                             <div class="about-year">2025</div>
-                             <div class="about-desc">Focusing on advanced LLM Ops & GenAI.</div>
-                        </div>
-                     </div>
+                    </div>
                 </div>
-             </div>
-         </section>
+            </div>
+        </section>
 
-         <!-- Experience Section -->
-          <section id="experience" class="section">
-             <h2 id="experience-title" class="section-title">Experience</h2>
-             <div class="bento-grid" style="grid-template-columns: 1fr;"> <!-- Force single column for this section -->
-                 <div class="bento-card"> 
+        <!-- Experience Section -->
+        <section id="experience" class="container">
+            <h2 id="experience-title" class="section-title">Experience</h2>
+            <div class="editorial-grid" style="grid-template-columns: 1fr;">
+                <div class="editorial-card hover-target"> 
                     <div class="timeline">
                         <div class="timeline-item">
                             <div class="timeline-date">Jul 2024 – Present</div>
-                            <div class="timeline-role">AI Chatbot & GenAI App Developer</div>
+                            <div class="timeline-role">AI Chatbot & GenAI Developer</div>
                             <div class="timeline-company">Fed Society</div>
                             <ul class="timeline-details">
-                               <li>Designed and deployed personalized chatbot using Gemini API.</li>
-                               <li>Developed <strong>Aahar AI</strong>, an intelligent diet assistant.</li>
-                               <li>Created modular FastAPI backend with RAG pipeline.</li>
-                               <li>Integrated medical history parsing & PDF chunking (93% accuracy).</li>
-                               <li>Achieved 30% faster retrieval using optimized ChromaDB.</li>
-                               <li>Collaborated in Agile environment for timely delivery.</li>
-                           </ul>
+                                <li>Built and deployed modular FastAPI backends with session memory and RAG pipelines.</li>
+                                <li>Improved response retrieval speed by 30% via embedding optimization.</li>
+                                <li>Developed AI-powered wellness system as part of student startup initiative.</li>
+                            </ul>
                         </div>
-                        <!-- Add more timeline-item blocks here -->
                     </div>
                 </div>
-             </div>
-          </section>
+            </div>
+        </section>
 
-        <!-- Skills Section - New Design -->
-          <section id="skills" class="section">
-             <h2 id="skills-title" class="section-title">Technical Toolkit</h2>
-             <div class="skills-section-grid" id="skills-grid">
-                 <!-- Skill cards will be injected by JS -->
-             </div>
-             <div class="skills-footer-text">
-                 <p><strong>Development Practices:</strong> Agile Development, ORM, REST API Design, CI/CD</p>
-                 <p><strong>Also proficient in:</strong> Leadership, Communication, Problem Solving, Teamwork, Adaptability, Time Management</p>
-             </div>
-          </section>
+        <!-- Skills Section -->
+        <section id="skills" class="container">
+            <h2 id="skills-title" class="section-title">Technical Toolkit</h2>
+            <div class="skills-section-grid" id="skills-grid">
+                <!-- Skill cards injected by JS -->
+            </div>
+            <div class="skills-footer-text">
+                <p><strong>Core CS:</strong> Data Structures, Algorithms, OOP, REST APIs, System Design (Basics)</p>
+                <p><strong>Soft Skills:</strong> Leadership, Communication, Problem Solving, Adaptability</p>
+            </div>
+        </section>
             
         <!-- Projects Section -->
-          <section id="projects" class="section">
-             <h2 id="projects-title" class="section-title">Featured Projects</h2>
-             <div class="bento-grid" style="grid-template-columns: 1fr;"> <!-- Force single column -->
-                <div class="bento-card">
+        <section id="projects" class="container">
+            <h2 id="projects-title" class="section-title">Featured Projects</h2>
+            <div class="editorial-grid" style="grid-template-columns: 1fr;"> 
+                <div class="editorial-card">
                     <div class="project-list" id="project-list">
-                        <!-- Projects will be injected by JS -->
+                        <!-- Projects injected by JS -->
                     </div>
                 </div>
             </div>
-          </section>
+        </section>
             
-         <!-- Resume & Certs Section -->
-          <section id="resume" class="section">
-             <h2 id="resume-title" class="section-title">Resume & Certifications</h2>
-             <div class="bento-grid">
-                <div class="bento-card grid-col-span-2 tablet-col-span-2">
-                     <h2 class="card-header">Resume Highlights</h2>
-                    <div class="card-content resume-summary">
-                         <p>As a driven AI/ML Developer, I bring a strong foundation in machine learning, deep learning, and generative AI. My expertise spans building intelligent applications, optimizing models, and implementing RAG architectures for enhanced context awareness.</p>
-                         <p>Key highlights include:</p>
-                         <ul>
-                             <li>Developed and deployed RAG-based AI assistants (Aahar AI, Hindu Q&A) using LangChain and Gemini API.</li>
-                             <li>Built and deployed multilingual NMT systems (Translate-V2) using Transformers & FastAPI.</li>
-                             <li>Proficient in Python, TensorFlow, PyTorch, and various data science libraries.</li>
-                             <li>Experienced in cloud platforms (Hugging Face Spaces, Firebase, Google Cloud) and containerization (Docker).</li>
-                             <li>Committed to continuous learning and open-source contributions.</li>
-                         </ul>
-                        <a href="Suprovo_Mallick_Resume.pdf" target="_blank" class="resume-download-btn" download>
-                            <i class="fas fa-download"></i> Download Resume (PDF)
-                        </a>
-                     </div>
-                </div>
-                 <div class="bento-card grid-col-span-1 grid-row-span-1 tablet-col-span-2">
-                     <h2 class="card-header">Certifications</h2>
-                     <div class="card-content">
-                         <ul class="certifications-list">
-                            <li>
-                                <div class="cert-title">Supervised ML: Regression & Classification</div>
-                                <div class="cert-issuer">DeepLearning.AI, Stanford</div>
-                                <div class="cert-date">May 2024</div>
-                                <a href="https://www.coursera.org/account/accomplishments/certificate/AFZPVCBNNWFZ" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                            </li>
-                             <li>
-                                <div class="cert-title">Python for Data Science, AI & Dev</div>
-                                <div class="cert-issuer">IBM</div>
-                                <div class="cert-date">May 2024</div>
-                                <a href="https://www.coursera.org/account/accomplishments/certificate/UH8KMBNEUK7L" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                            </li>
-                              <li>
-                                <div class="cert-title">Google AI Essentials</div>
-                                <div class="cert-issuer">Google</div>
-                                <div class="cert-date">Jul 2024</div>
-                                <a href="https://www.credly.com/badges/KGLM9TZEJ8C4" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                            </li>
-                             <li>
-                                <div class="cert-title">Intro to Generative AI Path</div>
-                                <div class="cert-issuer">Google Cloud</div>
-                                <div class="cert-date">Jul 2024</div>
-                                <a href="https://www.credly.com/badges/WWZDLR7QL85S" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                            </li>
-                            <li>
-                                <div class="cert-title">Career Essentials in Generative AI</div>
-                                <div class="cert-issuer">Microsoft & LinkedIn</div>
-                                <div class="cert-date">Jul 2024</div>
-                            </li>
-                             <li>
-                                <div class="cert-title">Intro to Large Language Models</div>
-                                <div class="cert-issuer">Google Cloud</div>
-                                <div class="cert-date">Jul 2024</div>
-                                 <a href="https://www.coursera.org/account/accomplishments/certificate/D5ELP7BHZ224" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                            </li>
-                             <li>
-                                <div class="cert-title">Implementing Page Navigation in Flutter</div>
-                                <div class="cert-issuer">Google Cloud</div>
-                                <div class="cert-date">May 2024</div>
-                                <a href="https://www.coursera.org/account/accomplishments/certificate/ETAY2X5DFH5V" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                             </li>
-                              <li>
-                                <div class="cert-title">Introduction to Front-End Development</div>
-                                <div class="cert-issuer">Meta</div>
-                                <div class="cert-date">May 2024</div>
-                                 <a href="https://www.coursera.org/account/accomplishments/certificate/53YU9V6Y67K9" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                             </li>
-                             <li>
-                                <div class="cert-title">Digital Skills: Artificial Intelligence</div>
-                                <div class="cert-issuer">Accenture</div>
-                                <div class="cert-date">Jul 2024</div>
-                            </li>
-                              <li>
-                                <div class="cert-title">GenAI: Evolution of Online Search</div>
-                                <div class="cert-issuer">LinkedIn</div>
-                                <div class="cert-date">Jul 2024</div>
-                            </li>
-                             <li>
-                                <div class="cert-title">Learning Microsoft 365 Copilot</div>
-                                <div class="cert-issuer">LinkedIn</div>
-                                <div class="cert-date">Jul 2024</div>
-                            </li>
-                             <li>
-                                <div class="cert-title">ML with PySpark: Churn Analysis</div>
-                                <div class="cert-issuer">Coursera Project Network</div>
-                                <div class="cert-date">Jul 2024</div>
-                                <a href="https://www.coursera.org/account/accomplishments/certificate/GWQWBUJR4WJY" target="_blank" class="cert-link"><i class="fas fa-external-link-alt"></i> Credential</a>
-                            </li>
-                              <li>
-                                <div class="cert-title">Streamlining Work with MS Copilot</div>
-                                <div class="cert-issuer">LinkedIn</div>
-                                <div class="cert-date">Jul 2024</div>
-                            </li>
-                             <li>
-                                <div class="cert-title">What Is Generative AI?</div>
-                                <div class="cert-issuer">LinkedIn</div>
-                                <div class="cert-date">Jul 2024</div>
-                            </li>
-                         </ul>
-                     </div>
-                </div>
-             </div>
-         </section>
-
-         <!-- Contact Section -->
-          <section id="contact" class="section">
-             <h2 id="contact-title" class="section-title">Contact</h2>
-             <div class="bento-grid" style="grid-template-columns: 1fr;"> <!-- Force single column -->
-                <div class="bento-card">
-                    <h2 class="card-header">Let's Connect</h2>
+        <!-- Resume, Certs & Publications Section -->
+        <section id="resume" class="container">
+            <h2 id="resume-title" class="section-title">Credentials</h2>
+            <div class="editorial-grid" style="grid-template-columns: repeat(2, 1fr);">
+                <!-- Highlights spans 2 columns -->
+                <div class="editorial-card hover-target" style="grid-column: span 2;">
+                    <h2 class="card-header">Resume Highlights</h2>
                     <div class="card-content">
-                        <p>Interested in collaborating or have a question? I'm always open to discussing new ideas and opportunities.</p>
+                        <p>As a driven AI/ML Developer, I bring a strong foundation in machine learning, deep learning, and generative AI. My expertise spans building intelligent applications, optimizing models, and implementing RAG and Agentic AI architectures.</p>
+                        <ul class="timeline-details" style="margin-top: 20px;">
+                            <li>Deployed RAG-based AI assistants and Agentic workflows.</li>
+                            <li>Built disease detection systems (EfficientNetV2) and NMT systems (NLLB-200).</li>
+                            <li>Proficient in Python, TensorFlow, PyTorch, and vector databases.</li>
+                            <li>Experienced in cloud platforms, AWS Bedrock, and containerization (Docker).</li>
+                        </ul>
+                        <a href="#" target="_blank" class="btn secondary hover-target" style="margin-top: 25px;">
+                            <i class="fas fa-download"></i> Download PDF
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="editorial-card hover-target">
+                    <h2 class="card-header">Certifications</h2>
+                    <div class="card-content">
+                        <ul class="certifications-list">
+                            <li class="cert-item">
+                                <div class="cert-title">IBM RAG and Agentic AI Professional</div>
+                                <div class="cert-issuer">IBM via Coursera • 2026</div>
+                                <a href="https://coursera.org/share/12db2151db7c5b063cbb941340efaabe" target="_blank" class="cert-link hover-target"><i class="fas fa-external-link-alt"></i> Credential</a>
+                            </li>
+                            <li class="cert-item">
+                                <div class="cert-title">AWS Generative AI Applications</div>
+                                <div class="cert-issuer">Amazon Web Services • 2026</div>
+                                <a href="https://coursera.org/share/e740d15052333a21d14c0de7e3f1c4cc" target="_blank" class="cert-link hover-target"><i class="fas fa-external-link-alt"></i> Credential</a>
+                            </li>
+                            <li class="cert-item">
+                                <div class="cert-title">Supervised ML: Regression & Classification</div>
+                                <div class="cert-issuer">DeepLearning.AI • 2024</div>
+                            </li>
+                            <li class="cert-item">
+                                <div class="cert-title">Career Essentials in Generative AI</div>
+                                <div class="cert-issuer">Microsoft + LinkedIn • 2024</div>
+                            </li>
+                            <li class="cert-item">
+                                <div class="cert-title">Google AI Essentials</div>
+                                <div class="cert-issuer">Google • 2024</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Publications -->
+                <div class="editorial-card hover-target">
+                    <h2 class="card-header">Publications</h2>
+                    <div class="card-content">
+                        <ul class="certifications-list">
+                            <li class="cert-item">
+                                <div class="cert-title">Raahi – Real-Time Public Transport Tracking System</div>
+                                <div class="cert-issuer" style="margin-bottom: 10px;">Conference Paper, Proceedings of 15th Project Innovation Contest (PIC-2026), Satellite Event of ICDCIT-2026, KIIT</div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                                    • Designed distributed real-time tracking architecture optimized for low-network environments.<br>
+                                    • Selected among top 40 out of 160 submissions after peer review.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="container">
+            <h2 id="contact-title" class="section-title">Initiate Protocol</h2>
+            <div class="editorial-grid" style="grid-template-columns: 1fr; max-width: 650px; margin: 0 auto;"> 
+                <div class="editorial-card hover-target" style="align-items: center; text-align: center; padding: 50px 30px;">
+                    <h2 class="card-header" style="font-size: 2.2rem;">Let's Connect</h2>
+                    <div class="card-content">
+                        <p style="max-width: 450px; margin: 0 auto 30px; font-size: 0.95rem;">Interested in collaborating on AI projects, building generative models, or have a question? The nexus is always open.</p>
                         <div class="contact-links">
-                            <a href="https://github.com/DYNOSuprovo" target="_blank" class="contact-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                            <a href="https://www.linkedin.com/in/suprovo-mallick-abb582287/" target="_blank" class="contact-link" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-                            <a href="https://twitter.com/suprovo1307" target="_blank" class="contact-link" title="Twitter/X"><i class="fa-brands fa-twitter"></i></a>
-                             <a href="https://leetcode.com/supromallick3/" target="_blank" class="contact-link" title="LeetCode"><i class="fas fa-code"></i></a>
-                            <a href="https://www.hackerrank.com/profile/supromallick3" target="_blank" class="contact-link" title="HackerRank"><i class="fab fa-hackerrank"></i></a>
-                            <a href="mailto:supromallick3@gmail.com" class="contact-link" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                            <a href="https://github.com/DYNOSuprovo" target="_blank" class="contact-link-icon hover-target" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/suprovo-mallick-abb582287/" target="_blank" class="contact-link-icon hover-target" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href="https://twitter.com/suprovo1307" target="_blank" class="contact-link-icon hover-target" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="mailto:supromallick3@gmail.com" class="contact-link-icon hover-target" title="Email"><i class="fa-solid fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
-         </section>
+        </section>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer container">
-        Designed & Built by Suprovo Mallick
-    </footer>
+        <!-- Footer -->
+        <footer class="footer container">
+            Designed & Engineered by Suprovo Mallick
+        </footer>
+    </div>
     
     <!-- Project Modal -->
     <div class="modal-overlay" id="project-modal">
         <div class="modal-content">
-            <div class="modal-close" id="modal-close-btn"><i class="fa-solid fa-times"></i></div>
+            <div class="modal-close hover-target" id="modal-close-btn"><i class="fa-solid fa-times"></i></div>
             <h2 id="modal-project-title">Project Title</h2>
-            <div class="skills-grid" id="modal-project-stack">
-                <!-- Modal skills injected by JS -->
+            <div id="modal-project-stack">
+                <!-- Skills injected -->
             </div>
             <div id="modal-project-description">
-                 <!-- Description including list points -->
+                 <!-- Description -->
             </div>
             <div class="modal-links">
-                <a href="#" id="modal-link-live" target="_blank" class="modal-link primary">
+                <a href="#" id="modal-link-live" target="_blank" class="modal-link primary hover-target">
                     <i class="fa-solid fa-rocket"></i> Live Demo
                 </a>
-                <a href="#" id="modal-link-github" target="_blank" class="modal-link secondary">
+                <a href="#" id="modal-link-github" target="_blank" class="modal-link secondary hover-target">
                     <i class="fa-brands fa-github"></i> View Code
                 </a>
-                <button class="modal-link secondary btn-ai-summary" id="modal-ai-summary-btn">
+                <button class="modal-link secondary hover-target" id="modal-ai-summary-btn" style="border-color: var(--accent-color); color: var(--accent-color);">
                      <i class="fas fa-robot"></i> AI Summary
                 </button>
             </div>
@@ -1002,700 +737,778 @@
     
     <!-- AI Summary Modal -->
      <div class="modal-overlay" id="ai-summary-modal" style="z-index: 1001;">
-        <div class="modal-content">
-            <div class="modal-close" id="ai-summary-close-btn"><i class="fa-solid fa-times"></i></div>
-            <h2 style="color: var(--accent-color); font-family: var(--font-heading); margin-bottom: 15px;">AI Project Summary</h2>
-            <p id="ai-summary-text"><i>Generating summary...</i></p>
+        <div class="modal-content" style="max-width: 500px; text-align: center;">
+            <div class="modal-close hover-target" id="ai-summary-close-btn"><i class="fa-solid fa-times"></i></div>
+            <h2 style="color: var(--accent-color); font-family: var(--font-heading); margin-bottom: 15px;">AI Generation</h2>
+            <p id="ai-summary-text" style="color: var(--text-muted); line-height: 1.6;"><i>Analyzing project data...</i></p>
         </div>
     </div>
 
-
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            
-            // --- Modal Functions (Defined early) ---
-            const projectModal = document.getElementById('project-modal');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const aiSummaryModal = document.getElementById('ai-summary-modal');
-            const aiSummaryCloseBtn = document.getElementById('ai-summary-close-btn');
-            const aiSummaryTextElement = document.getElementById('ai-summary-text');
-             let currentProjectForAISummary = null; // Store project name for AI modal
-
-            const openModal = (project) => {
-                if (!projectModal) return;
-                currentProjectForAISummary = project.title; // Set current project for AI summary
-                document.getElementById('modal-project-title').textContent = project.title;
-                
-                // --- Populate Description including points ---
-                 const descriptionContainer = document.getElementById('modal-project-description');
-                 descriptionContainer.innerHTML = ''; // Clear previous
-                 // Add main description paragraph if exists
-                 if (project.main_desc) {
-                     const p = document.createElement('p');
-                     p.textContent = project.main_desc;
-                     descriptionContainer.appendChild(p);
-                 }
-                // Add bullet points if they exist
-                 if (project.points && project.points.length > 0) {
-                     const ul = document.createElement('ul');
-                     project.points.forEach(point => {
-                         const li = document.createElement('li');
-                         // Use innerHTML to allow for <strong> tags etc. if needed later
-                         li.innerHTML = point; 
-                         ul.appendChild(li);
-                     });
-                     descriptionContainer.appendChild(ul);
-                 }
-                // --- End Description Population ---
-                
-                const stackContainer = document.getElementById('modal-project-stack');
-                stackContainer.innerHTML = '';
-                 if (project.stack && project.stack.length > 0) { // Check if stack exists
-                     project.stack.forEach(tech => {
-                        const tag = document.createElement('span');
-                        tag.className = 'skill-tag'; // Use skill-tag style
-                        tag.textContent = tech;
-                        stackContainer.appendChild(tag);
-                     });
-                 }
-                
-                const liveLink = document.getElementById('modal-link-live');
-                const githubLink = document.getElementById('modal-link-github');
-                 const aiSummaryBtn = document.getElementById('modal-ai-summary-btn');
-                
-                if (project.links.live) {
-                    liveLink.href = project.links.live;
-                    liveLink.style.display = 'inline-flex';
+        // --- 0. PROCEDURAL SOUND ENGINE (Web Audio API) ---
+        const SoundEngine = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            },
+            playHover() {
+                if (!this.ctx || this.ctx.state !== 'running') return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, this.ctx.currentTime); // High soft blip
+                gain.gain.setValueAtTime(0.015, this.ctx.currentTime); // Very quiet
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.1);
+            },
+            playClick() {
+                if (!this.ctx || this.ctx.state !== 'running') return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, this.ctx.currentTime); // Deeper pop
+                gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.15);
+            },
+            playSweep(up = true) {
+                if (!this.ctx || this.ctx.state !== 'running') return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                if(up) {
+                    osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.2);
                 } else {
-                    liveLink.style.display = 'none';
+                    osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.2);
                 }
-                
-                if (project.links.github) {
-                    githubLink.href = project.links.github;
-                    githubLink.style.display = 'inline-flex';
+                gain.gain.setValueAtTime(0.02, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.2);
+            }
+        };
+
+        // Unlock audio context on any user interaction
+        window.addEventListener('pointerdown', () => SoundEngine.init(), { once: true });
+        window.addEventListener('keydown', () => SoundEngine.init(), { once: true });
+
+
+        // --- 1. THEME TOGGLE LOGIC ---
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        let isLightMode = false;
+
+        themeBtn.addEventListener('click', () => {
+            isLightMode = !isLightMode;
+            document.body.classList.toggle('light-theme', isLightMode);
+            themeIcon.className = isLightMode ? 'fas fa-moon' : 'fas fa-sun';
+            
+            // Dynamic WebGL Theme Injection
+            if (scene) {
+                if (isLightMode) {
+                    scene.fog.color.setHex(0xf4f0f8); 
+                    if(nexusData.ambientLight) { nexusData.ambientLight.color.setHex(0xffffff); nexusData.ambientLight.intensity = 0.8; }
+                    if(nexusData.topo) nexusData.topo.material.color.setHex(0xb76e79); 
+                    if(nexusData.pointLight) nexusData.pointLight.color.setHex(0xb76e79); 
+                    if(nexusData.storm) nexusData.storm.material.color.setHex(0xb76e79); 
+                    if(nexusData.kinetic) {
+                        nexusData.kinetic.material.color.setHex(0xe0dae6); 
+                        nexusData.kinetic.material.roughness = 0.6;
+                    }
+                    if(nexusData.singularityUniforms) {
+                        nexusData.singularityUniforms.uColor1.value.setHex(0xffffff);
+                        nexusData.singularityUniforms.uColor2.value.setHex(0xb76e79); 
+                    }
                 } else {
-                    githubLink.style.display = 'none';
-                }
-                
-                // Show AI summary button for all projects now
-                 aiSummaryBtn.style.display = 'inline-flex'; 
-
-                projectModal.style.display = 'flex';
-                // Trigger Project Gateway Effect
-                const modalContent = projectModal.querySelector('.modal-content');
-                if (modalContent) {
-                    triggerParticleSwirlAroundElement(modalContent, 0xA855F7); // Purple accent
-                }
-            };
-
-            const closeModal = () => {
-                if (projectModal) projectModal.style.display = 'none';
-            };
-            
-             const openAISummaryModal = () => {
-                 if(aiSummaryModal) aiSummaryModal.style.display = 'flex';
-             }
-             const closeAISummaryModal = () => {
-                  if(aiSummaryModal) aiSummaryModal.style.display = 'none';
-             }
-
-            // Attach modal close events
-            if (projectModal && modalCloseBtn) { // Added null check for button
-                 modalCloseBtn.addEventListener('click', closeModal);
-                projectModal.addEventListener('click', (e) => {
-                    if (e.target === projectModal) closeModal();
-                });
-            }
-             // AI Summary Modal events
-            if (aiSummaryModal && aiSummaryCloseBtn) { // Added null check for button
-                 aiSummaryCloseBtn.addEventListener('click', closeAISummaryModal);
-                 aiSummaryModal.addEventListener('click', (e) => {
-                     if(e.target === aiSummaryModal) closeAISummaryModal();
-                 });
-             }
-
-            // --- 1. 3D Particle Background (Light Mode) ---
-            let scene, camera, renderer, particles;
-            let mouseX = 0, mouseY = 0;
-            const canvas = document.getElementById('bg-canvas');
-            let particlePositions, particleColors;
-            let mouseParticle;
-             let animationFrameId = null; // To control animation loop
-
-            function initThreeJS() {
-                try {
-                     if (!canvas) return; // Exit if canvas not found
-                    scene = new THREE.Scene();
-                    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                    camera.position.z = 5;
-
-                    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                    
-                    const particleCount = 5000;
-                    particlePositions = new Float32Array(particleCount * 3);
-                    particleColors = new Float32Array(particleCount * 3);
-                    const particleGeometry = new THREE.BufferGeometry();
-                    const color = new THREE.Color();
-
-                    for (let i = 0; i < particleCount; i++) {
-                        const x = (Math.random() - 0.5) * 10;
-                        const y = (Math.random() - 0.5) * 10;
-                        const z = (Math.random() - 0.5) * 10;
-                        particlePositions[i * 3] = x;
-                        particlePositions[i * 3 + 1] = y;
-                        particlePositions[i * 3 + 2] = z;
-
-                        // Color (Dark Grays)
-                        color.setHSL(0, 0, Math.random() * 0.3); // 0% to 30% lightness
-                        particleColors[i * 3] = color.r;
-                        particleColors[i * 3 + 1] = color.g;
-                        particleColors[i * 3 + 2] = color.b;
+                    scene.fog.color.setHex(0x121216); 
+                    if(nexusData.ambientLight) { nexusData.ambientLight.color.setHex(0x222222); nexusData.ambientLight.intensity = 1.0; }
+                    if(nexusData.topo) nexusData.topo.material.color.setHex(0x444455);
+                    if(nexusData.pointLight) nexusData.pointLight.color.setHex(0xA855F7); 
+                    if(nexusData.storm) nexusData.storm.material.color.setHex(0x888888); 
+                    if(nexusData.kinetic) {
+                        nexusData.kinetic.material.color.setHex(0x1a1a20); 
+                        nexusData.kinetic.material.roughness = 0.2;
                     }
-
-                    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-                    particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-
-                    const particleMaterial = new THREE.PointsMaterial({
-                        size: 0.02,
-                        vertexColors: true,
-                        transparent: true,
-                        opacity: 0.7,
-                        blending: THREE.NormalBlending // Use NormalBlending for dark particles
-                    });
-
-                    particles = new THREE.Points(particleGeometry, particleMaterial);
-                    scene.add(particles);
-
-                    // Mouse follower particle (Dark)
-                    const mouseParticleGeometry = new THREE.BufferGeometry();
-                    const mouseParticlePositions = new Float32Array([0, 0, 0]); // Init at 0,0,0
-                    const mouseParticleColors = new Float32Array([0.2, 0.2, 0.2]); // Dark gray
-                    mouseParticleGeometry.setAttribute('position', new THREE.BufferAttribute(mouseParticlePositions, 3));
-                    mouseParticleGeometry.setAttribute('color', new THREE.BufferAttribute(mouseParticleColors, 3));
-                    const mouseParticleMaterial = new THREE.PointsMaterial({
-                        size: 0.05,
-                        vertexColors: true,
-                        transparent: true,
-                        opacity: 0.8,
-                        blending: THREE.NormalBlending
-                    });
-                    mouseParticle = new THREE.Points(mouseParticleGeometry, mouseParticleMaterial);
-                    scene.add(mouseParticle);
-
-                    window.addEventListener('resize', onWindowResize);
-                    document.addEventListener('mousemove', onDocumentMouseMove);
-                    
-                     // Start animation only if successful
-                     if (animationFrameId) cancelAnimationFrame(animationFrameId); // Stop previous if exists
-                     animate();
-
-                } catch(e) {
-                    console.error("Three.js init failed:", e);
-                    if (canvas) canvas.style.display = 'none';
-                }
-            }
-            
-            function onWindowResize() {
-                if (!camera || !renderer) return;
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-
-            function onDocumentMouseMove(event) {
-                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-            }
-
-            function animate() {
-                 animationFrameId = requestAnimationFrame(animate); // Store the frame ID
-                if (!renderer || !scene || !camera || !particles || !mouseParticle) return; // Add checks here too
-                
-                particles.rotation.x += 0.0001;
-                particles.rotation.y += 0.0002;
-                
-                camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.02;
-                camera.position.y += (mouseY * 0.5 - camera.position.y) * 0.02;
-                camera.lookAt(scene.position);
-
-                // Update Spark Trail
-                 try { // Add try-catch for safety
-                     const vector = new THREE.Vector3(mouseX, mouseY, 0.5).unproject(camera); // Use 0.5 for depth
-                     const dir = vector.sub(camera.position).normalize();
-                     const distance = -camera.position.z / dir.z; // Calculate distance based on Z
-                     
-                     if (distance > 0 && distance < 1000 && !isNaN(distance)) { 
-                         const pos = camera.position.clone().add(dir.multiplyScalar(distance));
-                         if (!isNaN(pos.x) && !isNaN(pos.y) && !isNaN(pos.z)) {
-                             mouseParticle.geometry.attributes.position.array[0] = pos.x;
-                             mouseParticle.geometry.attributes.position.array[1] = pos.y;
-                             mouseParticle.geometry.attributes.position.array[2] = pos.z;
-                             mouseParticle.geometry.attributes.position.needsUpdate = true;
-                         }
-                     }
-                 } catch (e) {
-                     console.warn("Error updating mouse particle:", e); // Log warning instead of stopping animation
-                 }
-                
-                renderer.render(scene, camera);
-            }
-
-            initThreeJS(); // Initialize Three.js
-            
-            // --- 2. Dynamic Data Injection ---
-            
-            const projects = [ // Using the provided list
-                {
-                    "id": "project-01",
-                    "title": "Aahar AI - Diet & Health Recommendation",
-                     "main_desc": "Developed AI-powered diet advisor that parses PDF-based diet plans and generates health insights.",
-                    "points": [
-                        "Implemented RetrievalQA with vector embeddings for contextual query response.",
-                        "Reduced response latency by 40% via API caching and async processing.",
-                        "Backend hosted with FastAPI and frontend built in Flutter for cross-platform access."
-                     ],
-                    "stack": ["FastAPI", "Flutter", "Gemini", "ChromaDB", "Hugging Face"],
-                    "links": { "live": "https://aaharai.firebaseapp.com/", "github": null }
-                },
-                {
-                    "id": "project-02",
-                    "title": "Translate-V2 – Neural Machine Translation",
-                     "main_desc": "Built and deployed a multilingual translation system (Nepali & Sinhala → English) using fine-tuned NLLB-200 model.",
-                     "points": [
-                        "Integrated FastAPI backend and interactive web UI for real-time translations.",
-                        "Containerized app with Docker and deployed to Hugging Face Spaces.",
-                        "Achieved 92% BLEU score on test corpus; reduced inference latency by 38%."
-                     ],
-                    "stack": ["FastAPI", "Transformers", "PyTorch", "Docker", "Hugging Face"],
-                    "links": { "live": "https://huggingface.co/spaces/Dyno1307/Translate-V2", "github": null }
-                },
-                 {
-                    "id": "project-03",
-                    "title": "Hindu Scripture Q&A App",
-                     "main_desc": "Built a RAG-based AI assistant that answers questions from Hindu scriptures.",
-                     "points": [
-                        "Embedded scripture PDFs into ChromaDB vectors for contextual conversation memory.",
-                         "Enabled multi-turn reasoning and LAN-based backend for faster access."
-                     ],
-                    "stack": ["FastAPI", "Flutter", "Streamlit", "LangChain", "Gemini", "ChromaDB"],
-                    "links": { "live": "https://hindugptbydrago.streamlit.app/", "github": "https://github.com/DYNOSuprovo/Hindu" }
-                },
-                {
-                    "id": "project-04",
-                    "title": "AI Expense Advisor (India Edition)",
-                     "main_desc": "Built a budgeting assistant that generates sarcastic financial advice using Gemini API.",
-                     "points": [
-                        "Integrated embeddings, sentence transformers, and FAQ matcher for dynamic query understanding.",
-                        "Enhanced UI with income sliders and visual charts, boosting user engagement by 25%."
-                     ],
-                    "stack": ["Streamlit", "Gemini API", "LangChain", "Hugging Face", "RAG"],
-                    "links": { "live": "https://nltk-exp-hfdde4w7vwxjnjjijvcsdi.streamlit.app/", "github": "https://github.com/DYNOSuprovo/NLTK-EXP" }
-                },
-                {
-                    "id": "project-05",
-                    "title": "ProblemSolverQP",
-                     "main_desc": "Automated parser that reads academic question papers and generates model answers.",
-                     "points": [
-                         "Used regex and NLP-based keyword detection to structure output efficiently."
-                     ],
-                    "stack": ["Python", "Streamlit", "Regex", "NLP"],
-                    "links": { "live": "https://question-paper-solver-4hrjgkllywsdrzxchusqb3.streamlit.app/", "github": "https://github.com/DYNOSuprovo/ProblemSolverQP" }
-                },
-                {
-                    "id": "project-06",
-                    "title": "User Churn Prediction Model",
-                    "main_desc": "Built real-time user churn prediction model with logistic regression and TensorFlow.",
-                    "points": [
-                        "Achieved 0.87 AUC and 85% accuracy on validation data through feature scaling.",
-                        "Deployed ML pipeline for live input inference."
-                    ],
-                    "stack": ["TensorFlow", "scikit-learn", "Python"],
-                    "links": { "live": null, "github": null }
-                },
-                {
-                    "id": "project-07",
-                    "title": "Car Price Prediction",
-                    "main_desc": "Trained regression models on car dataset with hyperparameter tuning.",
-                    "points": [
-                        "Conducted EDA and model comparison (Ridge, Lasso, Random Forest) with MAE = 2.4."
-                    ],
-                    "stack": ["NumPy", "Pandas", "scikit-learn", "Python"],
-                    "links": { "live": null, "github": null }
-                },
-                 {
-                    "id": "project-08",
-                    "title": "Diabetes Prediction Model",
-                     "main_desc": "Built classification pipeline on real-world data using Logistic Regression and Random Forest.",
-                     "points": [
-                        "Improved model F1-score by 10% via feature scaling and class balancing."
-                     ],
-                    "stack": ["scikit-learn", "Matplotlib", "Python"],
-                    "links": { "live": null, "github": null }
-                }
-            ];
-
-            // Define skill icons (Font Awesome classes)
-             const skillIcons = {
-                 "Python": "fab fa-python", "Java": "fab fa-java", "C": "fas fa-c", "C++": "fas fa-c", "Dart": "fab fa-dev", 
-                 "TensorFlow": "fas fa-brain", "PyTorch": "fas fa-robot", "scikit-learn": "fas fa-project-diagram",
-                 "NumPy": "fas fa-calculator", "Pandas": "fas fa-table", "Matplotlib": "fas fa-chart-line",
-                 "LangChain": "fas fa-link", "Streamlit": "fas fa-stream", "FastAPI": "fas fa-rocket", "React": "fab fa-react",
-                 "Firebase": "fas fa-fire", "Transformers": "fas fa-box-open", "Sentence Trans.": "fas fa-language",
-                 "Gemini API": "fas fa-star-of-life", "ChromaDB": "fas fa-database", "FAISS": "fas fa-cube", "Ollama": "fas fa-download",
-                 "Hugging Face": "fab fa-hugging-face",
-                 "Git": "fab fa-git-alt", "GitHub": "fab fa-github", "Docker": "fab fa-docker", "Google Cloud": "fab fa-google",
-                 "Google Colab": "fas fa-book", "Jupyter": "fas fa-flask", "VS Code": "fas fa-code",
-                 "Flutter": "fab fa-dev", "Figma": "fab fa-figma", "Fusion 360": "fas fa-drafting-compass", "SolidWorks": "fas fa-ruler-combined",
-                 "default": "fas fa-microchip"
-             };
-
-            const skills = [
-                "Python", "Java", "C", "C++", "Dart", 
-                "TensorFlow", "PyTorch", "scikit-learn", 
-                "NumPy", "Pandas", "Matplotlib", 
-                "LangChain", "Streamlit", "FastAPI", "React",
-                "Firebase", "Transformers", "Sentence Trans.",
-                "Gemini API", "ChromaDB", "FAISS", "Ollama",
-                "Hugging Face", 
-                "Git", "GitHub", "Docker", "Google Cloud",
-                "Google Colab", "Jupyter", "VS Code",
-                "Flutter", "Figma", "Fusion 360", "SolidWorks"
-            ];
-
-            // --- Inject Skill Cards into the new Grid ---
-             const skillsGridContainer = document.getElementById('skills-grid'); 
-             if (skillsGridContainer) {
-                 skills.forEach((skill, index) => {
-                     const card = document.createElement('div');
-                     card.className = 'skill-card'; // Use new card class
-                     // Add transition delay for staggered animation
-                     card.style.transitionDelay = `${index * 0.03}s`; 
-
-                     const iconClass = skillIcons[skill] || skillIcons["default"]; 
-                     card.innerHTML = `
-                         <i class="${iconClass}"></i>
-                         <span>${skill}</span>
-                     `; 
-                     skillsGridContainer.appendChild(card);
-                 });
-             }
-
-
-            const projectList = document.getElementById('project-list');
-            if (projectList) {
-                projects.forEach(project => {
-                    const item = document.createElement('div');
-                    item.className = 'project-item';
-                     const descPreview = project.main_desc ? project.main_desc.substring(0, 80) + '...' : 
-                                       (project.points && project.points.length > 0 ? project.points[0].substring(0, 80) + '...' : 'Click to see details...');
-                    item.innerHTML = `
-                        <div class="project-title">${project.title}</div>
-                        <div class="project-desc">${descPreview}</div>
-                    `;
-                    item.addEventListener('click', () => openModal(project));
-                    projectList.appendChild(item);
-                });
-            }
-
-            // --- 3. Smooth Scrolling & Active Nav Link ---
-             const navLinks = document.querySelectorAll('.nav-link');
-             const sections = document.querySelectorAll('section[id], h2.section-title[id]'); 
-
-             function updateActiveLink() {
-                 let currentSectionId = 'home'; 
-                 const scrollPosition = window.pageYOffset;
-                 const navHeight = document.querySelector('.navbar')?.offsetHeight || 60;
-
-                 sections.forEach(section => {
-                     const sectionElement = section.tagName === 'H2' ? section : document.getElementById(section.id);
-                     if (sectionElement && sectionElement.offsetTop <= scrollPosition + navHeight + 50) { 
-                         currentSectionId = sectionElement.id.replace('-title', ''); 
-                     }
-                 });
-
-                 navLinks.forEach(link => {
-                     link.classList.remove('active');
-                     const linkHref = link.getAttribute('href')?.substring(1); 
-                     if (linkHref === currentSectionId) {
-                         link.classList.add('active');
-                     }
-                 });
-             }
-             
-            document.querySelectorAll('.nav-link, .btn, .nav-logo').forEach(anchor => { 
-                anchor.addEventListener('click', function (e) {
-                    const href = this.getAttribute('href');
-                    if (href && href.startsWith('#')) {
-                        e.preventDefault();
-                        const targetId = href.substring(1);
-                         const targetElement = document.getElementById(targetId) || document.getElementById(targetId + '-title'); 
-                        if (targetElement) {
-                             const navHeight = document.querySelector('.navbar')?.offsetHeight || 60; // Use fallback
-                             const elementPosition = targetElement.getBoundingClientRect().top;
-                             const offsetPosition = elementPosition + window.pageYOffset - navHeight;
-                            
-                            window.scrollTo({
-                                top: offsetPosition,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
-            });
-
-             window.addEventListener('scroll', updateActiveLink);
-             updateActiveLink(); 
-
-            // --- 4. Fade-in on Scroll for Bento Cards, Section Titles & Skill Cards ---
-             const observerElements = document.querySelectorAll('.bento-card, .section-title, .skill-card'); // Observe skill cards too
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-                 entries.forEach((entry, index) => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                         // Apply staggered delay only to skill cards for now
-                          const delay = entry.target.classList.contains('skill-card') ? index * 0.03 : 0;
-                         entry.target.style.transition = `all 0.6s ease-out ${delay}s`; 
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, appearOptions);
-
-             observerElements.forEach(el => {
-                appearOnScroll.observe(el);
-            });
-
-
-            // --- 5. CANVAS EFFECTS (Light Mode) ---
-
-            function screenToWorld(x, y) {
-                if (!camera) return null; 
-                try { // Added try-catch for unproject issues
-                    const vector = new THREE.Vector3();
-                    vector.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
-                    vector.unproject(camera);
-                    const dir = vector.sub(camera.position).normalize();
-                    const distance = -camera.position.z / dir.z;
-                    if (distance < 0 || distance > 1000 || isNaN(distance)) return null; 
-                    const worldPos = camera.position.clone().add(dir.multiplyScalar(distance));
-                    if (isNaN(worldPos.x) || isNaN(worldPos.y) || isNaN(worldPos.z)) return null; 
-                    return worldPos;
-                } catch (e) {
-                    console.warn("screenToWorld error:", e);
-                    return null;
-                }
-            }
-
-            // "Skill Burst" on Hover - Attaching listener using delegation
-             const skillsGridContainerElement = document.getElementById('skills-grid'); // Renamed variable
-             if (skillsGridContainerElement) {
-                 skillsGridContainerElement.addEventListener('mouseenter', (e) => {
-                     // Check if the event target is a skill-card
-                     const skillCard = e.target.closest('.skill-card'); 
-                     if (skillCard) {
-                         const rect = skillCard.getBoundingClientRect();
-                         const centerX = rect.left + rect.width / 2;
-                         const centerY = rect.top + rect.height / 2;
-                         const worldPos = screenToWorld(centerX, centerY);
-                         // Trigger burst effect on the skill-card
-                         if (worldPos) triggerParticleBurst(worldPos.x, worldPos.y, worldPos.z, 0x555555); 
-                     }
-                 }, true); // Use capture phase
-             }
-
-
-            function triggerParticleBurst(x, y, z, color = 0x555555, num = 30, spread = 0.3) { 
-                if (isNaN(x) || isNaN(y) || isNaN(z) || !scene) return; 
-                
-                const burstGeometry = new THREE.BufferGeometry();
-                const burstPositions = new Float32Array(num * 3);
-                const burstColors = new Float32Array(num * 3);
-                const tempColor = new THREE.Color(color);
-
-                for (let i = 0; i < num; i++) {
-                    burstPositions[i * 3] = x + (Math.random() - 0.5) * spread;
-                    burstPositions[i * 3 + 1] = y + (Math.random() - 0.5) * spread;
-                    burstPositions[i * 3 + 2] = z + (Math.random() - 0.5) * spread;
-                    
-                    burstColors[i * 3] = tempColor.r;
-                    burstColors[i * 3 + 1] = tempColor.g;
-                    burstColors[i * 3 + 2] = tempColor.b;
-                }
-                 // Safety check before setting attributes
-                if (burstPositions.some(isNaN) || burstColors.some(isNaN)) {
-                    console.warn("NaN value detected in burst particle data.");
-                    return; 
-                }
-                burstGeometry.setAttribute('position', new THREE.BufferAttribute(burstPositions, 3));
-                burstGeometry.setAttribute('color', new THREE.BufferAttribute(burstColors, 3));
-
-                const burstMaterial = new THREE.PointsMaterial({
-                    size: 0.04, 
-                    vertexColors: true,
-                    transparent: true,
-                    opacity: 1.0,
-                    blending: THREE.NormalBlending 
-                });
-                const burstParticles = new THREE.Points(burstGeometry, burstMaterial);
-                scene.add(burstParticles);
-
-                let opacity = 1.0;
-                 let burstAnimationFrameId = null; // ID for burst animation
-                const animateBurst = () => {
-                     if (!scene) { // Check if scene exists
-                          if(burstAnimationFrameId) cancelAnimationFrame(burstAnimationFrameId); 
-                          return; 
-                      } 
-                    opacity -= 0.06; 
-                    if (opacity <= 0) {
-                        scene.remove(burstParticles);
-                         // Dispose Three.js objects when done
-                         burstGeometry.dispose(); 
-                         burstMaterial.dispose(); 
-                         if(burstAnimationFrameId) cancelAnimationFrame(burstAnimationFrameId); // Stop loop
-                    } else {
-                        burstParticles.material.opacity = opacity;
-                         burstAnimationFrameId = requestAnimationFrame(animateBurst); // Continue loop
-                    }
-                };
-                 burstAnimationFrameId = requestAnimationFrame(animateBurst); // Start loop
-            }
-
-            // "Project Gateway" Effect
-            let restoreTimeout = null; 
-            function triggerParticleSwirlAroundElement(element, color = 0xA855F7) {
-                if (!element || !particles || !particlePositions || !scene) return;
-                
-                 if (restoreTimeout) clearTimeout(restoreTimeout);
-
-                const rect = element.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const radiusX = rect.width / 2 / window.innerWidth * 5;
-                const radiusY = rect.height / 2 / window.innerHeight * 5;
-                
-                const worldCenter = screenToWorld(centerX, centerY);
-                if (!worldCenter) return; 
-
-                const tempColor = new THREE.Color(color);
-                const positions = particles.geometry.attributes.position.array;
-                const colors = particles.geometry.attributes.color.array;
-                 // It's safer *not* to copy particlePositions if it's being updated elsewhere
-                 // Instead, we'll restore directly to the original calculated values later
-
-                for (let i = 0; i < positions.length / 3; i++) {
-                    const currentX = positions[i * 3]; 
-                    const currentY = positions[i * 3 + 1];
-
-                    const distToCenter = Math.sqrt(
-                        Math.pow(currentX - worldCenter.x, 2) +
-                        Math.pow(currentY - worldCenter.y, 2)
-                    );
-
-                    if (distToCenter < Math.max(radiusX, radiusY) * 2) {
-                        // Swirl towards center and color
-                        positions[i * 3] += (worldCenter.x - currentX) * 0.1;
-                        positions[i * 3 + 1] += (worldCenter.y - currentY) * 0.1;
-                        positions[i * 3 + 2] = particlePositions[i * 3 + 2] * 0.5; // Shrink based on original Z
-                        
-                        colors[i * 3] = tempColor.r;
-                        colors[i * 3 + 1] = tempColor.g;
-                        colors[i * 3 + 2] = tempColor.b;
+                    if(nexusData.singularityUniforms) {
+                        nexusData.singularityUniforms.uColor1.value.setHex(0xffffff);
+                        nexusData.singularityUniforms.uColor2.value.setHex(0xA855F7); 
                     }
                 }
-                particles.geometry.attributes.position.needsUpdate = true;
-                particles.geometry.attributes.color.needsUpdate = true;
-
-                 restoreTimeout = setTimeout(() => {
-                     // Check existence again before restoring
-                    if (!particles || !particlePositions || !scene) return; 
-                    const positions = particles.geometry.attributes.position.array;
-                    const colors = particles.geometry.attributes.color.array;
-                    const tempColor = new THREE.Color();
-                    for (let i = 0; i < positions.length / 3; i++) {
-                        // Restore directly from the original static array
-                        positions[i * 3] = particlePositions[i * 3]; 
-                        positions[i * 3 + 1] = particlePositions[i * 3 + 1];
-                        positions[i * 3 + 2] = particlePositions[i * 3 + 2];
-                        
-                        // Restore original dark gray color
-                        tempColor.setHSL(0, 0, Math.random() * 0.3);
-                        colors[i * 3] = tempColor.r;
-                        colors[i * 3 + 1] = tempColor.g;
-                        colors[i * 3 + 2] = tempColor.b;
-                    }
-                    particles.geometry.attributes.position.needsUpdate = true;
-                    particles.geometry.attributes.color.needsUpdate = true;
-                     restoreTimeout = null; 
-                }, 1500);
             }
-
-            // --- 6. AI Summary Integration ---
-             const aiSummaryButton = document.getElementById('modal-ai-summary-btn');
-
-             if (aiSummaryButton && aiSummaryModal && aiSummaryTextElement) {
-                 aiSummaryButton.addEventListener('click', async () => {
-                     if (!currentProjectForAISummary) return;
-
-                     aiSummaryTextElement.innerHTML = `<i>Generating summary for ${currentProjectForAISummary}...</i>`;
-                     openAISummaryModal();
-
-                     try {
-                         const prompt = `Provide a concise, 2-3 sentence AI-generated summary for the project: "${currentProjectForAISummary}". Focus on its core functionality and key technologies. Make it sound professional and engaging for a portfolio website visitor.`;
-                         const payload = { contents: [{ parts: [{ text: prompt }] }] };
-                         const apiKey = ""; 
-                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                         
-                         // Simple fetch without backoff for now
-                          let response;
-                          try {
-                             response = await fetch(apiUrl, { 
-                                 method: 'POST', 
-                                 headers: { 'Content-Type': 'application/json' }, 
-                                 body: JSON.stringify(payload) 
-                             });
-                          } catch (fetchError) {
-                              console.error("Network error fetching AI summary:", fetchError);
-                              throw new Error("Network error. Please check connection.");
-                          }
-
-                         if (!response.ok) {
-                              let errorBody = await response.text(); // Attempt to get error details
-                              console.error("API Error Response:", errorBody);
-                             throw new Error(`API error (${response.status}): ${response.statusText}`);
-                         }
-
-                         const result = await response.json();
-                         const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                         if (text) {
-                             aiSummaryTextElement.textContent = text;
-                         } else {
-                              const blockReason = result?.promptFeedback?.blockReason;
-                             if (blockReason) {
-                                  aiSummaryTextElement.textContent = `Content generation blocked: ${blockReason}.`;
-                                  console.error("Gemini API blocked:", result.promptFeedback);
-                             } else {
-                                 aiSummaryTextElement.textContent = "Failed to generate summary. Unexpected response format.";
-                                 console.error("Gemini API response structure unexpected:", result);
-                             }
-                         }
-                     } catch (error) {
-                         aiSummaryTextElement.textContent = `Error generating summary: ${error.message}`;
-                         console.error("Error calling Gemini API:", error);
-                     }
-                 });
-             }
-
         });
+
+        // --- 2. DATA INJECTION & LOGIC ---
+        const projects = [
+            {
+                "id": "project-01",
+                "title": "Wheat Guardian - AI Disease Detection",
+                "main_desc": "AI-Based Wheat Disease Detection System using EfficientNetV2 and FastAPI.",
+                "points": [
+                    "Fine-tuned EfficientNetV2B2 achieving 93%+ accuracy on multi-class disease classification.",
+                    "Built end-to-end inference pipeline with REST APIs and modular backend design.",
+                    "Containerized and deployed with optimized cloud inference latency (~300ms)."
+                ],
+                "stack": ["TensorFlow", "EfficientNetV2", "FastAPI", "OpenCV", "Docker"],
+                "links": { "live": "https://wheat-analysis-app.vercel.app", "github": null },
+                "image": "https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/Screenshot%202026-03-01%20170310.png?raw=true"
+            },
+            {
+                "id": "project-02",
+                "title": "Aahar - AI-Powered Diet & Wellness Companion",
+                "main_desc": "RAG-based nutrition assistant with vector retrieval for Indian diet planning.",
+                "points": [
+                    "Built RAG-based nutrition assistant with vector retrieval for Indian diet planning.",
+                    "Designed personalized calorie computation and AI-driven health advisory system.",
+                    "Integrated multi-model LLM routing using Gemini and Groq APIs."
+                ],
+                "stack": ["LangChain", "Gemini API", "ChromaDB", "FastAPI", "Next.js"],
+                "links": { "live": "https://aahar-react.vercel.app/", "github": null },
+                "image": null // Add image URLs here as you get them
+            },
+            {
+                "id": "project-03",
+                "title": "Translate-V2 – Neural Machine Translation System",
+                "main_desc": "Multilingual neural machine translation system for Nepali/Sinhala to English.",
+                "points": [
+                    "Deployed NLLB-200 based multilingual translation (Nepali/Sinhala → English).",
+                    "Reduced inference latency by 38% through optimized batching and model loading."
+                ],
+                "stack": ["Transformers", "PyTorch", "FastAPI", "Docker"],
+                "links": { "live": "https://huggingface.co/spaces/Dyno1307/Translate-V2", "github": null },
+                "image": null
+            },
+            {
+                "id": "project-04",
+                "title": "AI Expense Advisor",
+                "main_desc": "Contextual AI budgeting assistant with embedding-based FAQ retrieval.",
+                "points": [
+                    "Built contextual AI budgeting assistant with embedding-based FAQ retrieval."
+                ],
+                "stack": ["Streamlit", "LangChain", "Gemini API"],
+                "links": { "live": null, "github": null },
+                "image": null
+            }
+        ];
+
+        const skillIcons = {
+            "Python": "fab fa-python", "Java": "fab fa-java", "C++": "fas fa-c", 
+            "TensorFlow": "fas fa-brain", "PyTorch": "fas fa-network-wired", 
+            "scikit-learn": "fas fa-project-diagram",
+            "LangChain": "fas fa-link", "FastAPI": "fas fa-rocket", 
+            "RAG": "fas fa-project-diagram", "Vector Databases": "fas fa-database",
+            "Transformers": "fas fa-box-open", "Gemini API": "fas fa-star-of-life", 
+            "ChromaDB": "fas fa-database", "FAISS": "fas fa-search",
+            "Ollama": "fas fa-server", "Agentic AI": "fas fa-robot",
+            "Git": "fab fa-git-alt", "Docker": "fab fa-docker", 
+            "Google Colab": "fas fa-book", "Jupyter": "fas fa-book-open",
+            "VS Code": "fas fa-code", "AWS-Bedrock": "fab fa-aws",
+            "OpenCV": "fas fa-camera", "Next.js": "fab fa-node-js",
+            "default": "fas fa-microchip"
+        };
+
+        const skills = [
+            "Python", "Java", "C++", 
+            "TensorFlow", "PyTorch", "scikit-learn", 
+            "LangChain", "RAG", "Vector Databases", 
+            "Gemini API", "ChromaDB", "FAISS", "Ollama", "Agentic AI",
+            "Docker", "Git", "Jupyter", "Google Colab", "VS Code", "AWS-Bedrock"
+        ];
+
+        // Inject Skills
+        const skillsGrid = document.getElementById('skills-grid'); 
+        skills.forEach((skill, idx) => {
+            const card = document.createElement('div');
+            card.className = 'skill-card hover-target';
+            card.style.transitionDelay = `${idx * 0.03}s`; 
+            card.innerHTML = `<i class="${skillIcons[skill] || skillIcons['default']}"></i><span>${skill}</span>`; 
+            if(skillsGrid) skillsGrid.appendChild(card);
+        });
+
+        // Inject Projects
+        const projectList = document.getElementById('project-list');
+        // I have removed the redeclaration of globalPreviewContainer and previewImage
+        // from inside the project injection logic to fix the SyntaxError.
+
+        projects.forEach(project => {
+            const item = document.createElement('div');
+            item.className = 'project-item hover-target';
+            item.innerHTML = `
+                <div class="project-title">${project.title}</div>
+                <div class="project-desc">${project.main_desc}</div>
+            `;
+            
+            // Hover Reveal Logic
+            item.addEventListener('mouseenter', () => {
+                const previewImg = document.getElementById('project-preview-image');
+                const previewCont = document.getElementById('project-preview-container');
+                if(project.image && previewCont && previewImg) {
+                    previewImg.style.backgroundImage = `url('${project.image}')`;
+                    previewCont.classList.add('active');
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                const previewCont = document.getElementById('project-preview-container');
+                if(previewCont) previewCont.classList.remove('active');
+            });
+            
+            item.addEventListener('click', () => openModal(project));
+            if(projectList) projectList.appendChild(item);
+        });
+
+        // Add global click sound listener for interactive elements
+        document.body.addEventListener('click', (e) => {
+            const target = e.target.closest('.hover-target, a, button, .project-card, .skill-card');
+            if (target) {
+                SoundEngine.playClick();
+            }
+        });
+
+        // --- 3. MODAL & API LOGIC ---
+        const projectModal = document.getElementById('project-modal');
+        const aiSummaryModal = document.getElementById('ai-summary-modal');
+        let currentProjectName = null;
+
+        function openModal(project) {
+            if(!projectModal) return;
+            
+            SoundEngine.playSweep(true); // Play open sound
+            
+            currentProjectName = project.title;
+            
+            const titleEl = document.getElementById('modal-project-title');
+            if (titleEl) titleEl.textContent = project.title;
+            
+            const descContainer = document.getElementById('modal-project-description');
+            if (descContainer) {
+                descContainer.innerHTML = `<p>${project.main_desc}</p>`;
+                if (project.points) {
+                    const ul = document.createElement('ul');
+                    project.points.forEach(pt => {
+                        const li = document.createElement('li'); li.innerHTML = pt; ul.appendChild(li);
+                    });
+                    descContainer.appendChild(ul);
+                }
+            }
+
+            const stackContainer = document.getElementById('modal-project-stack');
+            if (stackContainer) {
+                stackContainer.innerHTML = '';
+                project.stack.forEach(tech => {
+                    const span = document.createElement('span'); span.className = 'skill-tag'; span.textContent = tech;
+                    stackContainer.appendChild(span);
+                });
+            }
+
+            const liveLnk = document.getElementById('modal-link-live');
+            if (liveLnk) {
+                liveLnk.style.display = project.links.live ? 'inline-flex' : 'none';
+                liveLnk.href = project.links.live || '#';
+            }
+
+            const gitLnk = document.getElementById('modal-link-github');
+            if (gitLnk) {
+                gitLnk.style.display = project.links.github ? 'inline-flex' : 'none';
+                gitLnk.href = project.links.github || '#';
+            }
+
+            projectModal.style.display = 'flex';
+        }
+        
+        const projModalClose = document.getElementById('modal-close-btn');
+        if(projModalClose) projModalClose.onclick = () => {
+            SoundEngine.playSweep(false); // Play close sound
+            projectModal.style.display = 'none';
+        }
+        
+        const aiModalClose = document.getElementById('ai-summary-close-btn');
+        if(aiModalClose) aiModalClose.onclick = () => {
+            SoundEngine.playSweep(false);
+            aiSummaryModal.style.display = 'none';
+        }
+
+        // Gemini AI Fetch
+        const aiSummaryBtn = document.getElementById('modal-ai-summary-btn');
+        if(aiSummaryBtn) {
+            aiSummaryBtn.addEventListener('click', async () => {
+                if (!currentProjectName) return;
+                const textEl = document.getElementById('ai-summary-text');
+                if (textEl) textEl.innerHTML = `<i>Establishing connection to LLM cluster...</i>`;
+                
+                SoundEngine.playSweep(true);
+                if (aiSummaryModal) aiSummaryModal.style.display = 'flex';
+
+                try {
+                    const prompt = `Provide a concise, 2-sentence AI-generated summary for the project: "${currentProjectName}". Focus on its core functionality and tech stack. Make it sound highly professional for an AI engineer portfolio.`;
+                    const apiKey = ""; 
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json' }, 
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) 
+                    });
+
+                    if (!response.ok) throw new Error("API Error");
+                    const result = await response.json();
+                    if (textEl) textEl.textContent = result?.candidates?.[0]?.content?.parts?.[0]?.text || "Summary generation failed.";
+                } catch (error) {
+                    if (textEl) textEl.textContent = "Error communicating with AI Service.";
+                }
+            });
+        }
+
+        // --- 4. UI INTERACTIONS (Scroll, Custom Ring Cursor, Observer) ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+        let ringX = mouseX, ringY = mouseY;
+        let previewX = mouseX, previewY = mouseY; // Dedicated physics for the image
+        let normX = 0, normY = 0, scrollPercent = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            normX = (e.clientX / window.innerWidth) * 2 - 1;
+            normY = -(e.clientY / window.innerHeight) * 2 + 1;
+            if(cursorDot) {
+                cursorDot.style.left = mouseX + 'px'; 
+                cursorDot.style.top = mouseY + 'px';
+            }
+        });
+
+        function animateCursor() {
+            // Cursor ring lerp
+            ringX += (mouseX - ringX) * 0.15; 
+            ringY += (mouseY - ringY) * 0.15;
+            if(cursorRing) {
+                cursorRing.style.left = ringX + 'px'; 
+                cursorRing.style.top = ringY + 'px';
+            }
+            
+            // Image Preview lerp (slightly smoother to trail behind beautifully)
+            previewX += (mouseX - previewX) * 0.12;
+            previewY += (mouseY - previewY) * 0.12;
+            const globalPreviewContainer = document.getElementById('project-preview-container');
+            if (globalPreviewContainer) {
+                // Set top/left directly, CSS transform translate(-50%, -50%) will handle the perfect centering
+                globalPreviewContainer.style.left = previewX + 'px';
+                globalPreviewContainer.style.top = previewY + 'px';
+            }
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        function initCursorHover() {
+            document.body.addEventListener('mouseover', (e) => {
+                if (!cursorDot || !cursorRing) return;
+                const target = e.target.closest('.hover-target, a, button, h1, h2, h3, .project-card, .skill-card, .editorial-card, .cert-link, .nav-link, .nav-logo, .contact-link-icon');
+                
+                if (target) {
+                    // Play hover sound only when freshly entering the element
+                    if (!target.contains(e.relatedTarget)) {
+                        SoundEngine.playHover();
+                    }
+
+                    cursorDot.style.width = '70px'; 
+                    cursorDot.style.height = '70px';
+                    cursorRing.style.width = '0px'; 
+                    cursorRing.style.height = '0px';
+                    cursorRing.style.opacity = '0';
+                }
+            });
+
+            document.body.addEventListener('mouseout', (e) => {
+                if (!cursorDot || !cursorRing) return;
+                const target = e.target.closest('.hover-target, a, button, h1, h2, h3, .project-card, .skill-card, .editorial-card, .cert-link, .nav-link, .nav-logo, .contact-link-icon');
+                
+                if (target && !target.contains(e.relatedTarget)) {
+                    cursorDot.style.width = '8px'; 
+                    cursorDot.style.height = '8px';
+                    cursorRing.style.width = '36px'; 
+                    cursorRing.style.height = '36px';
+                    cursorRing.style.opacity = '1';
+                }
+            });
+        }
+        initCursorHover();
+
+        // Scroll Tracking & Nav Highlight
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+        
+        window.addEventListener('scroll', () => {
+            const maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
+            scrollPercent = window.scrollY / maxScroll;
+
+            let current = 'home';
+            sections.forEach(sec => {
+                if(window.pageYOffset >= sec.offsetTop - 200) current = sec.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href').includes(current)) link.classList.add('active');
+            });
+        });
+
+        // Intersection Observer (Fade in)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        
+        document.querySelectorAll('.editorial-card, .section-title, .skill-card').forEach(el => observer.observe(el));
+
+        // --- 5. THE NEXUS WEBGL ENGINE ---
+        const noiseChunk = `
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+            float snoise(vec3 v) {
+                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 = v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i); 
+                vec4 p = permute( permute( permute( 
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m; return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            }
+        `;
+
+        const canvas3D = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x121216, 0.025);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 55); 
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas3D, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+        const clock = new THREE.Clock();
+        const nexusData = {}; 
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Particle Storm (Atmosphere)
+        function setupStorm() {
+            const count = 3000; const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            nexusData.stormBases = new Float32Array(count * 3); 
+            
+            for(let i=0; i<count; i++) {
+                let px = (Math.random()-0.5)*100;    
+                let py = (Math.random()-0.5)*50;   
+                let pz = (Math.random()*100) - 20; 
+                
+                pos[i*3] = px; pos[i*3+1] = py; pos[i*3+2] = pz;
+                nexusData.stormBases[i*3] = px; nexusData.stormBases[i*3+1] = py; nexusData.stormBases[i*3+2] = pz;
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({ color: 0x888888, size: 0.08, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+            nexusData.storm = new THREE.Points(geo, mat);
+            scene.add(nexusData.storm);
+        }
+
+        // Singularity (Core)
+        function setupSingularity() {
+            const count = 30000; const geo = new THREE.BufferGeometry();
+            const rad=new Float32Array(count), ang=new Float32Array(count), spd=new Float32Array(count);
+            for(let i=0; i<count; i++) {
+                rad[i] = Math.pow(Math.random(), 2.0)*12 + 0.5; 
+                ang[i] = Math.random()*Math.PI*2; spd[i] = (1.0/rad[i]) * (Math.random()*1.5+0.5);
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(count*3), 3));
+            geo.setAttribute('aRad', new THREE.BufferAttribute(rad, 1));
+            geo.setAttribute('aAng', new THREE.BufferAttribute(ang, 1));
+            geo.setAttribute('aSpd', new THREE.BufferAttribute(spd, 1));
+            
+            nexusData.singularityUniforms = { 
+                uTime: {value:0},
+                uColor1: {value: new THREE.Color(0xffffff)},
+                uColor2: {value: new THREE.Color(0xA855F7)}
+            };
+            const mat = new THREE.ShaderMaterial({
+                uniforms: nexusData.singularityUniforms,
+                vertexShader: `${noiseChunk} uniform float uTime; attribute float aRad; attribute float aAng; attribute float aSpd; varying float vRad;
+                    void main() { vRad=aRad; float cAng = aAng + uTime*aSpd;
+                    vec3 p = vec3(cos(cAng)*aRad, snoise(vec3(cos(cAng)*0.2, sin(cAng)*0.2, uTime*0.3))*aRad*0.2, sin(cAng)*aRad);
+                    vec4 mv = modelViewMatrix * vec4(p,1.0); gl_PointSize = 15.0/-mv.z; gl_Position = projectionMatrix * mv; }`,
+                fragmentShader: `
+                    uniform vec3 uColor1; uniform vec3 uColor2; varying float vRad; 
+                    void main() { if(distance(gl_PointCoord, vec2(0.5))>0.5) discard;
+                    vec3 col = mix(uColor1, uColor2, smoothstep(0.5, 10.0, vRad));
+                    gl_FragColor = vec4(col, 0.6); }`,
+                transparent: true, blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            nexusData.singularity = new THREE.Points(geo, mat); 
+            nexusData.singularity.position.set(12, 2, 25);
+            nexusData.singularity.rotation.x = Math.PI/6;
+            scene.add(nexusData.singularity);
+        }
+
+        // Topo (Floor)
+        function setupTopo() {
+            const geo = new THREE.PlaneGeometry(150, 150, 80, 80);
+            const mat = new THREE.LineBasicMaterial({ color: 0x444455, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+            const wire = new THREE.LineSegments(new THREE.WireframeGeometry(geo), mat);
+            wire.rotation.x = -Math.PI / 2; wire.position.y = -12; wire.position.z = 10;
+            scene.add(wire);
+            nexusData.topo = wire;
+        }
+
+        // Kinetic Wall (Background)
+        function setupKinetic() {
+            const cx = 80, cy = 40, total = cx * cy;
+            const mat = new THREE.MeshStandardMaterial({color: 0x1a1a20, roughness: 0.2, metalness: 0.8}); 
+            nexusData.kinetic = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.9, 5), mat, total);
+            nexusData.kineticBlocks = []; nexusData.dummy = new THREE.Object3D();
+            
+            let i=0;
+            for(let x=0; x<cx; x++) {
+                for(let y=0; y<cy; y++) {
+                    let px = (x - cx/2) * 0.95, py = (y - cy/2) * 0.95;
+                    nexusData.kineticBlocks.push({bx:px, by:py, z:0, vz:0});
+                    nexusData.dummy.position.set(px, py, 0); nexusData.dummy.updateMatrix();
+                    nexusData.kinetic.setMatrixAt(i++, nexusData.dummy.matrix);
+                }
+            }
+            nexusData.kinetic.position.z = -20; 
+            scene.add(nexusData.kinetic);
+
+            nexusData.ambientLight = new THREE.AmbientLight(0x222222);
+            scene.add(nexusData.ambientLight); 
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.5); dirLight.position.set(10, 20, 10);
+            scene.add(dirLight);
+
+            nexusData.pointLight = new THREE.PointLight(0xA855F7, 4, 40); 
+            scene.add(nexusData.pointLight);
+        }
+
+        setupStorm(); setupSingularity(); setupTopo(); setupKinetic();
+
+        // Animation Loop
+        function renderWebGL() {
+            requestAnimationFrame(renderWebGL);
+            const time = clock.getElapsedTime();
+
+            // Camera Fly-through
+            const targetZ = 55 - (scrollPercent * 65); 
+            const targetY = 5 - (scrollPercent * 3); 
+            camera.position.z += (targetZ - camera.position.z) * 0.05;
+            camera.position.y += (targetY - camera.position.y) * 0.05;
+            camera.position.x += (normX * 2 - camera.position.x) * 0.05;
+            camera.lookAt(0, 0, -20); 
+
+            // Raycasting for interactions
+            const vec = new THREE.Vector3(normX, normY, 0.5); vec.unproject(camera);
+            const dir = vec.sub(camera.position).normalize();
+            const distWall = (-20 - camera.position.z) / dir.z;
+            const mouseWallPos = camera.position.clone().add(dir.clone().multiplyScalar(distWall));
+            const distFloor = (-12 - camera.position.y) / dir.y;
+            const mouseFloorPos = camera.position.clone().add(dir.clone().multiplyScalar(distFloor));
+
+            // Storm 
+            if(nexusData.storm && nexusData.stormBases) {
+                const pos = nexusData.storm.geometry.attributes.position;
+                for(let i=0; i<pos.count; i++) {
+                    let bx = nexusData.stormBases[i*3];
+                    let by = nexusData.stormBases[i*3+1];
+                    let bz = nexusData.stormBases[i*3+2];
+                    
+                    pos.setXYZ(i, bx + Math.sin(time + by * 0.1)*2.0, by + Math.cos(time + bx * 0.1)*2.0, bz);
+                }
+                pos.needsUpdate = true; 
+                nexusData.storm.rotation.y = time * 0.02;
+            }
+
+            // Singularity
+            if(nexusData.singularity) {
+                nexusData.singularityUniforms.uTime.value = time;
+                nexusData.singularity.rotation.y = time * 0.05;
+                nexusData.singularity.rotation.x = Math.PI/6 + normY * 0.05;
+            }
+
+            // Topo
+            if(nexusData.topo) {
+                const pos = nexusData.topo.geometry.attributes.position;
+                for(let i=0; i<pos.count; i+=2) {
+                    let x = pos.getX(i), y = pos.getY(i);
+                    let w = Math.sin(x*0.1 + time)*1.5 + Math.cos(y*0.1 + time)*1.5;
+                    let d = Math.sqrt(Math.pow(x - mouseFloorPos.x, 2) + Math.pow(y - (mouseFloorPos.z - 10), 2)); 
+                    let crater = d < 8 ? (8-d)*1.0 : 0;
+                    pos.setZ(i, w - crater);
+                    if(i+1 < pos.count) pos.setZ(i+1, w - crater);
+                }
+                pos.needsUpdate = true;
+            }
+
+            // Kinetic Wall
+            if(nexusData.kinetic) {
+                nexusData.pointLight.position.set(mouseWallPos.x, mouseWallPos.y, -16); 
+                let i=0;
+                nexusData.kineticBlocks.forEach(b => {
+                    let d = Math.sqrt((b.bx-mouseWallPos.x)**2 + (b.by-mouseWallPos.y)**2);
+                    let forceMulti = Math.max(0.1, scrollPercent);
+                    let tz = d < 8 ? -(8-d) * 3.0 * forceMulti : Math.sin(b.bx*0.2+time)*0.3;
+                    b.vz += (tz - b.z)*0.15; b.vz *= 0.8; b.z += b.vz;
+                    nexusData.dummy.position.set(b.bx, b.by, b.z);
+                    nexusData.dummy.updateMatrix();
+                    nexusData.kinetic.setMatrixAt(i++, nexusData.dummy.matrix);
+                });
+                nexusData.kinetic.instanceMatrix.needsUpdate = true;
+            }
+
+            renderer.render(scene, camera);
+        }
+        
+        // --- PRE-LOADER & FLIP ANIMATION LOGIC ---
+        document.body.style.overflow = 'hidden';
+        window.scrollTo(0, 0);
+        
+        let loadProgress = 0;
+        const loaderBar = document.getElementById('loader-bar');
+        const loaderText = document.getElementById('loader-percentage');
+        const loaderWrapper = document.getElementById('loader');
+        const dynamicSuuu = document.getElementById('dynamic-suuu');
+        const targetLogoText = document.getElementById('nav-logo-text');
+
+        let suuuText = "S";
+        let timeAccumulator = 0;
+        
+        const targetDuration = 2000; 
+        const tickRate = 50; 
+        const totalTicks = targetDuration / tickRate;
+        const incrementPerTick = 100 / totalTicks;
+
+        function simulateLoading() {
+            let increment = incrementPerTick * (Math.random() * 0.8 + 0.6); 
+            loadProgress += increment;
+
+            timeAccumulator += tickRate;
+            if (timeAccumulator > 150 && loadProgress < 98) { 
+                if (loadProgress < 75) {
+                    suuuText += "u";
+                } else {
+                    suuuText += "!";
+                }
+                if (dynamicSuuu) dynamicSuuu.innerText = suuuText;
+                timeAccumulator = 0;
+            }
+
+            if (loadProgress >= 100) {
+                loadProgress = 100;
+                if(loaderBar) loaderBar.style.width = `100%`;
+                if(loaderText) loaderText.innerHTML = `<span class="loader-ready-text">SYSTEM READY</span>`;
+                
+                setTimeout(() => {
+                    renderWebGL(); 
+                    
+                    if(dynamicSuuu && targetLogoText) {
+                        dynamicSuuu.innerText = "SUPROVO";
+                        dynamicSuuu.style.animation = "none";
+                        dynamicSuuu.style.textShadow = "none";
+                        
+                        document.querySelector('.loader-bar-container').style.opacity = '0';
+                        loaderText.style.opacity = '0';
+                        
+                        document.body.classList.add('app-ready');
+                        
+                        const startRect = dynamicSuuu.getBoundingClientRect();
+                        const targetRect = targetLogoText.getBoundingClientRect();
+                        
+                        const moveX = (targetRect.left + targetRect.width/2) - (startRect.left + startRect.width/2);
+                        const moveY = (targetRect.top + targetRect.height/2) - (startRect.top + startRect.height/2);
+                        const scaleW = targetRect.width / startRect.width;
+                        
+                        dynamicSuuu.style.transition = "transform 1s cubic-bezier(0.77, 0, 0.175, 1), color 1s, letter-spacing 1s";
+                        dynamicSuuu.style.transform = `translate(${moveX}px, ${moveY}px) scale(${scaleW})`;
+                        dynamicSuuu.style.color = "var(--text-main)";
+                        dynamicSuuu.style.letterSpacing = "1px";
+                    }
+
+                    if(loaderWrapper) {
+                        loaderWrapper.style.transition = "background-color 1s ease";
+                        loaderWrapper.style.backgroundColor = "transparent";
+                        loaderWrapper.style.pointerEvents = "none";
+                    }
+                    
+                    setTimeout(() => {
+                        document.body.style.overflow = ''; 
+                        if(loaderWrapper) loaderWrapper.style.display = 'none'; 
+                        if(targetLogoText) targetLogoText.style.opacity = "1";
+                    }, 1000); 
+                    
+                }, 400);
+
+            } else {
+                if(loaderBar) loaderBar.style.width = `${loadProgress}%`;
+                if(loaderText) loaderText.innerText = `${Math.floor(loadProgress)}%`;
+                setTimeout(simulateLoading, tickRate);
+            }
+        }
+
+        simulateLoading();
+
     </script>
 </body>
 </html>
-
