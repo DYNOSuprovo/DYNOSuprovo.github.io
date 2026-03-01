@@ -21,27 +21,27 @@
             --font-heading: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
 
-            /* Default: Dark Mode Palette (Lightened the dark background) */
-            --bg-color: #121216; 
+            /* Default: Dark Mode Palette (Softened / Lighter Dark) */
+            --bg-color: #1a1a24; 
             --text-main: #ffffff;
-            --text-muted: #a0a0a5;
+            --text-muted: #a0a0aa;
             --accent-color: #A855F7; /* Purple Accent */
             --accent-glow: rgba(168, 85, 247, 0.4);
             
-            --card-bg: rgba(25, 25, 30, 0.5);
+            --card-bg: rgba(35, 35, 45, 0.5);
             --card-border: rgba(255, 255, 255, 0.08);
-            --card-hover-bg: rgba(35, 35, 42, 0.7);
-            --card-shadow: rgba(0, 0, 0, 0.3);
+            --card-hover-bg: rgba(45, 45, 55, 0.7);
+            --card-shadow: rgba(0, 0, 0, 0.25);
             
-            --nav-bg: rgba(18, 18, 22, 0.4); /* Highly translucent for Liquid Glass */
+            --nav-bg: rgba(26, 26, 36, 0.6); 
             
-            --blend-mode: difference; /* Crucial for dark mode text contrast */
+            --blend-mode: difference; 
         }
 
         /* Light Mode Palette (Morning Purple & Rose Gold) */
         body.light-theme {
-            --bg-color: #f4f0f8; /* Morning light purple / whitish */
-            --text-main: #3a3542; /* Soft dark contrast */
+            --bg-color: #f4f0f8; 
+            --text-main: #3a3542; 
             --text-muted: #857e90;
             --accent-color: #b76e79; /* Rose Gold */
             --accent-glow: rgba(183, 110, 121, 0.3);
@@ -51,9 +51,9 @@
             --card-hover-bg: rgba(255, 255, 255, 0.85);
             --card-shadow: rgba(183, 110, 121, 0.1);
             
-            --nav-bg: rgba(255, 255, 255, 0.4); /* Highly translucent for Liquid Glass */
+            --nav-bg: rgba(244, 240, 248, 0.6); 
             
-            --blend-mode: normal; /* Disable difference blending in light mode */
+            --blend-mode: normal; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -71,7 +71,7 @@
             position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
             width: 8px; height: 8px; background: #ffffff; border-radius: 50%;
             pointer-events: none; z-index: 9999; 
-            mix-blend-mode: difference; /* Always difference for the negative invert effect */
+            mix-blend-mode: difference; 
             transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), height 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
         #cursor-ring {
@@ -83,40 +83,10 @@
             mix-blend-mode: difference;
         }
 
-        /* --- Clean Premium Project Image Hover Preview --- */
-        #project-preview-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 360px; height: 220px; 
-            pointer-events: none;
-            z-index: 90;
-            opacity: 0;
-            visibility: hidden;
-            /* Center exactly on the cursor with a slight initial scale-down */
-            transform: translate(-50%, -50%) scale(0.85);
-            transition: opacity 0.3s ease, visibility 0.3s, transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            overflow: hidden;
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px var(--card-border);
-        }
-
-        #project-preview-container.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .preview-image {
-            width: 100%; height: 100%;
-            background-size: cover;
-            background-position: center;
-            /* Inner image scales down as the outer container scales up */
-            transform: scale(1.2); 
-            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        #project-preview-container.active .preview-image {
-            transform: scale(1);
+        /* Hide custom cursor on mobile to prevent sticking */
+        @media (pointer: coarse) {
+            #cursor-dot, #cursor-ring { display: none; }
+            body, html { cursor: auto; }
         }
 
         /* --- APP STATE TRANSITIONS (For Initial Load Reveal) --- */
@@ -127,8 +97,8 @@
         }
 
         nav {
-            opacity: 0; /* Initial hidden state for the loading screen */
-            transition: opacity 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s; /* Delay nav fade in to match merge */
+            opacity: 0; 
+            transition: opacity 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s; 
         }
 
         body.app-ready #webgl-canvas, 
@@ -161,7 +131,7 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         nav, nav * {
-            mix-blend-mode: normal !important; /* Forces solid crisp rendering over the glass */
+            mix-blend-mode: normal !important; 
         }
         .nav-logo { 
             justify-self: start;
@@ -171,7 +141,6 @@
         }
         .nav-logo img { height: 35px; border-radius: 4px; }
         
-        /* The invisible target for the merging text */
         #nav-logo-text { opacity: 0; transition: opacity 0.3s; }
         
         .nav-center {
@@ -205,9 +174,7 @@
         }
         .theme-toggle:hover { border-color: var(--accent-color); color: var(--accent-color); transform: rotate(45deg); }
 
-        .nav-cta {
-            color: var(--text-muted);
-        }
+        .nav-cta { color: var(--text-muted); }
         .nav-cta::after { display: none; }
         .nav-cta:hover { color: var(--text-main); }
 
@@ -240,7 +207,7 @@
         .btn {
             font-family: var(--font-body); font-size: 0.9rem; text-decoration: none; color: var(--bg-color);
             background: var(--text-main); padding: 12px 24px; border-radius: 4px; font-weight: 600;
-            transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--text-main);
+            transition: all 0.3s ease; display: inline-flex; justify-content: center; align-items: center; gap: 8px; border: 1px solid var(--text-main);
             mix-blend-mode: normal !important; 
         }
         .btn.secondary { background: transparent; color: var(--text-main); border-color: var(--card-border); }
@@ -257,6 +224,8 @@
         .editorial-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; width: 100%;
         }
+        .span-2 { grid-column: span 2; }
+
         .editorial-card {
             background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--card-border); border-top: 3px solid var(--accent-color);
@@ -462,14 +431,36 @@
             50% { opacity: 0.5; }
         }
 
+        /* --- MOBILE RESPONSIVENESS OVERRIDES --- */
         @media (max-width: 950px) {
             .editorial-grid { grid-template-columns: 1fr !important; }
-            .grid-col-span-2 { grid-column: span 1 !important; }
+            .span-2 { grid-column: span 1 !important; }
         }
+        
         @media (max-width: 768px) {
-            nav { display: flex; justify-content: space-between; }
+            nav { padding: 15px 5vw; display: flex; justify-content: space-between; }
             .nav-center { display: none; }
             .nav-right { gap: 15px; }
+            
+            .hero-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+            
+            /* Stack buttons cleanly on mobile */
+            .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; }
+            .hero-buttons .btn { width: 100%; justify-content: center; }
+            
+            /* Reduce card padding so text fits nicely */
+            .editorial-card { padding: 25px; }
+            
+            /* Adjust Modal for mobile */
+            .modal-content { padding: 25px; width: 95%; max-width: none; margin: 0 auto; }
+            #modal-project-title { font-size: 1.8rem; }
+            
+            /* Contact section constrained properly for mobile to prevent massive cards */
+            #contact .editorial-grid { width: 100%; max-width: 500px; margin: 0 auto; }
+            #contact .editorial-card { padding: 30px 20px; }
+            
+            /* Contact icons wrap nicely */
+            .contact-links { flex-wrap: wrap; justify-content: center; }
         }
     </style>
 </head>
@@ -489,11 +480,6 @@
     <!-- Dynamic Smooth Ring & Negative Dot Cursor -->
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
-    
-    <!-- Sleek Project Hover Image Reveal -->
-    <div id="project-preview-container">
-        <div class="preview-image" id="project-preview-image"></div>
-    </div>
 
     <!-- 3D Nexus Background -->
     <canvas id="webgl-canvas"></canvas>
@@ -617,8 +603,8 @@
         <section id="resume" class="container">
             <h2 id="resume-title" class="section-title">Credentials</h2>
             <div class="editorial-grid" style="grid-template-columns: repeat(2, 1fr);">
-                <!-- Highlights spans 2 columns -->
-                <div class="editorial-card hover-target" style="grid-column: span 2;">
+                <!-- Highlights spans 2 columns on desktop, 1 on mobile -->
+                <div class="editorial-card span-2 hover-target">
                     <h2 class="card-header">Resume Highlights</h2>
                     <div class="card-content">
                         <p>As a driven AI/ML Developer, I bring a strong foundation in machine learning, deep learning, and generative AI. My expertise spans building intelligent applications, optimizing models, and implementing RAG and Agentic AI architectures.</p>
@@ -628,7 +614,7 @@
                             <li>Proficient in Python, TensorFlow, PyTorch, and vector databases.</li>
                             <li>Experienced in cloud platforms, AWS Bedrock, and containerization (Docker).</li>
                         </ul>
-                        <a href="#" target="_blank" class="btn secondary hover-target" style="margin-top: 25px;">
+                        <a href="#" target="_blank" class="btn secondary hover-target" style="margin-top: 25px; width: fit-content;">
                             <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
@@ -688,8 +674,9 @@
         <!-- Contact Section -->
         <section id="contact" class="container">
             <h2 id="contact-title" class="section-title">Initiate Protocol</h2>
-            <div class="editorial-grid" style="grid-template-columns: 1fr; max-width: 650px; margin: 0 auto;"> 
-                <div class="editorial-card hover-target" style="align-items: center; text-align: center; padding: 50px 30px;">
+            <!-- Constrained the grid width perfectly to prevent oversized card look -->
+            <div class="editorial-grid" style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; width: 100%;"> 
+                <div class="editorial-card hover-target" style="align-items: center; text-align: center;">
                     <h2 class="card-header" style="font-size: 2.2rem;">Let's Connect</h2>
                     <div class="card-content">
                         <p style="max-width: 450px; margin: 0 auto 30px; font-size: 0.95rem;">Interested in collaborating on AI projects, building generative models, or have a question? The nexus is always open.</p>
@@ -748,7 +735,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        // --- 0. PROCEDURAL SOUND ENGINE (Web Audio API) ---
+        // --- 0. PROCEDURAL SOUND ENGINE (Web Audio API) & GYROSCOPE ---
         const SoundEngine = {
             ctx: null,
             init() {
@@ -764,8 +751,8 @@
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, this.ctx.currentTime); // High soft blip
-                gain.gain.setValueAtTime(0.015, this.ctx.currentTime); // Very quiet
+                osc.frequency.setValueAtTime(1200, this.ctx.currentTime); 
+                gain.gain.setValueAtTime(0.015, this.ctx.currentTime); 
                 gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
@@ -777,7 +764,7 @@
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(300, this.ctx.currentTime); // Deeper pop
+                osc.frequency.setValueAtTime(300, this.ctx.currentTime); 
                 gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
                 osc.connect(gain);
@@ -806,9 +793,37 @@
             }
         };
 
-        // Unlock audio context on any user interaction
-        window.addEventListener('pointerdown', () => SoundEngine.init(), { once: true });
-        window.addEventListener('keydown', () => SoundEngine.init(), { once: true });
+        // Gyroscope Orientation Handler for Mobile Parallax
+        function handleOrientation(event) {
+            let x = event.gamma || 0; // [-90, 90]
+            let y = event.beta || 0;  // [-180, 180]
+            
+            // Constrain tilt to 45 degrees max for smooth usability
+            x = Math.max(-45, Math.min(45, x));
+            y = Math.max(-45, Math.min(45, y));
+            
+            // Map degrees to our normalized -1 to +1 range
+            normX = x / 45;
+            normY = -(y / 45); // Invert Y so tilting phone forward points camera down
+        }
+
+        // Initialize Audio and Gyroscope on first interaction
+        window.addEventListener('pointerdown', () => {
+            SoundEngine.init();
+            
+            // Request Gyro permission (required for iOS 13+)
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                    }
+                })
+                .catch(console.error);
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        }, { once: true });
 
 
         // --- 1. THEME TOGGLE LOGIC ---
@@ -821,7 +836,6 @@
             document.body.classList.toggle('light-theme', isLightMode);
             themeIcon.className = isLightMode ? 'fas fa-moon' : 'fas fa-sun';
             
-            // Dynamic WebGL Theme Injection
             if (scene) {
                 if (isLightMode) {
                     scene.fog.color.setHex(0xf4f0f8); 
@@ -838,13 +852,13 @@
                         nexusData.singularityUniforms.uColor2.value.setHex(0xb76e79); 
                     }
                 } else {
-                    scene.fog.color.setHex(0x121216); 
-                    if(nexusData.ambientLight) { nexusData.ambientLight.color.setHex(0x222222); nexusData.ambientLight.intensity = 1.0; }
+                    scene.fog.color.setHex(0x1a1a24); 
+                    if(nexusData.ambientLight) { nexusData.ambientLight.color.setHex(0x333344); nexusData.ambientLight.intensity = 1.0; }
                     if(nexusData.topo) nexusData.topo.material.color.setHex(0x444455);
                     if(nexusData.pointLight) nexusData.pointLight.color.setHex(0xA855F7); 
                     if(nexusData.storm) nexusData.storm.material.color.setHex(0x888888); 
                     if(nexusData.kinetic) {
-                        nexusData.kinetic.material.color.setHex(0x1a1a20); 
+                        nexusData.kinetic.material.color.setHex(0x22222a); 
                         nexusData.kinetic.material.roughness = 0.2;
                     }
                     if(nexusData.singularityUniforms) {
@@ -867,8 +881,7 @@
                     "Containerized and deployed with optimized cloud inference latency (~300ms)."
                 ],
                 "stack": ["TensorFlow", "EfficientNetV2", "FastAPI", "OpenCV", "Docker"],
-                "links": { "live": "https://wheat-analysis-app.vercel.app", "github": null },
-                "image": "https://github.com/DYNOSuprovo/DYNOSuprovo.github.io/blob/main/Screenshot%202026-03-01%20170310.png?raw=true"
+                "links": { "live": "https://wheat-analysis-app.vercel.app", "github": null }
             },
             {
                 "id": "project-02",
@@ -880,8 +893,7 @@
                     "Integrated multi-model LLM routing using Gemini and Groq APIs."
                 ],
                 "stack": ["LangChain", "Gemini API", "ChromaDB", "FastAPI", "Next.js"],
-                "links": { "live": "https://aahar-react.vercel.app/", "github": null },
-                "image": null // Add image URLs here as you get them
+                "links": { "live": "https://aahar-react.vercel.app/", "github": null }
             },
             {
                 "id": "project-03",
@@ -892,8 +904,7 @@
                     "Reduced inference latency by 38% through optimized batching and model loading."
                 ],
                 "stack": ["Transformers", "PyTorch", "FastAPI", "Docker"],
-                "links": { "live": "https://huggingface.co/spaces/Dyno1307/Translate-V2", "github": null },
-                "image": null
+                "links": { "live": "https://huggingface.co/spaces/Dyno1307/Translate-V2", "github": null }
             },
             {
                 "id": "project-04",
@@ -903,8 +914,7 @@
                     "Built contextual AI budgeting assistant with embedding-based FAQ retrieval."
                 ],
                 "stack": ["Streamlit", "LangChain", "Gemini API"],
-                "links": { "live": null, "github": null },
-                "image": null
+                "links": { "live": null, "github": null }
             }
         ];
 
@@ -917,10 +927,9 @@
             "Transformers": "fas fa-box-open", "Gemini API": "fas fa-star-of-life", 
             "ChromaDB": "fas fa-database", "FAISS": "fas fa-search",
             "Ollama": "fas fa-server", "Agentic AI": "fas fa-robot",
-            "Git": "fab fa-git-alt", "Docker": "fab fa-docker", 
-            "Google Colab": "fas fa-book", "Jupyter": "fas fa-book-open",
+            "Docker": "fab fa-docker", "Git": "fab fa-git-alt", 
+            "Jupyter": "fas fa-book-open", "Google Colab": "fas fa-book", 
             "VS Code": "fas fa-code", "AWS-Bedrock": "fab fa-aws",
-            "OpenCV": "fas fa-camera", "Next.js": "fab fa-node-js",
             "default": "fas fa-microchip"
         };
 
@@ -944,8 +953,6 @@
 
         // Inject Projects
         const projectList = document.getElementById('project-list');
-        // I have removed the redeclaration of globalPreviewContainer and previewImage
-        // from inside the project injection logic to fix the SyntaxError.
 
         projects.forEach(project => {
             const item = document.createElement('div');
@@ -954,20 +961,6 @@
                 <div class="project-title">${project.title}</div>
                 <div class="project-desc">${project.main_desc}</div>
             `;
-            
-            // Hover Reveal Logic
-            item.addEventListener('mouseenter', () => {
-                const previewImg = document.getElementById('project-preview-image');
-                const previewCont = document.getElementById('project-preview-container');
-                if(project.image && previewCont && previewImg) {
-                    previewImg.style.backgroundImage = `url('${project.image}')`;
-                    previewCont.classList.add('active');
-                }
-            });
-            item.addEventListener('mouseleave', () => {
-                const previewCont = document.getElementById('project-preview-container');
-                if(previewCont) previewCont.classList.remove('active');
-            });
             
             item.addEventListener('click', () => openModal(project));
             if(projectList) projectList.appendChild(item);
@@ -989,7 +982,7 @@
         function openModal(project) {
             if(!projectModal) return;
             
-            SoundEngine.playSweep(true); // Play open sound
+            SoundEngine.playSweep(true); 
             
             currentProjectName = project.title;
             
@@ -1034,7 +1027,7 @@
         
         const projModalClose = document.getElementById('modal-close-btn');
         if(projModalClose) projModalClose.onclick = () => {
-            SoundEngine.playSweep(false); // Play close sound
+            SoundEngine.playSweep(false); 
             projectModal.style.display = 'none';
         }
         
@@ -1081,9 +1074,9 @@
         
         let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
         let ringX = mouseX, ringY = mouseY;
-        let previewX = mouseX, previewY = mouseY; // Dedicated physics for the image
         let normX = 0, normY = 0, scrollPercent = 0;
-
+        
+        // Listen to mouse movements for PC parallax
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX; mouseY = e.clientY;
             normX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -1103,16 +1096,6 @@
                 cursorRing.style.top = ringY + 'px';
             }
             
-            // Image Preview lerp (slightly smoother to trail behind beautifully)
-            previewX += (mouseX - previewX) * 0.12;
-            previewY += (mouseY - previewY) * 0.12;
-            const globalPreviewContainer = document.getElementById('project-preview-container');
-            if (globalPreviewContainer) {
-                // Set top/left directly, CSS transform translate(-50%, -50%) will handle the perfect centering
-                globalPreviewContainer.style.left = previewX + 'px';
-                globalPreviewContainer.style.top = previewY + 'px';
-            }
-            
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
@@ -1123,7 +1106,6 @@
                 const target = e.target.closest('.hover-target, a, button, h1, h2, h3, .project-card, .skill-card, .editorial-card, .cert-link, .nav-link, .nav-logo, .contact-link-icon');
                 
                 if (target) {
-                    // Play hover sound only when freshly entering the element
                     if (!target.contains(e.relatedTarget)) {
                         SoundEngine.playHover();
                     }
@@ -1232,7 +1214,7 @@
 
         const canvas3D = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x121216, 0.025);
+        scene.fog = new THREE.FogExp2(0x1a1a24, 0.025);
 
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 5, 55); 
@@ -1319,7 +1301,7 @@
         // Kinetic Wall (Background)
         function setupKinetic() {
             const cx = 80, cy = 40, total = cx * cy;
-            const mat = new THREE.MeshStandardMaterial({color: 0x1a1a20, roughness: 0.2, metalness: 0.8}); 
+            const mat = new THREE.MeshStandardMaterial({color: 0x22222a, roughness: 0.2, metalness: 0.8}); 
             nexusData.kinetic = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.9, 5), mat, total);
             nexusData.kineticBlocks = []; nexusData.dummy = new THREE.Object3D();
             
@@ -1335,7 +1317,7 @@
             nexusData.kinetic.position.z = -20; 
             scene.add(nexusData.kinetic);
 
-            nexusData.ambientLight = new THREE.AmbientLight(0x222222);
+            nexusData.ambientLight = new THREE.AmbientLight(0x333344);
             scene.add(nexusData.ambientLight); 
             const dirLight = new THREE.DirectionalLight(0xffffff, 0.5); dirLight.position.set(10, 20, 10);
             scene.add(dirLight);
@@ -1351,9 +1333,13 @@
             requestAnimationFrame(renderWebGL);
             const time = clock.getElapsedTime();
 
-            // Camera Fly-through
-            const targetZ = 55 - (scrollPercent * 65); 
+            // Camera Fly-through optimized for mobile (pulls back if screen is narrow)
+            const baseTargetZ = window.innerWidth < 768 ? 75 : 55;
+            const scrollZoomMultiplier = window.innerWidth < 768 ? 85 : 65; 
+            
+            const targetZ = baseTargetZ - (scrollPercent * scrollZoomMultiplier); 
             const targetY = 5 - (scrollPercent * 3); 
+            
             camera.position.z += (targetZ - camera.position.z) * 0.05;
             camera.position.y += (targetY - camera.position.y) * 0.05;
             camera.position.x += (normX * 2 - camera.position.x) * 0.05;
