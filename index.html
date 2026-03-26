@@ -870,54 +870,82 @@
         });
 
         // --- 2. DATA INJECTION & LOGIC ---
-        const projects = [
-            {
-                "id": "project-01",
-                "title": "Wheat Guardian - AI Disease Detection",
-                "main_desc": "AI-Based Wheat Disease Detection System using EfficientNetV2 and FastAPI.",
-                "points": [
-                    "Fine-tuned EfficientNetV2B2 achieving 93%+ accuracy on multi-class disease classification.",
-                    "Built end-to-end inference pipeline with REST APIs and modular backend design.",
-                    "Containerized and deployed with optimized cloud inference latency (~300ms)."
-                ],
-                "stack": ["TensorFlow", "EfficientNetV2", "FastAPI", "OpenCV", "Docker"],
-                "links": { "live": "https://wheat-analysis-app.vercel.app", "github": null }
-            },
-            {
-                "id": "project-02",
-                "title": "Aahar - AI-Powered Diet & Wellness Companion",
-                "main_desc": "RAG-based nutrition assistant with vector retrieval for Indian diet planning.",
-                "points": [
-                    "Built RAG-based nutrition assistant with vector retrieval for Indian diet planning.",
-                    "Designed personalized calorie computation and AI-driven health advisory system.",
-                    "Integrated multi-model LLM routing using Gemini and Groq APIs."
-                ],
-                "stack": ["LangChain", "Gemini API", "ChromaDB", "FastAPI", "Next.js"],
-                "links": { "live": "https://aahar-react.vercel.app/", "github": null }
-            },
-            {
-                "id": "project-03",
-                "title": "Translate-V2 – Neural Machine Translation System",
-                "main_desc": "Multilingual neural machine translation system for Nepali/Sinhala to English.",
-                "points": [
-                    "Deployed NLLB-200 based multilingual translation (Nepali/Sinhala → English).",
-                    "Reduced inference latency by 38% through optimized batching and model loading."
-                ],
-                "stack": ["Transformers", "PyTorch", "FastAPI", "Docker"],
-                "links": { "live": "https://huggingface.co/spaces/Dyno1307/Translate-V2", "github": null }
-            },
-            {
-                "id": "project-04",
-                "title": "AI Expense Advisor",
-                "main_desc": "Contextual AI budgeting assistant with embedding-based FAQ retrieval.",
-                "points": [
-                    "Built contextual AI budgeting assistant with embedding-based FAQ retrieval."
-                ],
-                "stack": ["Streamlit", "LangChain", "Gemini API"],
-                "links": { "live": null, "github": null }
-            }
+const projects = [
+    {
+        "id": "project-01",
+        "title": "Wheat Guardian - AI Disease Detection",
+        "main_desc": "AI-Based Wheat Disease Detection System using EfficientNetV2 and FastAPI.",
+        "points": [
+            "Fine-tuned EfficientNetV2B2 achieving 93%+ accuracy on multi-class disease classification.",
+            "Built end-to-end inference pipeline with REST APIs and modular backend design.",
+            "Containerized and deployed with optimized cloud inference latency (~300ms)."
         ],
-    ];
+        "stack": ["TensorFlow", "EfficientNetV2", "FastAPI", "OpenCV", "Docker"],
+        "links": {
+            "live": "https://wheat-analysis-app.vercel.app",
+            "github": null
+        }
+    },
+    {
+        "id": "project-02",
+        "title": "Aahar - AI-Powered Diet & Wellness Companion",
+        "main_desc": "RAG-based nutrition assistant with vector retrieval for Indian diet planning.",
+        "points": [
+            "Built RAG-based nutrition assistant with vector retrieval for Indian diet planning.",
+            "Designed personalized calorie computation and AI-driven health advisory system.",
+            "Integrated multi-model LLM routing using Gemini and Groq APIs."
+        ],
+        "stack": ["LangChain", "Gemini API", "ChromaDB", "FastAPI", "Next.js"],
+        "links": {
+            "live": "https://aahar-react.vercel.app/",
+            "github": null
+        }
+    },
+
+    {
+        "id": "project-05",
+        "title": "Intent Compiler – Multi-Agent AI Architecture Generator",
+        "main_desc": "AI system that converts product ideas into structured system architecture using LLM orchestration.",
+        "points": [
+            "Built multi-agent pipeline that converts natural language product ideas into structured technical architecture.",
+            "Generates requirements, database schema, and pseudo-code using agent orchestration.",
+            "Interactive Streamlit interface for real-time architecture generation."
+        ],
+        "stack": ["LangGraph", "Groq LLaMA", "Streamlit", "Python"],
+        "links": {
+            "live": "https://intent-compiler-bydyno.streamlit.app/",
+            "github": "https://github.com/DYNOSuprovo/intent-compiler"
+        }
+    },
+
+    {
+        "id": "project-03",
+        "title": "Translate-V2 – Neural Machine Translation System",
+        "main_desc": "Multilingual neural machine translation system for Nepali/Sinhala to English.",
+        "points": [
+            "Deployed NLLB-200 based multilingual translation (Nepali/Sinhala → English).",
+            "Reduced inference latency by 38% through optimized batching and model loading."
+        ],
+        "stack": ["Transformers", "PyTorch", "FastAPI", "Docker"],
+        "links": {
+            "live": "https://huggingface.co/spaces/Dyno1307/Translate-V2",
+            "github": null
+        }
+    },
+    {
+        "id": "project-04",
+        "title": "AI Expense Advisor",
+        "main_desc": "Contextual AI budgeting assistant with embedding-based FAQ retrieval.",
+        "points": [
+            "Built contextual AI budgeting assistant with embedding-based FAQ retrieval."
+        ],
+        "stack": ["Streamlit", "LangChain", "Gemini API"],
+        "links": {
+            "live": null,
+            "github": null
+        }
+    }
+];
         
 
         const skillIcons = {
